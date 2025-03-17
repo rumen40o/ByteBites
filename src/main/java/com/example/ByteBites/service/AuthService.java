@@ -1,0 +1,83 @@
+package com.example.ByteBites.service;
+
+import com.example.ByteBites.models.Accounts;
+import com.example.ByteBites.models.AuthRequest;
+import com.example.ByteBites.models.RegisterRequest;
+import com.example.ByteBites.models.Roles;
+import com.example.ByteBites.repository.AccountRepository;
+import com.example.ByteBites.security.ApplicationConfig;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class AuthService {
+    private final AccountRepository userRepository;
+    private final JWTService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+
+    // Регистрация на нов потребител
+    public ResponseEntity<String> register(RegisterRequest request) {
+        try {
+            if (userRepository.findByUsername(request.getUsername()).isPresent() ||
+                    userRepository.findByEmail(request.getEmail()).isPresent()) {
+                return new ResponseEntity<>("Username or Email is already taken!", HttpStatus.BAD_REQUEST);
+            }
+
+            Roles role = (request.getRole() != null) ? request.getRole() : Roles.USER; // Задаване на роля
+
+            Accounts newUser = new Accounts();
+            newUser.setUsername(request.getUsername());
+            newUser.setEmail(request.getEmail());
+            newUser.setPassword(passwordEncoder.encode(request.getPassword())); // Кодиране на парола
+            newUser.setRole(role); // Задаване на роля
+
+            userRepository.save(newUser);
+
+            return ResponseEntity.ok("User registered successfully with role: " + role);
+        } catch (DataIntegrityViolationException exp) {
+            return new ResponseEntity<>("Username or Email is already taken!", HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("Registration failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Логин с username или email
+    public ResponseEntity<String> login(AuthRequest request) {
+        try {
+            // Търсене на потребител по username или email
+            Optional<Accounts> userOpt = userRepository.findByUsername(request.getIdentifier())
+                    .or(() -> userRepository.findByEmail(request.getIdentifier()));
+
+            if (userOpt.isEmpty()) {
+                return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
+            }
+
+            Accounts user = userOpt.get();
+
+            // Аутентикация
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), request.getPassword())
+            );
+
+            // Генериране на JWT
+            String jwtToken = jwtService.generateToken(user);
+
+            return ResponseEntity.ok(jwtToken);
+        } catch (AuthenticationException e) {
+            return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("Login failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}
