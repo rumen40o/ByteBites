@@ -67,4 +67,12 @@ public class AuthController {
                 String.format("{\"message\": \"This is a protected resource\", \"user\": \"%s\"}", user.getUsername())
         );
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Accounts user) {
+        if (user == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+        return ResponseEntity.ok(user);
+    }
 }
