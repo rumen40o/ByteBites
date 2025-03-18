@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
+
 import axios from "axios";
 
 function Home() {
@@ -15,9 +16,14 @@ function Home() {
 
   useEffect(() => {
     axios.get("http://localhost:8080/auth/me", { withCredentials: true })
-        .then((response) => setUser(response.data))
+        .then((res) => { // ✅ Преименуваме на `res`, за да няма конфликти
+            setUser(res.data);
+            if (res.data.role === "DELIVER") { // ✅ Сега имаме достъп до `res.data`
+                navigate("/deliver");
+            }
+        })
         .catch(() => setUser(null));
-}, []);
+}, [navigate]);
 
 
 const handleLogout = async () => {
@@ -44,6 +50,16 @@ const handleLogout = async () => {
                         >
                             <FaUserCircle />
                         </button>
+
+                        {/* Ако е админ, добавяме бутон "Add Restaurant" */}
+                        {user.role === "ADMIN" && (
+                            <button 
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                                onClick={() => navigate("/add-restaurant")}
+                            >
+                                Add Restaurant
+                            </button>
+                        )}
 
                         {menuOpen && (
                             <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded shadow-lg">
