@@ -2,6 +2,7 @@ import Home from './pages/home';
 import { Route, Routes } from "react-router-dom";
 import './App.css';
 import ProfilePage from './pages/profile';
+import DeliverPage from './pages/deliver';
 
 function App() {
   return (
@@ -21,6 +22,15 @@ function App() {
               element={
                 <>
                   <ProfilePage />
+                </>
+              }
+            />
+
+          <Route
+              path="/deliver"
+              element={
+                <>
+                  <DeliverPage />
                 </>
               }
             />

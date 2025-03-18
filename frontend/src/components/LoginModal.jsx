@@ -40,8 +40,15 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
                 { withCredentials: true }
             );
     
-            console.log("Login successful:", response.data);
+
+            const loggedUser = response.data;
     
+            if (loggedUser.role === "DELIVER") {
+                navigate("/deliver");
+            } else {
+                navigate("/");
+            }
+
             // ✅ Успешен логин -> Редирект към началната страница
             onLoginSuccess();
             close(); // Затваряме pop-up-а
