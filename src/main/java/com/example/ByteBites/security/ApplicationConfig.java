@@ -72,23 +72,4 @@ public class ApplicationConfig {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         };
     }
-
-    @Bean
-    public CommandLineRunner createAdminUser() {
-        return args -> {
-            if (repository.findByUsername("admin").isEmpty()) {
-                String rawPassword = "123"; // TODO: Използвай защитена парола от конфигурация
-                String encodedPassword = passwordEncoder().encode(rawPassword);
-
-                Accounts adminUser = new Accounts();
-                adminUser.setUsername("admin");
-                adminUser.setEmail("admin@abv.bg");
-                adminUser.setPassword(encodedPassword);
-                adminUser.setPhoneNumber("0896724567");
-                adminUser.setRole(Roles.ADMIN); // Тук е поправената грешка
-
-                repository.save(adminUser);
-            }
-        };
-    }
 }

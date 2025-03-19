@@ -3,7 +3,7 @@ package com.example.ByteBites.models;
 public enum Roles {
 
     USER,
-    ADMIN,
+    OWNER,
     DELIVER
 
 }

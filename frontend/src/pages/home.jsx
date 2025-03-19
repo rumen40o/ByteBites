@@ -11,6 +11,7 @@ function Home() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showDeliverRegister, setShowDeliverRegister] = useState(false);
+  const [showOwnerRegister, setShowOwnerRegister] = useState(false);
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -52,7 +53,7 @@ const handleLogout = async () => {
                         </button>
 
                         {/* Ако е админ, добавяме бутон "Add Restaurant" */}
-                        {user.role === "ADMIN" && (
+                        {user.role === "OWNER" && (
                             <button 
                                 className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                                 onClick={() => navigate("/add-restaurant")}
@@ -93,6 +94,11 @@ const handleLogout = async () => {
                         >
                             Стани Доставчик
                         </button>
+                        <button 
+                            onClick={() => setShowOwnerRegister(true)}
+                        >
+                            Become a member
+                        </button>
                     </>
                 )}
             </div>
@@ -109,6 +115,8 @@ const handleLogout = async () => {
       {showRegister && <RegisterModal close={() => setShowRegister(false)} role="USER"/>}
 
       {showDeliverRegister && <RegisterModal close={() => setShowDeliverRegister(false)} role="DELIVER" />}
+
+      {showOwnerRegister && <RegisterModal close={() => setShowOwnerRegister(false)} role="OWNER" />}
    </div>
   );
 }
