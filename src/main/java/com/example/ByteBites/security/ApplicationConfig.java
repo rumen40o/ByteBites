@@ -84,6 +84,7 @@ public class ApplicationConfig {
                 adminUser.setUsername("admin");
                 adminUser.setEmail("admin@abv.bg");
                 adminUser.setPassword(encodedPassword);
+                adminUser.setPhoneNumber("0896724567");
                 adminUser.setRole(Roles.ADMIN); // Тук е поправената грешка
 
                 repository.save(adminUser);

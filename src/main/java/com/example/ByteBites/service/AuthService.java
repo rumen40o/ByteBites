@@ -40,6 +40,7 @@ public class AuthService {
             newUser.setUsername(request.getUsername());
             newUser.setEmail(request.getEmail());
             newUser.setPassword(passwordEncoder.encode(request.getPassword())); // Кодиране на парола
+            newUser.setPhoneNumber(request.getPhoneNumber());
             newUser.setRole(role); // Задаване на роля
 
             userRepository.save(newUser);

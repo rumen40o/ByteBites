@@ -35,10 +35,10 @@ public class Accounts implements UserDetails {
 
     private String password;
 
+    private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Roles role;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
