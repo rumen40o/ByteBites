@@ -1,0 +1,90 @@
+package com.example.ByteBites.service;
+
+import com.example.ByteBites.models.*;
+import com.example.ByteBites.repository.AccountRepository;
+import com.example.ByteBites.repository.DeliveriesRepository;
+import com.example.ByteBites.repository.OrdersRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class DeliveryService {
+    private final DeliveriesRepository deliveriesRepository;
+    private final OrdersRepository ordersRepository;
+    private final AccountRepository accountsRepository;
+
+
+    public List<Orders> getAvailableDeliveries() {
+        return ordersRepository.findByStatus(OrderStatus.CONFIRMED);
+    }
+
+
+    public String acceptDelivery(Long orderId, Long deliverId) {
+        Optional<Orders> orderOpt = ordersRepository.findById(orderId);
+        Optional<Accounts> deliverOpt = accountsRepository.findById(deliverId);
+
+        if (orderOpt.isEmpty() || deliverOpt.isEmpty()) {
+            return "Поръчката или доставчикът не съществуват!";
+        }
+
+        Orders order = orderOpt.get();
+        Accounts deliver = deliverOpt.get();
+
+        // Проверка дали поръчката вече има доставчик
+        if (deliveriesRepository.findByOrder(order).isPresent()) {
+            return "Поръчката вече има назначен доставчик!";
+        }
+
+        // Създаваме нов запис за доставка
+        Deliveries delivery = new Deliveries();
+        delivery.setOrder(order);
+        delivery.setDeliver(deliver);
+        delivery.setStatus(DeliveryStatus.ASSIGNED);
+        deliveriesRepository.save(delivery);
+
+        // Обновяваме статуса на поръчката
+        order.setStatus(OrderStatus.ON_THE_WAY);
+        ordersRepository.save(order);
+
+        return "Успешно приехте поръчката за доставка!";
+    }
+
+
+    public String updateDeliveryStatus(Long deliveryId, DeliveryStatus status) {
+        Optional<Deliveries> deliveryOpt = deliveriesRepository.findById(deliveryId);
+
+        if (deliveryOpt.isEmpty()) {
+            return "Доставката не е намерена!";
+        }
+
+        Deliveries delivery = deliveryOpt.get();
+        delivery.setStatus(status);
+
+        // Ако доставката е завършена, ъпдейтваме поръчката като `DELIVERED`
+        if (status == DeliveryStatus.COMPLETED) {
+            Orders order = delivery.getOrder();
+            order.setStatus(OrderStatus.DELIVERED);
+            ordersRepository.save(order);
+            delivery.setDeliveredAt(LocalDateTime.now().toString());
+        }
+
+        deliveriesRepository.save(delivery);
+        return "Статусът на доставката е променен!";
+    }
+
+
+    public List<Deliveries> getDeliveriesByDeliver(Long deliverId) {
+        Optional<Accounts> deliverOpt = accountsRepository.findById(deliverId);
+        return deliverOpt.map(deliveriesRepository::findByDeliver).orElse(null);
+    }
+
+
+
+
+
+}
