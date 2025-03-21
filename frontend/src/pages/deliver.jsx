@@ -5,43 +5,40 @@ import Cookies from "js-cookie";
 
 const DeliverPage = () => {
     const navigate = useNavigate();
-    const [availableOrders, setAvailableOrders] = useState([]); // Поръчки за приемане
-    const [deliveries, setDeliveries] = useState([]); // Текущи доставки
+    const [availableOrders, setAvailableOrders] = useState([]); 
+    const [deliveries, setDeliveries] = useState([]); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [deliverId, setDeliverId] = useState(null); // Държим `deliverId` в state
+    const [deliverId, setDeliverId] = useState(null);
 
     useEffect(() => {
-        getCurrentUser(); // ✅ Извличаме текущия потребител
+        getCurrentUser();
     }, []);
 
-    // ✅ Взимаме информация за текущия потребител (доставчик)
     const getCurrentUser = async () => {
         try {
             const response = await axios.get("http://localhost:8080/auth/me", { withCredentials: true });
-            console.log("📌 Вход потребител:", response.data);
-            setDeliverId(response.data.id); // ✅ Запазваме `deliverId`
-            loadAvailableOrders(); // ✅ Зареждаме поръчките
+            console.log("Вход потребител:", response.data);
+            setDeliverId(response.data.id);
+            loadAvailableOrders();
             loadDeliveries(response.data.id);
         } catch (error) {
-            console.error("❌ Грешка при вземане на текущия потребител:", error);
+            console.error("Грешка при вземане на текущия потребител:", error);
             setError("Неуспешно зареждане на потребител!");
         }
     };
 
-    // ✅ Зареждане на налични поръчки за доставка
     const loadAvailableOrders = async () => {
         try {
             const response = await axios.get("http://localhost:8080/deliveries/available", { withCredentials: true });
-            console.log("📌 Налични поръчки:", response.data);
+            console.log("Налични поръчки:", response.data);
             setAvailableOrders(response.data);
         } catch (error) {
-            console.error("❌ Грешка при зареждане на налични поръчки:", error);
+            console.error("Грешка при зареждане на налични поръчки:", error);
             setError("Грешка при зареждане на налични поръчки!");
         }
     };
 
-    // ✅ Зареждане на текущи доставки за доставчика
     const loadDeliveries = async (deliverId) => {
         try {
             setLoading(true);
@@ -54,24 +51,20 @@ const DeliverPage = () => {
         }
     };
 
-    // ✅ Приемане на поръчка за доставка
     const handleAcceptDelivery = async (orderId) => {
         if (!deliverId) return;
         try {
             await axios.post(`http://localhost:8080/deliveries/accept/${orderId}/${deliverId}`, {}, { withCredentials: true });
     
-            // ✅ Премахваме приетата поръчка от наличните
             setAvailableOrders((prev) => prev.filter((order) => order.id !== orderId));
     
-            // ✅ Презареждаме списъка с доставки, за да се покаже новата поръчка
             loadDeliveries(deliverId);
         } catch (error) {
-            console.error("❌ Грешка при приемане на доставка:", error);
+            console.error("Грешка при приемане на доставка:", error);
             setError("Неуспешно приемане на поръчка!");
         }
     };
 
-    // ✅ Актуализиране на статус на доставка
     const handleStatusUpdate = async (deliveryId, newStatus) => {
         try {
             await axios.put(`http://localhost:8080/deliveries/${deliveryId}/status`, null, {
@@ -86,13 +79,12 @@ const DeliverPage = () => {
         }
     };
 
-    // ✅ Логаут функция
     const handleLogout = async () => {
         try {
             await axios.post("http://localhost:8080/auth/logout", {}, { withCredentials: true });
-            Cookies.remove("jwt_token"); // ✅ Изтриваме `jwt_token`
-            navigate("/"); // ✅ Пренасочване към HomePage
-            window.location.reload(); // ✅ Презареждане за изчистване на сесията
+            Cookies.remove("jwt_token");
+            navigate("/");
+            window.location.reload();
         } catch (err) {
             console.error("Logout failed:", err);
         }
@@ -102,10 +94,9 @@ const DeliverPage = () => {
         <div className="container mx-auto p-4">
             <h1 className="text-3xl font-bold mb-4">Страница на доставчика</h1>
 
-            {/* ✅ Налични поръчки за приемане */}
             <h2 className="text-xl font-semibold mt-4">Налични поръчки</h2>
             {availableOrders.length === 0 ? (
-                <p>❌ Няма налични поръчки за доставка.</p>
+                <p>Няма налични поръчки за доставка.</p>
             ) : (
                 <table className="min-w-full bg-white border border-gray-300">
                     <thead>

@@ -34,7 +34,7 @@ public class AuthController {
 
             Cookie jwtCookie = new Cookie("jwt_token", jwtToken);
             jwtCookie.setHttpOnly(true);
-            jwtCookie.setSecure(false); // Сложи `true`, ако използваш HTTPS
+            jwtCookie.setSecure(false);
             jwtCookie.setPath("/");
             jwtCookie.setMaxAge(60 * 60); // 1 час
 
@@ -46,7 +46,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
-        // Изчистване на JWT cookie
+
         Cookie jwtCookie = new Cookie("jwt_token", null);
         jwtCookie.setHttpOnly(true);
         jwtCookie.setSecure(false);

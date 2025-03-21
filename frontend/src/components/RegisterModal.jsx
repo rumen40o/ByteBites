@@ -9,7 +9,6 @@ const RegisterModal = ({ close, role }) => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [error, setError] = useState(null);
 
-    // Функция за валидация на телефонен номер
     const validatePhoneNumber = (number) => {
         const phoneRegex = /^(\+359|0)[8-9][0-9]{8}$/;
         return phoneRegex.test(number);
@@ -19,7 +18,6 @@ const RegisterModal = ({ close, role }) => {
         e.preventDefault();
         setError(null);
 
-        // Проверка дали телефонният номер е валиден
         if (!validatePhoneNumber(phoneNumber)) {
             setError("Невалиден телефонен номер! Използвайте формат: +359XXXXXXXXX или 0XXXXXXXXX");
             return;

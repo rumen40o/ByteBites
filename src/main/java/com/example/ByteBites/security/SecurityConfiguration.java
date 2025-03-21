@@ -24,7 +24,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Изключване на CSRF (ако използваш JWT)
+                .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS настройки
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()

@@ -35,19 +35,16 @@ public class DeliveryService {
         Orders order = orderOpt.get();
         Accounts deliver = deliverOpt.get();
 
-        // Проверка дали поръчката вече има доставчик
         if (deliveriesRepository.findByOrder(order).isPresent()) {
             return "Поръчката вече има назначен доставчик!";
         }
 
-        // Създаваме нов запис за доставка
         Deliveries delivery = new Deliveries();
         delivery.setOrder(order);
         delivery.setDeliver(deliver);
         delivery.setStatus(DeliveryStatus.ASSIGNED);
         deliveriesRepository.save(delivery);
 
-        // Обновяваме статуса на поръчката
         order.setStatus(OrderStatus.ON_THE_WAY);
         ordersRepository.save(order);
 
@@ -65,7 +62,6 @@ public class DeliveryService {
         Deliveries delivery = deliveryOpt.get();
         delivery.setStatus(status);
 
-        // Ако доставката е завършена, ъпдейтваме поръчката като `DELIVERED`
         if (status == DeliveryStatus.COMPLETED) {
             Orders order = delivery.getOrder();
             order.setStatus(OrderStatus.DELIVERED);

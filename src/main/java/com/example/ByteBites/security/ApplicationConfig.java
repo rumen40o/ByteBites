@@ -85,29 +85,25 @@ public class ApplicationConfig {
             if (repository.count() == 0) {
                 BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-                // ✅ Добавяме потребители
                 Accounts user = new Accounts("user1", "user1@example.com", encoder.encode("password"),"0896724567", Roles.USER);
                 Accounts deliver = new Accounts("deliver1", "deliver1@example.com", encoder.encode("password"),"0896724554", Roles.DELIVER);
                 Accounts owner = new Accounts("admin", "admin@example.com", encoder.encode("admin123"),"0896742567", Roles.OWNER);
 
                 repository.saveAll(List.of(user, deliver, owner));
 
-                // ✅ Добавяме ресторант
                 Restaurants restaurant = new Restaurants("Pizza Place", "Best pizza in town", "123 Main St");
                 restaurantsRepository.save(restaurant);
 
-                // ✅ Добавяме храна в менюто
                 MenuItems pizza = new MenuItems("Margherita Pizza", 12.99, Category.PIZZA, restaurant);
                 MenuItems pasta = new MenuItems("Spaghetti Carbonara", 9.99, Category.PASTA, restaurant);
 
                 menuItemsRepository.saveAll(List.of(pizza, pasta));
 
-                // ✅ Добавяме поръчка със статус `CONFIRMED`
                 Orders order = new Orders(user, restaurant, OrderStatus.CONFIRMED, 22.98);
 
                 ordersRepository.save(order);
 
-                System.out.println("✅ Тестови данни са добавени успешно!");
+                System.out.println("Тестови данни са добавени успешно!");
             }
         };
     }

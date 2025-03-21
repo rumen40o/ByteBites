@@ -13,7 +13,7 @@ import lombok.Setter;
 
 public class AuthRequest {
     @NotBlank(message = "Username or email cannot be empty")
-    private String identifier; // Може да бъде username или email
+    private String identifier;
 
     @NotBlank(message = "Password cannot be empty")
     private String password;

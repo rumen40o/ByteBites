@@ -26,7 +26,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
-    // Регистрация на нов потребител
+
     public ResponseEntity<String> register(RegisterRequest request) {
         try {
             if (userRepository.findByUsername(request.getUsername()).isPresent() ||
@@ -34,14 +34,14 @@ public class AuthService {
                 return new ResponseEntity<>("Username or Email is already taken!", HttpStatus.BAD_REQUEST);
             }
 
-            Roles role = (request.getRole() != null) ? request.getRole() : Roles.USER; // Задаване на роля
+            Roles role = (request.getRole() != null) ? request.getRole() : Roles.USER;
 
             Accounts newUser = new Accounts();
             newUser.setUsername(request.getUsername());
             newUser.setEmail(request.getEmail());
-            newUser.setPassword(passwordEncoder.encode(request.getPassword())); // Кодиране на парола
+            newUser.setPassword(passwordEncoder.encode(request.getPassword()));
             newUser.setPhoneNumber(request.getPhoneNumber());
-            newUser.setRole(role); // Задаване на роля
+            newUser.setRole(role);
 
             userRepository.save(newUser);
 
@@ -53,10 +53,9 @@ public class AuthService {
         }
     }
 
-    // Логин с username или email
+
     public ResponseEntity<String> login(AuthRequest request) {
         try {
-            // Търсене на потребител по username или email
             Optional<Accounts> userOpt = userRepository.findByUsername(request.getIdentifier())
                     .or(() -> userRepository.findByEmail(request.getIdentifier()));
 
@@ -66,12 +65,10 @@ public class AuthService {
 
             Accounts user = userOpt.get();
 
-            // Аутентикация
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), request.getPassword())
             );
 
-            // Генериране на JWT
             String jwtToken = jwtService.generateToken(user);
 
             return ResponseEntity.ok(jwtToken);

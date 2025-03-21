@@ -27,13 +27,11 @@ public class OrderService {
         Restaurants restaurant = restaurantsRepository.findById(restaurantId)
                 .orElseThrow(() -> new RuntimeException("Ресторантът не е намерен!"));
 
-        // ✅ Създаваме нов обект, но НЕ го записваме още
         Orders order = new Orders();
         order.setCustomer(customer);
         order.setRestaurant(restaurant);
         order.setStatus(OrderStatus.PENDING);
 
-        // ✅ Изчисляваме totalPrice ПРЕДИ да запазим order
         double totalPrice = 0;
         for (OrderItems item : orderItemsList) {
             MenuItems menuItem = menuItemsRepository.findById(item.getMenuItem().getId())
@@ -42,12 +40,10 @@ public class OrderService {
             totalPrice += menuItem.getPrice() * item.getQuantity();
         }
 
-        order.setTotalPrice(totalPrice); // ✅ Задаваме totalPrice преди save()
+        order.setTotalPrice(totalPrice);
 
-        // ✅ Сега вече запазваме order с пълната информация
         Orders savedOrder = ordersRepository.save(order);
 
-        // ✅ Записваме артикулите с правилния order_id
         for (OrderItems item : orderItemsList) {
             item.setOrder(savedOrder);
             orderItemsRepository.save(item);
@@ -55,10 +51,7 @@ public class OrderService {
 
         return savedOrder;
     }
-
-
-
-
+    
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();
     }

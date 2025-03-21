@@ -21,9 +21,9 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
             newErrors.password = "Моля, въведете парола!";
         }
     
-        setError(newErrors); // Запазваме новите грешки
+        setError(newErrors);
     
-        return Object.keys(newErrors).length === 0; // Връщаме `true`, ако няма грешки
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleLogin = async (e) => {
@@ -50,16 +50,14 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
                 navigate("/");
             }
 
-            // ✅ Успешен логин -> Редирект към началната страница
             onLoginSuccess();
-            close(); // Затваряме pop-up-а
+            close(); 
         } catch (err) {
-            console.error("❌ Axios Error:", err);
+            console.error("Axios Error:", err);
         
             if (err.response) {
-                console.log("📌 Server Response:", err.response);
+                console.log("Server Response:", err.response);
                 
-                // Проверяваме дали `err.response.data` е текст или JSON
                 if (typeof err.response.data === "string") {
                     setServerError(err.response.data);
                 } else if (err.response.data?.message) {
@@ -68,10 +66,10 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
                     setServerError("Грешка при вход!");
                 }
             } else if (err.request) {
-                console.log("📌 Request made, но няма отговор:", err.request);
+                console.log("Request made, но няма отговор:", err.request);
                 setServerError("Сървърът не отговаря!");
             } else {
-                console.log("📌 Грешка в заявката:", err.message);
+                console.log("Грешка в заявката:", err.message);
                 setServerError("Непозната грешка: " + err.message);
             }
         }
@@ -98,9 +96,6 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
                         onChange={(e) => setIdentifier(e.target.value)}
                     />
                         {error.identifier && <p className="text-red-500 text-xs mt-1">{error.identifier}</p>}
-
-
-
                     <input
                         type="password"
                         placeholder="Парола"

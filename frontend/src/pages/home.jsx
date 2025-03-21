@@ -17,9 +17,9 @@ function Home() {
 
   useEffect(() => {
     axios.get("http://localhost:8080/auth/me", { withCredentials: true })
-        .then((res) => { // ✅ Преименуваме на `res`, за да няма конфликти
+        .then((res) => {
             setUser(res.data);
-            if (res.data.role === "DELIVER") { // ✅ Сега имаме достъп до `res.data`
+            if (res.data.role === "DELIVER") {
                 navigate("/deliver");
             }
         })
@@ -30,8 +30,8 @@ function Home() {
 const handleLogout = async () => {
   try {
       await axios.post("http://localhost:8080/auth/logout", {}, { withCredentials: true });
-      setUser(null); // Премахваме потребителя от state
-      setMenuOpen(false); // Скриваме менюто
+      setUser(null); 
+      setMenuOpen(false);
       window.location.reload();
   } catch (err) {
       console.error("Logout failed:", err);
@@ -42,7 +42,7 @@ const handleLogout = async () => {
   return (
    <div>
     <div>
-                {/* Ако потребителят е логнат, показваме иконка и падащо меню */}
+                
                 {user ? (
                     <div className="relative">
                         <button 
@@ -52,7 +52,6 @@ const handleLogout = async () => {
                             <FaUserCircle />
                         </button>
 
-                        {/* Ако е админ, добавяме бутон "Add Restaurant" */}
                         {user.role === "OWNER" && (
                             <button 
                                 className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
@@ -81,14 +80,13 @@ const handleLogout = async () => {
                     </div>
                 ) : (
                     <>
-                        {/* Бутон за Вход */}
+
                         <button 
                             onClick={() => setShowLogin(true)}
                         >
                             Login
                         </button>
 
-                        {/* Бутон за регистрация на доставчик */}
                         <button 
                             onClick={() => setShowDeliverRegister(true)}
                         >

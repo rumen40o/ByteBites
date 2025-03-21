@@ -10,7 +10,6 @@
     justify-content: center;
 }
 
-/* Login Container */
 .login-container {
     background: white;
     width: 600px;
@@ -21,7 +20,6 @@
     position: relative;
 }
 
-/* Close Button */
 .close_button {
     position: absolute;
     top: 15px;
@@ -32,12 +30,10 @@
     cursor: pointer;
 }
 
-/* Login Content */
 .login-content {
     display: flex;
 }
 
-/* Form Section */
 .form-section {
     flex: 1;
     padding: 30px;
@@ -71,7 +67,6 @@
     font-size: 16px;
 }
 
-/* Links */
 .create-account {
     font-weight: bold;
     color: black;
@@ -86,7 +81,6 @@
     margin-top: 10px;
 }
 
-/* Image Section */
 .image-section {
     flex: 1;
     background: #a0c147;
