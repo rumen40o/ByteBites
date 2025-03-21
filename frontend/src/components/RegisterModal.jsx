@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import "../css/RegisterModal.css";
 
 const RegisterModal = ({ close, role }) => {
     const [username, setUsername] = useState("");
@@ -29,7 +30,7 @@ const RegisterModal = ({ close, role }) => {
                 username,
                 email,
                 password,
-                phone_number: phoneNumber,  // Изпращаме коректно phoneNumber
+                phone_number: phoneNumber,
                 role 
             });
 
@@ -41,49 +42,65 @@ const RegisterModal = ({ close, role }) => {
     };
 
     return (
-        <div>
-            <div>
-                <button onClick={close}>✖</button>
-                <h2 className="text-xl font-bold mb-4">
-                    {role === "DELIVER" ? "Стани Доставчик" : "Регистрация"}
-                </h2>
-
-                {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-
-                <form onSubmit={handleRegister}>
-                    <input
-                        type="text"
-                        placeholder="Потребителско име"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="email"
-                        placeholder="Имейл"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Парола"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="tel"
-                        placeholder="+359888123456 или 0888123456"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        className={`border p-2 ${error ? "border-red-500" : "border-gray-300"}`}
-                        required
-                    />
-                    <button type="submit">
-                        {role === "DELIVER" ? "Стани Доставчик" : "Регистрирай се"}
-                    </button>
-                </form>
+        <div className="overlay">
+            <div className="register-container">
+                <button 
+                    onClick={close}
+                    className="close_button"
+                >
+                    ✖
+                </button>
+                <div className="register-content">
+                    <div className="form-section">
+                        <h2 className="text">
+                            {role === "DELIVER" ? "Стани Доставчик" : "Регистрация"}
+                        </h2>
+                        <form onSubmit={handleRegister} className="form">
+                            <input
+                                type="text"
+                                placeholder="Потребителско име"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                className="inputs"
+                                required
+                            />
+                            <input
+                                type="email"
+                                placeholder="Имейл"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="inputs"
+                                required
+                            />
+                            <input
+                                type="password"
+                                placeholder="Парола"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="inputs"
+                                required
+                            />
+                            <input
+                                type="tel"
+                                placeholder="+359888123456 или 0888123456"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                className="inputs"
+                                required
+                            />
+                            {error && <p className="error-message">{error}</p>}
+                            <button
+                                type="submit"
+                                className="register-btn"
+                            >
+                                {role === "DELIVER" ? "Стани Доставчик" : "Регистрирай се"}
+                            </button>
+                        </form>
+                    </div>
+                    <div className="image-section">
+                        <img src="sushi.png" alt="Sushi Image"/>
+                    </div>
+                </div>
             </div>
         </div>
     );
