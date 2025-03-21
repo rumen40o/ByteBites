@@ -20,7 +20,7 @@ public class DeliveryService {
 
 
     public List<Orders> getAvailableDeliveries() {
-        return ordersRepository.findByStatus(OrderStatus.CONFIRMED);
+        return ordersRepository.findByStatus(OrderStatus.PENDING);
     }
 
 
