@@ -104,6 +104,7 @@ public class ApplicationConfig {
 
                 // ✅ Добавяме поръчка със статус `CONFIRMED`
                 Orders order = new Orders(user, restaurant, OrderStatus.CONFIRMED, 22.98);
+
                 ordersRepository.save(order);
 
                 System.out.println("✅ Тестови данни са добавени успешно!");
