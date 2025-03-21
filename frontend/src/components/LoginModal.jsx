@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../css/LoginModal.css"
 
 const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
     const [identifier, setIdentifier] = useState("");
@@ -77,37 +78,41 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
     };
 
     return (
-        <div>
-            <div>
+        <div class="overlay">
+            <div class="login-container">
                 <button 
                     onClick={close}
+                    className="close_button"
                 >
                     ✖
                 </button>
-                <h2>Вход</h2>
-                <form onSubmit={handleLogin}>
-                    <div>
+                <div class="login-content">
+                <div class="form-section">
+                <h2 className="text">Вход</h2>
+                <form onSubmit={handleLogin} className="form">
                     <input
                         type="text"
                         placeholder="Имейл или Потребителско име"
                         value={identifier}
+                        className="inputs"
                         onChange={(e) => setIdentifier(e.target.value)}
                     />
                         {error.identifier && <p className="text-red-500 text-xs mt-1">{error.identifier}</p>}
-                    </div>
 
-                    <div>
+
+
                     <input
                         type="password"
                         placeholder="Парола"
                         value={password}
+                        className="inputs"
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     {error.password && <p className="text-red-500 text-xs mt-1">{error.password}</p>}
-                    </div>
                     
                     <button
                         type="submit"
+                        class="login-btn"
                     >
                         Вход
                     </button>
@@ -116,12 +121,19 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
                     Нямате акаунт?{" "}
                     <button 
                         onClick={openRegister}
+                        className="register_button"
                     >
                         Регистрирайте се
                     </button>
                 </p>
+                </div>
+                <div class="image-section">
+                    <img src="sushi.png" alt="Sushi Image"/>
+                </div>
             </div>
         </div>
+    </div>
+                
     );
 };
 
