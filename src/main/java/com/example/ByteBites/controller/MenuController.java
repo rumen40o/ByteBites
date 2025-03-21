@@ -17,13 +17,13 @@ public class MenuController {
 
     private final MenuService menuService;
 
-    // ✅ Връща всички ястия
+
     @GetMapping("/all")
     public ResponseEntity<List<MenuItems>> getAllMenuItems() {
         return ResponseEntity.ok(menuService.getAllMenuItems());
     }
 
-    // ✅ Връща ястие по ID
+
     @GetMapping("/{id}")
     public ResponseEntity<MenuItems> getMenuItemById(@PathVariable Long id) {
         Optional<MenuItems> menuItem = menuService.getMenuItemById(id);
@@ -31,25 +31,25 @@ public class MenuController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // ✅ Връща всички ястия за даден ресторант
+
     @GetMapping("/restaurant/{restaurantId}")
     public ResponseEntity<List<MenuItems>> getMenuItemsByRestaurant(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(menuService.getMenuItemsByRestaurant(restaurantId));
     }
 
-    // ✅ Добавяне на ново ястие
+
     @PostMapping("/add/{restaurantId}")
     public ResponseEntity<MenuItems> addMenuItem(@RequestBody MenuItems menuItem, @PathVariable Long restaurantId) {
         return ResponseEntity.ok(menuService.addMenuItem(menuItem, restaurantId));
     }
 
-    // ✅ Обновяване на ястие
+
     @PutMapping("/{id}")
     public ResponseEntity<MenuItems> updateMenuItem(@PathVariable Long id, @RequestBody MenuItems menuItem) {
         return ResponseEntity.ok(menuService.updateMenuItem(id, menuItem));
     }
 
-    // ✅ Изтриване на ястие
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteMenuItem(@PathVariable Long id) {
         menuService.deleteMenuItem(id);
