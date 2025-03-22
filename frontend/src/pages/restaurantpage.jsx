@@ -84,11 +84,11 @@ const RestaurantPage = () => {
                 { withCredentials: true }
             )
             .then(() => {
-                alert("✅ Поръчката е създадена успешно!");
+                alert("Поръчката е създадена успешно!");
                 setOrderItems([]);
             })
             .catch((err) => {
-                console.error("❌ Грешка при поръчване:", err);
+                console.error("Грешка при поръчване:", err);
                 setError("Грешка при създаване на поръчката.");
             });
     };
@@ -103,7 +103,7 @@ const RestaurantPage = () => {
                 <div className="mb-4">
                     <button
                         className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-                        onClick={() => alert("🔧 Add Item - бъдеща функционалност")}
+                        onClick={() => alert("Add Item - бъдеща функционалност")}
                     >
                         ➕ Add item to menu
                     </button>
