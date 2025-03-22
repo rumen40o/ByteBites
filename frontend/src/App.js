@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import './App.css';
 import ProfilePage from './pages/profile';
 import DeliverPage from './pages/deliver';
+import Restaurantpage from './pages/restaurantpage';
 
 function App() {
   return (
@@ -33,6 +34,15 @@ function App() {
                   <DeliverPage />
                 </>
               }
+            />
+            
+            <Route
+            path="/restaurant/:id"
+            element={
+                <>
+                  <Restaurantpage/>
+                </>
+            }
             />
         </Routes>
     </div>
