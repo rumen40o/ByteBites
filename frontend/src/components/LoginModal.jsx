@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../css/LoginModal.css"
+import "../css/LoginModal.css";
+import image from "../images/sushi-1.png"
 
 const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
     const [identifier, setIdentifier] = useState("");
@@ -123,7 +124,7 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
                 </p>
                 </div>
                 <div class="image-section">
-                    <img src="sushi.png" alt="Sushi Image"/>
+                    <img src={image} alt="Sushi Image"/>
                 </div>
             </div>
         </div>
