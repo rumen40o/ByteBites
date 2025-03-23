@@ -10,7 +10,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
         category: "PIZZA"
     });
     
-    const categories = ["PIZZA", "PASTA", "DESSERT", "DRINK", "SALAD", "BURGER"];
+    const categories = ["PIZZA", "PASTA", "SANDWICH", "SUSHI", "RAMEN", "BURGER"];
 
     useEffect(() => {
         if (isOpen) {

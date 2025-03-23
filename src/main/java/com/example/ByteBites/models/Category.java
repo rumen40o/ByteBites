@@ -4,7 +4,7 @@ public enum Category {
     PIZZA,
     PASTA,
     SANDWICH,
-    SHUSHI,
+    SUSHI,
     RAMEN,
     BURGER
 }
