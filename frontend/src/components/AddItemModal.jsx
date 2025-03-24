@@ -9,7 +9,8 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
         price: "",
         category: "PIZZA"
     });
-    
+    const [editingItemId, setEditingItemId] = useState(null);
+
     const categories = ["PIZZA", "PASTA", "SANDWICH", "SUSHI", "RAMEN", "BURGER"];
 
     useEffect(() => {
@@ -29,29 +30,39 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
         }
     };
 
-    const handleAdd = async () => {
+    const handleAddOrUpdate = async () => {
         if (!newItem.name || !newItem.price || !newItem.category) {
             alert("Моля, попълнете всички полета.");
             return;
         }
 
         try {
-            await axios.post(
-                `http://localhost:8080/menu/add/${restaurantId}`,
-                newItem,
-                { withCredentials: true }
-            );
+            if (editingItemId) {
+                
+                await axios.put(
+                    `http://localhost:8080/menu/${editingItemId}`,
+                    newItem,
+                    { withCredentials: true }
+                );
+            } else {
+                
+                await axios.post(
+                    `http://localhost:8080/menu/add/${restaurantId}`,
+                    newItem,
+                    { withCredentials: true }
+                );
+            }
+
             setNewItem({ name: "", price: "", category: "PIZZA" });
+            setEditingItemId(null);
             loadMenuItems();
             if (reloadMenu) reloadMenu();
         } catch (err) {
-            console.error("Грешка при добавяне:", err);
-            console.error("Грешка:", err);
+            console.error("Грешка при добавяне/редакция:", err);
             if (err.response) {
                 console.error("Сървърен отговор:", err.response.data);
             }
         }
-        
     };
 
     const handleDelete = async (id) => {
@@ -67,6 +78,15 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
         }
     };
 
+    const handleEdit = (item) => {
+        setNewItem({
+            name: item.name,
+            price: item.price,
+            category: item.category
+        });
+        setEditingItemId(item.id);
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -74,7 +94,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
             <div className="custom-modal">
                 <button onClick={close} className="custom-close">✖</button>
                 <div className="custom-content">
-                    {/* Таблица с ястия */}
+                    
                     <div className="custom-table">
                         <h2>Меню</h2>
                         <table>
@@ -96,10 +116,17 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
                                         <td>{item.price.toFixed(2)} лв</td>
                                         <td>
                                             <button
+                                                onClick={() => handleEdit(item)}
+                                                className="edit-button"
+                                            >
+                                                ✏
+                                            </button>
+                                            <button
                                                 onClick={() => handleDelete(item.id)}
                                                 className="delete-button"
                                             >
-                                                🗑</button>
+                                                🗑
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -107,9 +134,9 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
                         </table>
                     </div>
 
-                    {/* Форма за добавяне */}
+                    
                     <div className="custom-form">
-                        <h2>Добави ястие</h2>
+                        <h2>{editingItemId ? "Редактирай ястие" : "Добави ястие"}</h2>
                         <input
                             type="text"
                             placeholder="Име"
@@ -130,7 +157,9 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
                                 <option key={cat} value={cat}>{cat}</option>
                             ))}
                         </select>
-                        <button onClick={handleAdd}>Добави</button>
+                        <button onClick={handleAddOrUpdate}>
+                            {editingItemId ? "Запази промените" : "Добави"}
+                        </button>
                     </div>
                 </div>
             </div>
