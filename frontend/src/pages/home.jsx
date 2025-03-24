@@ -186,7 +186,7 @@ function Home() {
                 <p className="opportunity-text">
                   ByteBytes provides an opportunity for any restaurant-related business to expand its operations in the online space.
                 </p>
-                <button className="opportunity-button">
+                <button className="opportunity-button" onClick={() => setShowOwnerRegister(true)}>
                   GROW YOUR BUSINESS
                 </button>
               </div>
@@ -198,7 +198,7 @@ function Home() {
                 <p className="opportunity-text">
                   Do you like to get around the city by car, motorbike or bicycle? What's better than getting paid for it?
                 </p>
-                <button className="opportunity-button" onClick={() => setShowLogin(true)}>
+                <button className="opportunity-button" onClick={() => setShowDeliverRegister(true)}>
                   BECOME A DELIVER
                 </button>
               </div>

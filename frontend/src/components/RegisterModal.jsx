@@ -51,7 +51,10 @@ const RegisterModal = ({ close, role }) => {
                 <div className="register-content">
                     <div className="form-section">
                         <h2 className="text">
-                            {role === "DELIVER" ? "Стани Доставчик" : "Регистрация"}
+                        {role === "DELIVER" ? "Стани Доставчик"
+                            : role === "OWNER"
+                            ? "Стани Собственик"
+                            : "Регистрация"}
                         </h2>
                         <form onSubmit={handleRegister} className="form">
                             <input
@@ -91,7 +94,10 @@ const RegisterModal = ({ close, role }) => {
                                 type="submit"
                                 className="register-btn"
                             >
-                                {role === "DELIVER" ? "Стани Доставчик" : "Регистрирай се"}
+                                {role === "DELIVER" ? "Стани Доставчик"
+                                : role === "OWNER"
+                                ? "Стани Собственик"
+                                : "Регисрирай се"}
                             </button>
                         </form>
                     </div>
