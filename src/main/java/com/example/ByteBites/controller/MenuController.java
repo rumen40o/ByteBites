@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/menu")
-@CrossOrigin(origins =  "http://localhost:3000")
+@CrossOrigin(origins ="http://localhost:3000")
 @RequiredArgsConstructor
 public class MenuController {
 
