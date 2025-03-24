@@ -29,7 +29,7 @@ function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/auth/me", { withCredentials: true })
+    axios.get("http://localhost:8080/auth/logged/user", { withCredentials: true })
       .then((res) => {
         setUser(res.data);
         if (res.data.role === "DELIVER") {

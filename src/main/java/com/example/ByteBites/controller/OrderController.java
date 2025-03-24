@@ -17,7 +17,7 @@ public class OrderController {
     private final OrderService orderService;
 
 
-    @PostMapping("/create/{customerId}/{restaurantId}")
+    @PostMapping("/create/customer/{customerId}/restaurant/{restaurantId}")
     public ResponseEntity<Orders> createOrder(
             @PathVariable Long customerId,
             @PathVariable Long restaurantId,
@@ -25,8 +25,7 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrder(customerId, restaurantId, orderItemsList));
     }
 
-
-
+    
     @GetMapping
     public ResponseEntity<List<Orders>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());

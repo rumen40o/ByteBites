@@ -76,6 +76,9 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
         }
     };
 
+    
+
+
     return (
         <div class="overlay">
             <div class="login-container">

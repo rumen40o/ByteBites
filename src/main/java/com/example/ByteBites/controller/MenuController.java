@@ -24,7 +24,7 @@ public class MenuController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("item/{id}")
     public ResponseEntity<MenuItems> getMenuItemById(@PathVariable Long id) {
         Optional<MenuItems> menuItem = menuService.getMenuItemById(id);
         return menuItem.map(ResponseEntity::ok)
@@ -38,19 +38,19 @@ public class MenuController {
     }
 
 
-    @PostMapping("/add/{restaurantId}")
+    @PostMapping("/add/restaurant/{restaurantId}")
     public ResponseEntity<MenuItems> addMenuItem(@RequestBody MenuItems menuItem, @PathVariable Long restaurantId) {
         return ResponseEntity.ok(menuService.addMenuItem(menuItem, restaurantId));
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/item/{id}")
     public ResponseEntity<MenuItems> updateMenuItem(@PathVariable Long id, @RequestBody MenuItems menuItem) {
         return ResponseEntity.ok(menuService.updateMenuItem(id, menuItem));
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/item/{id}")
     public ResponseEntity<String> deleteMenuItem(@PathVariable Long id) {
         menuService.deleteMenuItem(id);
         return ResponseEntity.ok("Ястието беше изтрито успешно!");

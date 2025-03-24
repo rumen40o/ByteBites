@@ -17,7 +17,7 @@ const DeliverPage = () => {
 
     const getCurrentUser = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/auth/me", { withCredentials: true });
+            const response = await axios.get("http://localhost:8080/auth/logged/user", { withCredentials: true });
             console.log("Вход потребител:", response.data);
             setDeliverId(response.data.id);
             loadAvailableOrders();
@@ -54,7 +54,7 @@ const DeliverPage = () => {
     const handleAcceptDelivery = async (orderId) => {
         if (!deliverId) return;
         try {
-            await axios.post(`http://localhost:8080/deliveries/accept/${orderId}/${deliverId}`, {}, { withCredentials: true });
+            await axios.post(`http://localhost:8080/deliveries/accept/order/${orderId}/deliver/${deliverId}`, {}, { withCredentials: true });
     
             setAvailableOrders((prev) => prev.filter((order) => order.id !== orderId));
     

@@ -22,7 +22,7 @@ const RestaurantPage = () => {
 
     const getCurrentUser = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/auth/me", {
+            const response = await axios.get("http://localhost:8080/auth/logged/user", {
                 withCredentials: true,
             });
             setCustomerId(response.data.id);
@@ -85,7 +85,7 @@ const RestaurantPage = () => {
 
         axios
             .post(
-                `http://localhost:8080/orders/create/${customerId}/${id}`,
+                `http://localhost:8080/orders/create/customer/${customerId}/restaurant/${id}`,
                 orderItems,
                 { withCredentials: true }
             )

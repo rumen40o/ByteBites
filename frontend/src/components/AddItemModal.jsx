@@ -40,14 +40,14 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
             if (editingItemId) {
                 
                 await axios.put(
-                    `http://localhost:8080/menu/${editingItemId}`,
+                    `http://localhost:8080/menu/item/${editingItemId}`,
                     newItem,
                     { withCredentials: true }
                 );
             } else {
                 
                 await axios.post(
-                    `http://localhost:8080/menu/add/${restaurantId}`,
+                    `http://localhost:8080/menu/add/restaurant/${restaurantId}`,
                     newItem,
                     { withCredentials: true }
                 );
@@ -67,7 +67,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/menu/${id}`, { withCredentials: true });
+            await axios.delete(`http://localhost:8080/menu/item/${id}`, { withCredentials: true });
             loadMenuItems();
             if (reloadMenu) reloadMenu();
         } catch (err) {

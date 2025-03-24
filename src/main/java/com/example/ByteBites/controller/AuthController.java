@@ -58,17 +58,7 @@ public class AuthController {
         return ResponseEntity.ok("Logged out successfully");
     }
 
-    @GetMapping("/protected-resource")
-    public ResponseEntity<?> getProtectedResource(@AuthenticationPrincipal Accounts user) {
-        if (user == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
-        return ResponseEntity.ok().body(
-                String.format("{\"message\": \"This is a protected resource\", \"user\": \"%s\"}", user.getUsername())
-        );
-    }
-
-    @GetMapping("/me")
+    @GetMapping("/logged/user")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Accounts user) {
         if (user == null) {
             return ResponseEntity.status(401).body("Unauthorized");

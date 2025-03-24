@@ -6,7 +6,7 @@ const ProfilePage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/auth/me", { withCredentials: true })
+        axios.get("http://localhost:8080/auth/logged/user", { withCredentials: true })
             .then((response) => setUser(response.data))
             .catch(() => setError("Не сте логнати или сесията е изтекла."));
     }, []);
@@ -25,7 +25,6 @@ const ProfilePage = () => {
             <div>
                 <p><strong>Потребителско име:</strong> {user.username}</p>
                 <p><strong>Имейл:</strong> {user.email}</p>
-                <p><strong>Роля:</strong> {user.role}</p>
             </div>
         </div>
     );

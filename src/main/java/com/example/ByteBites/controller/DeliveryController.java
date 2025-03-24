@@ -21,7 +21,7 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.getAvailableDeliveries());
     }
 
-    @PostMapping("/accept/{orderId}/{deliverId}")
+    @PostMapping("/accept/order/{orderId}/deliver/{deliverId}")
     public ResponseEntity<String> acceptDelivery(@PathVariable Long orderId, @PathVariable Long deliverId) {
         return ResponseEntity.ok(deliveryService.acceptDelivery(orderId, deliverId));
     }
