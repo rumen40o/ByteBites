@@ -94,7 +94,7 @@ function Home() {
                     </button>
                     <button
                       className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                      onClick={() => navigate("/profile")}
+                      onClick={() => navigate("/order-tracking")}
                     >
                       Order Status
                     </button>
