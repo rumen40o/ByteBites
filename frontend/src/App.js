@@ -4,6 +4,7 @@ import './App.css';
 import ProfilePage from './pages/profile';
 import DeliverPage from './pages/deliver';
 import Restaurantpage from './pages/restaurantpage';
+import OrderStatusPage from './pages/OrderStatus';
 
 function App() {
   return (
