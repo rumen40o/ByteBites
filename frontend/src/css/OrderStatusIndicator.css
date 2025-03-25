@@ -1,0 +1,66 @@
+.order-status-indicator {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  margin: 20px auto;
+}
+
+.status-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+.status-segment {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  transform-origin: 100% 100%;
+  background: #e0e0e0;
+  transition: background-color 0.3s ease;
+}
+
+.status-segment.active {
+  background: #4A90E2;
+}
+
+.status-segment.active.status-pending {
+  background: #FFB74D;
+}
+
+.status-segment.active.status-confirmed {
+  background: #64B5F6;
+}
+
+.status-segment.active.status-on_the_way {
+  background: #81C784;
+}
+
+.status-segment.active.status-delivered {
+  background: #4CAF50;
+}
+
+.status-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.status-label {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  color: #333;
+} 
