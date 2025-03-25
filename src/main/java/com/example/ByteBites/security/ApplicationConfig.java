@@ -99,9 +99,6 @@ public class ApplicationConfig {
 
                 menuItemsRepository.saveAll(List.of(pizza, pasta));
 
-                Orders order = new Orders(user, restaurant, OrderStatus.CONFIRMED, 22.98);
-
-                ordersRepository.save(order);
 
                 System.out.println("Тестови данни са добавени успешно!");
             }

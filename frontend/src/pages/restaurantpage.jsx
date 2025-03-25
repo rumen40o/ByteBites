@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import AddItemModal from "../components/AddItemModal";
+import DeliveryAddressModal from "../components/DeliveryAddressModal";
 import "../css/RestaurantPage.css";
-
-
 
 const RestaurantPage = () => {
     const { id } = useParams();
@@ -14,7 +13,7 @@ const RestaurantPage = () => {
     const [userRole, setUserRole] = useState("");
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+    const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
     useEffect(() => {
         getCurrentUser();
@@ -80,78 +79,92 @@ const RestaurantPage = () => {
         }
     };
 
-    const createOrder = () => {
-        if (!customerId || !id || orderItems.length === 0) return;
+    const handleConfirmOrder = (deliveryAddress) => {
+        const orderData = {
+            deliveryAddress: deliveryAddress,
+            items: orderItems.map((item) => ({
+                menuItemId: item.menuItem.id,
+                quantity: item.quantity
+            }))
+        };
 
         axios
             .post(
                 `http://localhost:8080/orders/create/customer/${customerId}/restaurant/${id}`,
-                orderItems,
+                orderData,
                 { withCredentials: true }
             )
             .then(() => {
                 alert("Поръчката е създадена успешно!");
                 setOrderItems([]);
+                setIsAddressModalOpen(false);
             })
             .catch((err) => {
-                console.error("Грешка при поръчване:", err);
-                setError("Грешка при създаване на поръчката.");
+                console.error("Грешка при създаване на поръчката:", err);
+                setError("Неуспешно създаване на поръчката.");
             });
     };
 
     return (
         <div className="restaurant-container">
+            <h2>Меню на ресторанта</h2>
 
-<h2>Меню на ресторанта</h2>
+            {error && <p className="error-message">{error}</p>}
 
-{error && <p className="error-message">{error}</p>}
+            {userRole === "OWNER" && (
+                <>
+                    <button onClick={() => setIsModalOpen(true)} className="add-item-button">
+                        ➕ Edit menu
+                    </button>
 
-{userRole === "OWNER" && (
-  <>
-    <button onClick={() => setIsModalOpen(true)} className="add-item-button">
-      ➕ Edit menu
-    </button>
+                    <AddItemModal
+                        isOpen={isModalOpen}
+                        close={() => setIsModalOpen(false)}
+                        restaurantId={id}
+                        reloadMenu={loadMenuItems}
+                    />
+                </>
+            )}
 
-    <AddItemModal
-      isOpen={isModalOpen}
-      close={() => setIsModalOpen(false)}
-      restaurantId={id}
-      reloadMenu={loadMenuItems}
-    />
-  </>
-)}
+            <div className="menu-grid">
+                {menuItems.map((item) => (
+                    <div key={item.id} className="menu-item">
+                        <h3>{item.name}</h3>
+                        <p>Категория: {item.category}</p>
+                        <p>Цена: {item.price.toFixed(2)} лв</p>
+                        <button onClick={() => addToOrder(item)}>Добави</button>
+                    </div>
+                ))}
+            </div>
 
-<div className="menu-grid">
-  {menuItems.map((item) => (
-    <div key={item.id} className="menu-item">
-      <h3>{item.name}</h3>
-      <p>Категория: {item.category}</p>
-      <p>Цена: {item.price.toFixed(2)} лв</p>
-      <button onClick={() => addToOrder(item)}>Добави</button>
-    </div>
-  ))}
-</div>
+            {orderItems.length > 0 && (
+                <div className="order-section">
+                    <h3>Твоята поръчка</h3>
+                    <ul>
+                        {orderItems.map((o) => (
+                            <li key={o.menuItem.id} className="order-item">
+                                <span>{o.menuItem.name} – {o.quantity} бр.</span>
+                                <div className="order-buttons">
+                                    <button onClick={() => decreaseFromOrder(o.menuItem.id)}>−</button>
+                                    <button onClick={() => addToOrder(o.menuItem)}>+</button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                    <button
+                        onClick={() => setIsAddressModalOpen(true)}
+                        className="confirm-button"
+                    >
+                        Потвърди поръчката
+                    </button>
+                </div>
+            )}
 
-{orderItems.length > 0 && (
-  <div className="order-section">
-    <h3>Твоята поръчка</h3>
-    <ul>
-      {orderItems.map((o) => (
-        <li key={o.menuItem.id} className="order-item">
-          <span>{o.menuItem.name} – {o.quantity} бр.</span>
-          <div className="order-buttons">
-            <button onClick={() => decreaseFromOrder(o.menuItem.id)}>−</button>
-            <button onClick={() => addToOrder(o.menuItem)}>+</button>
-          </div>
-        </li>
-      ))}
-    </ul>
-    <button onClick={createOrder} className="confirm-button">
-      Потвърди поръчката
-    </button>
-  </div>
-)}
-            
+            <DeliveryAddressModal
+                isOpen={isAddressModalOpen}
+                onClose={() => setIsAddressModalOpen(false)}
+                onConfirm={handleConfirmOrder}
+            />
         </div>
     );
 };

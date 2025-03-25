@@ -1,11 +1,14 @@
 package com.example.ByteBites.service;
 
 import com.example.ByteBites.models.*;
+import com.example.ByteBites.models.DTO.OrderItemDTO;
+import com.example.ByteBites.models.DTO.OrderRequestDTO;
 import com.example.ByteBites.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,30 +23,42 @@ public class OrderService {
     private final OrderItemsRepository orderItemsRepository;
 
     @Transactional
-    public Orders createOrder(Long customerId, Long restaurantId, List<OrderItems> orderItemsList) {
+    public Orders createOrder(Long customerId, Long restaurantId, OrderRequestDTO request) {
         Accounts customer = accountsRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Клиентът не е намерен!"));
 
         Restaurants restaurant = restaurantsRepository.findById(restaurantId)
                 .orElseThrow(() -> new RuntimeException("Ресторантът не е намерен!"));
 
+        double totalPrice = 0.0;
+
+        // 🔁 Подготвяме артикулите
+        List<OrderItems> orderItemsList = new ArrayList<>();
+
+        for (OrderItemDTO itemDTO : request.getItems()) {
+            MenuItems menuItem = menuItemsRepository.findById(itemDTO.getMenuItemId())
+                    .orElseThrow(() -> new RuntimeException("Меню артикулът не е намерен!"));
+
+            OrderItems orderItem = new OrderItems();
+            orderItem.setMenuItem(menuItem);
+            orderItem.setQuantity(itemDTO.getQuantity());
+
+            orderItemsList.add(orderItem);
+
+            totalPrice += menuItem.getPrice() * itemDTO.getQuantity();
+        }
+
+        // ✅ Създаваме поръчка с totalPrice
         Orders order = new Orders();
         order.setCustomer(customer);
         order.setRestaurant(restaurant);
         order.setStatus(OrderStatus.PENDING);
-
-        double totalPrice = 0;
-        for (OrderItems item : orderItemsList) {
-            MenuItems menuItem = menuItemsRepository.findById(item.getMenuItem().getId())
-                    .orElseThrow(() -> new RuntimeException("Меню артикулът не е намерен!"));
-
-            totalPrice += menuItem.getPrice() * item.getQuantity();
-        }
-
+        order.setDeliveryAddress(request.getDeliveryAddress());
         order.setTotalPrice(totalPrice);
 
         Orders savedOrder = ordersRepository.save(order);
 
+        // 💾 Записваме артикулите
         for (OrderItems item : orderItemsList) {
             item.setOrder(savedOrder);
             orderItemsRepository.save(item);
@@ -51,7 +66,10 @@ public class OrderService {
 
         return savedOrder;
     }
-    
+
+
+
+
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();
     }

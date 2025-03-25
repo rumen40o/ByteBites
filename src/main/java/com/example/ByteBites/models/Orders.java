@@ -34,10 +34,6 @@ public class Orders {
     @Column(nullable = false)
     private Double totalPrice;
 
-    public Orders(Accounts customer, Restaurants restaurant, OrderStatus status, double totalPrice) {
-        this.customer = customer;
-        this.restaurant = restaurant;
-        this.status = status;
-        this.totalPrice = totalPrice;
-    }
+    @Column(nullable = false)
+    private String deliveryAddress;
 }
