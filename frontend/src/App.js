@@ -4,7 +4,7 @@ import './App.css';
 import ProfilePage from './pages/profile';
 import DeliverPage from './pages/deliver';
 import Restaurantpage from './pages/restaurantpage';
-
+import AllRestaurants from './pages/AllRestaurants';
 
 function App() {
   return (
@@ -37,13 +37,22 @@ function App() {
               }
             />
             
-            <Route
-            path="/restaurant/:id"
-            element={
+          <Route
+              path="/restaurants"
+              element={
+                <>
+                  <AllRestaurants />
+                </>
+              }
+            />
+            
+          <Route
+              path="/restaurant/:id"
+              element={
                 <>
                   <Restaurantpage/>
                 </>
-            }
+              }
             />
         </Routes>
     </div>

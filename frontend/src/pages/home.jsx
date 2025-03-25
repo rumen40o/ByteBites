@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { FaUserCircle, FaGlobe, FaMapMarkerAlt, FaHamburger, FaTruck, FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
+import ChatWidget from "../components/ChatWidget";
 import "../css/home.css";
 import axios from "axios";
 
@@ -131,7 +132,7 @@ function Home() {
             ByteBites is a delicious service offering a unique experience
             that helps you satisfy your hunger.
           </p>
-          <button className="search-button">
+          <button className="search-button" onClick={() => navigate('/restaurants')}>
             SEARCH ALL RESTAURANTS
           </button>
         </section>
@@ -268,6 +269,8 @@ function Home() {
       {showRegister && <RegisterModal close={() => setShowRegister(false)} role="USER" />}
       {showDeliverRegister && <RegisterModal close={() => setShowDeliverRegister(false)} role="DELIVER" />}
       {showOwnerRegister && <RegisterModal close={() => setShowOwnerRegister(false)} role="OWNER" />}
+      
+      <ChatWidget />
     </div>
   );
 }
