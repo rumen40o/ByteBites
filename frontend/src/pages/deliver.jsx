@@ -103,6 +103,8 @@ const DeliverPage = () => {
                         <tr className="bg-gray-200">
                             <th className="py-2 px-4 border">Поръчка №</th>
                             <th className="py-2 px-4 border">Ресторант</th>
+                            <th className="py-2 px-4 border">Адрес на ресторанта</th>
+                            <th className="py-2 px-4 border">Адрес за доставка</th>
                             <th className="py-2 px-4 border">Действие</th>
                         </tr>
                     </thead>
@@ -111,6 +113,8 @@ const DeliverPage = () => {
                             <tr key={order.id} className="border">
                                 <td className="py-2 px-4">{order.id}</td>
                                 <td className="py-2 px-4">{order.restaurant?.name || "Без име"}</td>
+                                <td className="py-2 px-4">{order.restaurant?.address || "Няма адрес"}</td>
+                                <td className="py-2 px-4">{order.deliveryAddress || "Няма адрес"}</td>
                                 <td className="py-2 px-4">
                                     <button
                                         onClick={() => handleAcceptDelivery(order.id)}
@@ -133,6 +137,9 @@ const DeliverPage = () => {
             <tr className="bg-gray-200">
                 <th className="py-2 px-4 border">Номер</th>
                 <th className="py-2 px-4 border">Поръчка</th>
+                <th className="py-2 px-4 border">Ресторант</th>
+                <th className="py-2 px-4 border">Адрес на ресторанта</th>
+                <th className="py-2 px-4 border">Адрес за доставка</th>
                 <th className="py-2 px-4 border">Статус</th>
                 <th className="py-2 px-4 border">Действия</th>
             </tr>
@@ -142,6 +149,9 @@ const DeliverPage = () => {
                 <tr key={delivery.id} className="border">
                     <td className="py-2 px-4">{delivery.id}</td>
                     <td className="py-2 px-4">Поръчка №{delivery.order.id}</td>
+                    <td className="py-2 px-4">{delivery.order.restaurant?.name || "Без име"}</td>
+                    <td className="py-2 px-4">{delivery.order.restaurant?.address || "Няма адрес"}</td>
+                    <td className="py-2 px-4">{delivery.order?.deliveryAddress || "Няма адрес"}</td>
                     <td className="py-2 px-4">{delivery.status}</td>
                     <td className="py-2 px-4">
                         {delivery.status === "ASSIGNED" && (

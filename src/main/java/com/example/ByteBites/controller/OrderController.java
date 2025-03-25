@@ -1,6 +1,7 @@
 package com.example.ByteBites.controller;
 
 import com.example.ByteBites.models.*;
+import com.example.ByteBites.models.DTO.OrderRequestDTO;
 import com.example.ByteBites.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,12 @@ public class OrderController {
     public ResponseEntity<Orders> createOrder(
             @PathVariable Long customerId,
             @PathVariable Long restaurantId,
-            @RequestBody List<OrderItems> orderItemsList) {
-        return ResponseEntity.ok(orderService.createOrder(customerId, restaurantId, orderItemsList));
+            @RequestBody OrderRequestDTO request) {
+        return ResponseEntity.ok(orderService.createOrder(customerId, restaurantId, request));
     }
 
-    
+
+
     @GetMapping
     public ResponseEntity<List<Orders>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
