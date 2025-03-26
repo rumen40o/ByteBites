@@ -9,10 +9,6 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "deliveries")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Deliveries {
 
     @Id
@@ -32,4 +28,49 @@ public class Deliveries {
     private DeliveryStatus status;
 
     private String deliveredAt;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Orders getOrder() {
+        return order;
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
+    }
+
+    public Accounts getDeliver() {
+        return deliver;
+    }
+
+    public void setDeliver(Accounts deliver) {
+        this.deliver = deliver;
+    }
+
+    public DeliveryStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DeliveryStatus status) {
+        this.status = status;
+    }
+
+    public String getDeliveredAt() {
+        return deliveredAt;
+    }
+
+    public void setDeliveredAt(String deliveredAt) {
+        this.deliveredAt = deliveredAt;
+    }
+
+    public Deliveries() {
+    }
 }
+

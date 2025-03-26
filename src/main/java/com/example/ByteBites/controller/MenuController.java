@@ -12,10 +12,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/menu")
 @CrossOrigin(origins ="http://localhost:3000")
-@RequiredArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
+
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
 
     @GetMapping("/all")
