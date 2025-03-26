@@ -35,4 +35,4 @@ const OrderStatusIndicator = ({ status }) => {
   );
 };
 
-export default OrderStatusIndicator; 
+export default OrderStatusIndicator;
