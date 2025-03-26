@@ -11,10 +11,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/deliveries")
 @CrossOrigin(origins ="http://localhost:3000")
-@RequiredArgsConstructor
 public class DeliveryController {
 
     private final DeliveryService deliveryService;
+
+    public DeliveryController(DeliveryService deliveryService) {
+        this.deliveryService = deliveryService;
+    }
 
     @GetMapping("/available")
     public ResponseEntity<List<Orders>> getAvailableDeliveries() {

@@ -12,11 +12,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+
 public class DeliveryService {
     private final DeliveriesRepository deliveriesRepository;
     private final OrdersRepository ordersRepository;
     private final AccountRepository accountsRepository;
+
+    public DeliveryService(DeliveriesRepository deliveriesRepository, OrdersRepository ordersRepository, AccountRepository accountsRepository) {
+        this.deliveriesRepository = deliveriesRepository;
+        this.ordersRepository = ordersRepository;
+        this.accountsRepository = accountsRepository;
+    }
 
 
     public List<Orders> getAvailableDeliveries() {

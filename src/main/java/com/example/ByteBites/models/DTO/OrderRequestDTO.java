@@ -4,8 +4,24 @@ import lombok.Data;
 
 import java.util.List;
 
-@Data
+
 public class OrderRequestDTO {
     private String deliveryAddress;
     private List<OrderItemDTO> items;
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public List<OrderItemDTO> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItemDTO> items) {
+        this.items = items;
+    }
 }

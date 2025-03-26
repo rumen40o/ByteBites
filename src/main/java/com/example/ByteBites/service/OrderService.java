@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class OrderService {
 
     private final OrdersRepository ordersRepository;
@@ -21,6 +20,14 @@ public class OrderService {
     private final RestaurantsRepository restaurantsRepository;
     private final MenuItemsRepository menuItemsRepository;
     private final OrderItemsRepository orderItemsRepository;
+
+    public OrderService(OrdersRepository ordersRepository, AccountRepository accountsRepository, RestaurantsRepository restaurantsRepository, MenuItemsRepository menuItemsRepository, OrderItemsRepository orderItemsRepository) {
+        this.ordersRepository = ordersRepository;
+        this.accountsRepository = accountsRepository;
+        this.restaurantsRepository = restaurantsRepository;
+        this.menuItemsRepository = menuItemsRepository;
+        this.orderItemsRepository = orderItemsRepository;
+    }
 
     @Transactional
     public Orders createOrder(Long customerId, Long restaurantId, OrderRequestDTO request) {
@@ -66,9 +73,6 @@ public class OrderService {
 
         return savedOrder;
     }
-
-
-
 
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();

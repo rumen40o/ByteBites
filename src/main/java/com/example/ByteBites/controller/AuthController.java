@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins ="http://localhost:3000")
-@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authenticationService;
+
+    public AuthController(AuthService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) {

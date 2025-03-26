@@ -28,13 +28,19 @@ import java.util.Collections;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
 
     private final AccountRepository repository;
     private final RestaurantsRepository restaurantsRepository;
     private final MenuItemsRepository menuItemsRepository;
     private final OrdersRepository ordersRepository;
+
+    public ApplicationConfig(AccountRepository repository, RestaurantsRepository restaurantsRepository, MenuItemsRepository menuItemsRepository, OrdersRepository ordersRepository) {
+        this.repository = repository;
+        this.restaurantsRepository = restaurantsRepository;
+        this.menuItemsRepository = menuItemsRepository;
+        this.ordersRepository = ordersRepository;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

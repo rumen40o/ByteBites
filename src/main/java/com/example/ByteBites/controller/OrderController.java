@@ -12,10 +12,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/orders")
 @CrossOrigin(origins ="http://localhost:3000")
-@RequiredArgsConstructor
+
 public class OrderController {
 
     private final OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
 
     @PostMapping("/create/customer/{customerId}/restaurant/{restaurantId}")

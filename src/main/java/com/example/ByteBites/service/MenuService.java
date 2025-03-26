@@ -11,11 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class MenuService {
 
     private final MenuItemsRepository menuItemsRepository;
     private final RestaurantsRepository restaurantsRepository;
+
+    public MenuService(MenuItemsRepository menuItemsRepository, RestaurantsRepository restaurantsRepository) {
+        this.menuItemsRepository = menuItemsRepository;
+        this.restaurantsRepository = restaurantsRepository;
+    }
 
 
     public List<MenuItems> getAllMenuItems() {
