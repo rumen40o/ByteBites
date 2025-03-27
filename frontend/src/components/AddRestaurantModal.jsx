@@ -1,0 +1,74 @@
+import { useState } from "react";
+import axios from "axios";
+
+const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
+  const [restaurant, setRestaurant] = useState({
+    name: "",
+    description: "",
+    address: "",
+    imageUrl: ""
+  });
+
+  const handleChange = (e) => {
+    setRestaurant({ ...restaurant, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    if (!restaurant.name || !restaurant.description || !restaurant.address || !restaurant.imageUrl) {
+      alert("Моля, попълнете всички полета.");
+      return;
+    }
+
+    try {
+      await axios.post("http://localhost:8080/restaurants/add", restaurant, {
+        withCredentials: true
+      });
+      onAddSuccess();
+      close();
+    } catch (err) {
+      console.error("Грешка при добавяне на ресторант:", err);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <button className="close-btn" onClick={close}>✖</button>
+        <h2>Добави нов ресторант</h2>
+        <input
+          type="text"
+          name="name"
+          placeholder="Име"
+          value={restaurant.name}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="description"
+          placeholder="Описание"
+          value={restaurant.description}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="address"
+          placeholder="Адрес"
+          value={restaurant.address}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="imageUrl"
+          placeholder="Image URL"
+          value={restaurant.imageUrl}
+          onChange={handleChange}
+        />
+        <button className="submit-btn" onClick={handleSubmit}>Добави</button>
+      </div>
+    </div>
+  );
+};
+
+export default AddRestaurantModal;
