@@ -137,7 +137,9 @@ function Home() {
             ByteBites is a delicious service offering a unique experience
             that helps you satisfy your hunger.
           </p>
-          <button className="search-button">
+          <button className="search-button" 
+          onClick={() => navigate("/restaurants")}
+          >
             SEARCH ALL RESTAURANTS
           </button>
         </section>
