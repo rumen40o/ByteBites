@@ -1,6 +1,6 @@
 package com.example.ByteBites.models.DTO;
 
-public class RestaurantDTO {
+public class RestaurantRequestDTO {
 
         private String name;
         private String description;

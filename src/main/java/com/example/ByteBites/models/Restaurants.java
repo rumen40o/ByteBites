@@ -24,6 +24,9 @@ public class Restaurants {
     @Column(nullable = false)
     private String address;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public Restaurants(String name, String description, String address) {
         this.name = name;
         this.description = description;
@@ -60,6 +63,14 @@ public class Restaurants {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Restaurants() {

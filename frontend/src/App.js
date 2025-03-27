@@ -5,6 +5,7 @@ import ProfilePage from './pages/profile';
 import DeliverPage from './pages/deliver';
 import Restaurantpage from './pages/restaurantpage';
 import OrderTrackingPage from './pages/orderTracking';
+import AllRestaurants from './pages/AllRestaurants';
 
 
 function App() {
@@ -54,6 +55,11 @@ function App() {
                   <OrderTrackingPage/>
                 </>
             }
+            />
+            <Route path="/restaurants" 
+            element={
+            <AllRestaurants />
+            } 
             />
         </Routes>
     </div>

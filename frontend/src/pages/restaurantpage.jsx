@@ -14,9 +14,11 @@ const RestaurantPage = () => {
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+    const [restaurant, setRestaurant] = useState(null);
 
     useEffect(() => {
         getCurrentUser();
+        loadRestaurantDetails();
     }, []);
 
     const getCurrentUser = async () => {
@@ -105,8 +107,27 @@ const RestaurantPage = () => {
             });
     };
 
+    const loadRestaurantDetails = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/restaurants/${id}`, {
+                withCredentials: true,
+            });
+            setRestaurant(response.data);
+        } catch (err) {
+            console.error("Грешка при зареждане на ресторанта:", err);
+        }
+    };
+
     return (
         <div className="restaurant-container">
+            {restaurant && (
+            <div className="restaurant-info">
+                <img src={restaurant.imageUrl} alt={restaurant.name} className="restaurant-banner" />
+                <h1 className="restaurant-name">{restaurant.name}</h1>
+                <p className="restaurant-description">{restaurant.description}</p>
+                <p className="restaurant-address">📍 {restaurant.address}</p>
+            </div>
+            )}
             <h2>Меню на ресторанта</h2>
 
             {error && <p className="error-message">{error}</p>}
