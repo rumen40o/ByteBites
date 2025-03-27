@@ -12,10 +12,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class RestaurantService {
 
     private final RestaurantsRepository restaurantsRepository;
+
+    public RestaurantService(RestaurantsRepository restaurantsRepository) {
+        this.restaurantsRepository = restaurantsRepository;
+    }
 
     // Създаване на ресторант
     public Restaurants createRestaurant(RestaurantRequestDTO dto) {
