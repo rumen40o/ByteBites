@@ -23,8 +23,28 @@
   transition: background-color 0.3s ease;
 }
 
+/* First quarter (0-90 degrees) */
+.status-segment:nth-child(1) {
+  transform: rotate(90deg);
+}
+
+/* Second quarter (90-180 degrees) */
+.status-segment:nth-child(2) {
+  transform: rotate(180deg);
+}
+
+/* Third quarter (180-270 degrees) */
+.status-segment:nth-child(3) {
+  transform: rotate(270deg);
+}
+
+/* Fourth quarter (270-360 degrees) */
+.status-segment:nth-child(4) {
+  transform: rotate(360deg);
+}
+
 .status-segment.active {
-  background: #4A90E2;
+  background: #FFB74D;
 }
 
 .status-segment.active.status-pending {
