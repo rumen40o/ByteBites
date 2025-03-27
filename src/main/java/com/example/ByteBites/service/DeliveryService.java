@@ -51,7 +51,7 @@ public class DeliveryService {
         delivery.setStatus(DeliveryStatus.ASSIGNED);
         deliveriesRepository.save(delivery);
 
-        order.setStatus(OrderStatus.ON_THE_WAY);
+        order.setStatus(OrderStatus.CONFIRMED);
         ordersRepository.save(order);
 
         return "Успешно приехте поръчката за доставка!";
@@ -74,7 +74,12 @@ public class DeliveryService {
             ordersRepository.save(order);
             delivery.setDeliveredAt(LocalDateTime.now().toString());
         }
-
+        if (status == DeliveryStatus.IN_PROGRESS) {
+            Orders order = delivery.getOrder();
+            order.setStatus(OrderStatus.ON_THE_WAY);
+            ordersRepository.save(order);
+            delivery.setDeliveredAt(LocalDateTime.now().toString());
+        }
         deliveriesRepository.save(delivery);
         return "Статусът на доставката е променен!";
     }
