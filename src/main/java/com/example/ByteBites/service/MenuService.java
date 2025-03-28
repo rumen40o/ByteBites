@@ -1,11 +1,14 @@
 package com.example.ByteBites.service;
 
+import com.example.ByteBites.models.Accounts;
 import com.example.ByteBites.models.MenuItems;
 import com.example.ByteBites.models.Restaurants;
 import com.example.ByteBites.repository.MenuItemsRepository;
 import com.example.ByteBites.repository.RestaurantsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,18 +43,27 @@ public class MenuService {
     }
 
 
-    public MenuItems addMenuItem(MenuItems menuItem, Long restaurantId) {
+    public MenuItems addMenuItem(MenuItems menuItem, Long restaurantId, Accounts currentUser) {
         Restaurants restaurant = restaurantsRepository.findById(restaurantId)
                 .orElseThrow(() -> new RuntimeException("Ресторантът не съществува!"));
+
+        if (!restaurant.getOwner().getId().equals(currentUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нямате право да променяте това меню.");
+        }
 
         menuItem.setRestaurants(restaurant);
         return menuItemsRepository.save(menuItem);
     }
 
 
-    public MenuItems updateMenuItem(Long id, MenuItems updatedItem) {
+    public MenuItems updateMenuItem(Long id, MenuItems updatedItem, Accounts currentUser) {
         MenuItems existingItem = menuItemsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ястието не е намерено!"));
+
+
+        if (!existingItem.getRestaurants().getOwner().getId().equals(currentUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нямате право да редактирате това ястие.");
+        }
 
         existingItem.setName(updatedItem.getName());
         existingItem.setPrice(updatedItem.getPrice());
@@ -61,10 +73,14 @@ public class MenuService {
     }
 
 
-    public void deleteMenuItem(Long id) {
-        if (!menuItemsRepository.existsById(id)) {
-            throw new RuntimeException("Ястието не е намерено!");
+    public void deleteMenuItem(Long id, Accounts currentUser) {
+        MenuItems item = menuItemsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Артикулът не е намерен"));
+
+        if (!item.getRestaurants().getOwner().getId().equals(currentUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нямате право да изтривате това ястие.");
         }
+
         menuItemsRepository.deleteById(id);
     }
 }
