@@ -1,9 +1,11 @@
 package com.example.ByteBites.controller;
 
+import com.example.ByteBites.models.Accounts;
 import com.example.ByteBites.models.MenuItems;
 import com.example.ByteBites.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,20 +44,20 @@ public class MenuController {
 
 
     @PostMapping("/add/restaurant/{restaurantId}")
-    public ResponseEntity<MenuItems> addMenuItem(@RequestBody MenuItems menuItem, @PathVariable Long restaurantId) {
-        return ResponseEntity.ok(menuService.addMenuItem(menuItem, restaurantId));
+    public ResponseEntity<MenuItems> addMenuItem(@RequestBody MenuItems menuItem, @PathVariable Long restaurantId, @AuthenticationPrincipal Accounts currentUser) {
+        return ResponseEntity.ok(menuService.addMenuItem(menuItem, restaurantId, currentUser));
     }
 
 
     @PutMapping("/item/{id}")
-    public ResponseEntity<MenuItems> updateMenuItem(@PathVariable Long id, @RequestBody MenuItems menuItem) {
-        return ResponseEntity.ok(menuService.updateMenuItem(id, menuItem));
+    public ResponseEntity<MenuItems> updateMenuItem(@PathVariable Long id, @RequestBody MenuItems menuItem, @AuthenticationPrincipal Accounts currentUser) {
+        return ResponseEntity.ok(menuService.updateMenuItem(id, menuItem, currentUser));
     }
 
 
     @DeleteMapping("/item/{id}")
-    public ResponseEntity<String> deleteMenuItem(@PathVariable Long id) {
-        menuService.deleteMenuItem(id);
+    public ResponseEntity<String> deleteMenuItem(@PathVariable Long id, @AuthenticationPrincipal Accounts currentUser) {
+        menuService.deleteMenuItem(id,currentUser);
         return ResponseEntity.ok("Ястието беше изтрито успешно!");
     }
 }

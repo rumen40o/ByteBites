@@ -27,6 +27,10 @@ public class Restaurants {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private Accounts owner;
+
     public Restaurants(String name, String description, String address) {
         this.name = name;
         this.description = description;
@@ -71,6 +75,14 @@ public class Restaurants {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Accounts getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Accounts owner) {
+        this.owner = owner;
     }
 
     public Restaurants() {

@@ -1,6 +1,7 @@
 package com.example.ByteBites.service;
 
 
+import com.example.ByteBites.models.Accounts;
 import com.example.ByteBites.models.DTO.RestaurantRequestDTO;
 import com.example.ByteBites.models.Restaurants;
 import com.example.ByteBites.repository.RestaurantsRepository;
@@ -21,12 +22,13 @@ public class RestaurantService {
     }
 
     // Създаване на ресторант
-    public Restaurants createRestaurant(RestaurantRequestDTO dto) {
+    public Restaurants createRestaurant(RestaurantRequestDTO dto, Accounts currentUser) {
         Restaurants restaurant = new Restaurants();
         restaurant.setName(dto.getName());
         restaurant.setDescription(dto.getDescription());
         restaurant.setAddress(dto.getAddress());
         restaurant.setImageUrl(dto.getImageUrl());
+        restaurant.setOwner(currentUser);
         return restaurantsRepository.save(restaurant);
     }
 
