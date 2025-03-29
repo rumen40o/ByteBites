@@ -4,6 +4,7 @@ import com.example.ByteBites.models.*;
 import com.example.ByteBites.models.DTO.OrderItemDTO;
 import com.example.ByteBites.models.DTO.OrderRequestDTO;
 import com.example.ByteBites.repository.*;
+import com.example.ByteBites.service.inteface.OrderServiceInterface;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OrderService {
+public class OrderService implements OrderServiceInterface {
 
     private final OrdersRepository ordersRepository;
     private final AccountRepository accountsRepository;

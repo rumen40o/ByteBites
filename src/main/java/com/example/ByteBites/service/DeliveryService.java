@@ -4,6 +4,7 @@ import com.example.ByteBites.models.*;
 import com.example.ByteBites.repository.AccountRepository;
 import com.example.ByteBites.repository.DeliveriesRepository;
 import com.example.ByteBites.repository.OrdersRepository;
+import com.example.ByteBites.service.inteface.DeliveryServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @Service
 
-public class DeliveryService {
+public class DeliveryService implements DeliveryServiceInterface {
     private final DeliveriesRepository deliveriesRepository;
     private final OrdersRepository ordersRepository;
     private final AccountRepository accountsRepository;

@@ -6,6 +6,7 @@ import com.example.ByteBites.models.RegisterRequest;
 import com.example.ByteBites.models.Roles;
 import com.example.ByteBites.repository.AccountRepository;
 import com.example.ByteBites.security.ApplicationConfig;
+import com.example.ByteBites.service.inteface.AuthServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import java.util.Optional;
 
 @Service
 
-public class AuthService {
+public class AuthService implements AuthServiceInterface {
     private final AccountRepository userRepository;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;

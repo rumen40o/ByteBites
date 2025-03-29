@@ -5,6 +5,7 @@ import com.example.ByteBites.models.Accounts;
 import com.example.ByteBites.models.DTO.RestaurantRequestDTO;
 import com.example.ByteBites.models.Restaurants;
 import com.example.ByteBites.repository.RestaurantsRepository;
+import com.example.ByteBites.service.inteface.RestaurantServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class RestaurantService {
+public class RestaurantService implements RestaurantServiceInterface {
 
     private final RestaurantsRepository restaurantsRepository;
 

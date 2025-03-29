@@ -1,5 +1,6 @@
 package com.example.ByteBites.service;
 
+import com.example.ByteBites.service.inteface.JWTServiceInterface;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JWTService {
+public class JWTService implements JWTServiceInterface {
 
     private static final String SECRET_KEY = "66556A586E327235753878214125442A472D4B6150645367566B597033733676";
     private static final int TIME_TO_EXPIRE = 60 * 60 * 1000; // 1 час
