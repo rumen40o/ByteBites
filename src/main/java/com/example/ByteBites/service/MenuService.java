@@ -5,6 +5,7 @@ import com.example.ByteBites.models.MenuItems;
 import com.example.ByteBites.models.Restaurants;
 import com.example.ByteBites.repository.MenuItemsRepository;
 import com.example.ByteBites.repository.RestaurantsRepository;
+import com.example.ByteBites.service.inteface.MenuServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MenuService {
+public class MenuService implements MenuServiceInterface {
 
     private final MenuItemsRepository menuItemsRepository;
     private final RestaurantsRepository restaurantsRepository;
