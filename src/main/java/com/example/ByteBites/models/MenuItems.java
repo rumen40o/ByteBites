@@ -1,10 +1,7 @@
 package com.example.ByteBites.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "menu_items")
@@ -26,7 +23,10 @@ public class MenuItems {
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
+    @JsonBackReference
     private Restaurants restaurants;
+
+    public MenuItems() {}
 
     public MenuItems(String name, double price, Category category, Restaurants restaurants) {
         this.name = name;
@@ -73,8 +73,5 @@ public class MenuItems {
 
     public void setRestaurants(Restaurants restaurants) {
         this.restaurants = restaurants;
-    }
-
-    public MenuItems() {
     }
 }

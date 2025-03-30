@@ -42,6 +42,11 @@ public class RestaurantController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/filter")
+    public ResponseEntity<List<Restaurants>> filterRestaurants(@RequestBody List<String> categories) {
+        return ResponseEntity.ok(restaurantService.filterRestaurantsByCategories(categories));
+    }
+
     @PutMapping("update/{id}")
     public ResponseEntity<Restaurants> updateRestaurant(@PathVariable Long id, @RequestBody RestaurantRequestDTO dto) {
         return ResponseEntity.ok(restaurantService.updateRestaurant(id, dto));
