@@ -697,13 +697,12 @@
   margin-left: 2px;
 }
 
-.card-row {
+.card-input-row {
   display: flex;
-  gap: 32px;
-  margin-bottom: 20px;
+  gap: 30px;
 }
 
-.card-row .card-input-group {
+.card-input-row .card-input-group {
   flex: 1;
   margin-bottom: 0;
 }
@@ -849,4 +848,47 @@
 
 .checkout-button:disabled:hover {
   background-color: #cccccc;
+}
+
+.card-info-box {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 15px;
+  border: 1px solid #e9ecef;
+}
+
+.card-input-group {
+  margin-bottom: 15px;
+}
+
+.card-input-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.card-input-group input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.card-input-row {
+  display: flex;
+  gap: 30px;
+}
+
+.card-input-row .card-input-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.card-input-group input:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 } 

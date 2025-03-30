@@ -6,6 +6,7 @@ import DeliverPage from './pages/deliver';
 import Restaurantpage from './pages/restaurantpage';
 import OrderTrackingPage from './pages/orderTracking';
 import AllRestaurants from './pages/AllRestaurants';
+import BucketPage from './pages/BucketPage';
 
 
 function App() {
@@ -60,6 +61,12 @@ function App() {
             element={
             <AllRestaurants />
             } 
+            />
+            <Route
+              path="/bucket"
+              element={
+                <BucketPage />
+              }
             />
         </Routes>
     </div>

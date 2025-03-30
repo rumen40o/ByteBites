@@ -54,6 +54,11 @@ public class OrderService implements OrderServiceInterface {
             orderItemsList.add(orderItem);
 
             totalPrice += menuItem.getPrice() * itemDTO.getQuantity();
+            if(totalPrice >= 100){
+                totalPrice += 0.15;
+            } else {
+                totalPrice += (0.15 + 4.99);
+            }
         }
 
         // ✅ Създаваме поръчка с totalPrice

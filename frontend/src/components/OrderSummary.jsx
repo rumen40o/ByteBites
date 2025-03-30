@@ -1,10 +1,11 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../css/OrderSummary.css';
 
-const OrderSummary = ({ cart, onUpdateQuantity }) => {
+const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo }) => {
   const { restaurantId } = useParams();
+  const navigate = useNavigate();
   
   const calculateSubtotal = () => {
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -17,6 +18,15 @@ const OrderSummary = ({ cart, onUpdateQuantity }) => {
 
   const handleQuantityChange = (itemId, newQuantity) => {
     onUpdateQuantity(itemId, Math.max(0, newQuantity));
+  };
+
+  const handleCheckout = () => {
+    navigate('/bucket', {
+      state: {
+        cart,
+        restaurantInfo
+      }
+    });
   };
 
   return (
@@ -74,6 +84,7 @@ const OrderSummary = ({ cart, onUpdateQuantity }) => {
       <button 
         className="checkout-button"
         type="button"
+        onClick={handleCheckout}
       >
         Платете, за да поръчате
       </button>
@@ -91,6 +102,10 @@ OrderSummary.propTypes = {
     })
   ).isRequired,
   onUpdateQuantity: PropTypes.func.isRequired,
+  restaurantInfo: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default OrderSummary; 
