@@ -10,10 +10,10 @@ const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo }) => {
   const calculateSubtotal = () => {
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
-
-  const deliveryFee = 4.99;
-  const serviceFee = 0.15;
+  
   const subtotal = calculateSubtotal();
+  const deliveryFee = subtotal >= 100 ? 0 : 4.99;
+  const serviceFee = 0.15;
   const total = subtotal + deliveryFee + serviceFee;
 
   const handleQuantityChange = (itemId, newQuantity) => {

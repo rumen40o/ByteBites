@@ -39,8 +39,6 @@ public class OrderService implements OrderServiceInterface {
                 .orElseThrow(() -> new RuntimeException("Ресторантът не е намерен!"));
 
         double totalPrice = 0.0;
-
-        // 🔁 Подготвяме артикулите
         List<OrderItems> orderItemsList = new ArrayList<>();
 
         for (OrderItemDTO itemDTO : request.getItems()) {
@@ -52,16 +50,16 @@ public class OrderService implements OrderServiceInterface {
             orderItem.setQuantity(itemDTO.getQuantity());
 
             orderItemsList.add(orderItem);
-
             totalPrice += menuItem.getPrice() * itemDTO.getQuantity();
-            if(totalPrice >= 100){
-                totalPrice += 0.15;
-            } else {
-                totalPrice += (0.15 + 4.99);
-            }
         }
 
-        // ✅ Създаваме поръчка с totalPrice
+        // ⬇️ Добавяме таксите само веднъж
+        if (totalPrice >= 100) {
+            totalPrice += 0.15; // такса за услуга
+        } else {
+            totalPrice += 0.15 + 4.99; // такса за услуга + доставка
+        }
+
         Orders order = new Orders();
         order.setCustomer(customer);
         order.setRestaurant(restaurant);
@@ -71,7 +69,6 @@ public class OrderService implements OrderServiceInterface {
 
         Orders savedOrder = ordersRepository.save(order);
 
-        // 💾 Записваме артикулите
         for (OrderItems item : orderItemsList) {
             item.setOrder(savedOrder);
             orderItemsRepository.save(item);

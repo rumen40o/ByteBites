@@ -54,7 +54,7 @@ const RegisterModal = ({ close, role }) => {
                         {role === "DELIVER" ? "Стани Доставчик"
                             : role === "OWNER"
                             ? "Стани Собственик"
-                            : "Регистрация"}
+                            : "Регистрация"}                           
                         </h2>
                         <form onSubmit={handleRegister} className="form">
                             <input

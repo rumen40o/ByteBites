@@ -83,9 +83,10 @@ const BucketPage = () => {
   };
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const deliveryFee = subtotal >= 100 ? 0 : 4.99;
   const serviceFee = 0.15;
-  const deliveryFee = subtotal < 100 ? 4.99 : 0;
-  const total = subtotal + serviceFee + deliveryFee;
+  const visualTotal = subtotal + deliveryFee + serviceFee;
+
   console.log(subtotal);
 
   if (!items || items.length === 0) {
@@ -218,23 +219,21 @@ const BucketPage = () => {
             <h2>Обобщение</h2>
             <span className="icon">🍔</span>
           </div>
-          <div className="summary-content">
-            <div className="summary-row">
-              <span>Продукти</span>
-              <span>{subtotal.toFixed(2)} лв.</span>
-            </div>
-            <div className="summary-row">
-              <span>Доставка</span>
-              <span>{deliveryFee.toFixed(2)} лв.</span>
-            </div>
-            <div className="summary-row">
-              <span>Такса за услуга</span>
-              <span>{serviceFee.toFixed(2)} лв.</span>
-            </div>
-            <div className="summary-row total">
-              <span>ОБЩО</span>
-              <span>{total.toFixed(2)} лв.</span>
-            </div>
+          <div className="summary-row">
+            <span>Продукти</span>
+            <span>{subtotal.toFixed(2)} лв.</span>
+          </div>
+          <div className="summary-row">
+            <span>Доставка</span>
+            <span>{deliveryFee.toFixed(2)} лв.</span>
+          </div>
+          <div className="summary-row">
+            <span>Такса за услуга</span>
+            <span>{serviceFee.toFixed(2)} лв.</span>
+          </div>
+          <div className="summary-row total">
+            <span>ОБЩО</span>
+            <span>{visualTotal.toFixed(2)} лв.</span>
           </div>
           <button 
             className="checkout-button"
