@@ -10,6 +10,7 @@ const BucketPage = () => {
   const [items, setItems] = useState(cart);
   const [showPayment, setShowPayment] = useState(false);
   const [showAddressModal, setShowAddressModal] = useState(false);
+  const [showCardModal, setShowCardModal] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -18,6 +19,13 @@ const BucketPage = () => {
     number: '',
     details: ''
   });
+  const [cardInfo, setCardInfo] = useState({
+    number: '',
+    expiry: '',
+    cvv: '',
+    name: ''
+  });
+  const [cardErrors, setCardErrors] = useState({});
 
   useEffect(() => {
     if (!restaurantInfo?.id) {
@@ -45,6 +53,118 @@ const BucketPage = () => {
       const formattedAddress = `${tempAddress.street}, ${tempAddress.number}${tempAddress.details ? `, ${tempAddress.details}` : ''}`;
       setSelectedAddress(formattedAddress);
       setShowAddressModal(false);
+    }
+  };
+
+  const handlePaymentSelection = (paymentType) => {
+    if (paymentType === 'card') {
+      setShowCardModal(true);
+    } else {
+      setSelectedPayment(paymentType);
+    }
+  };
+
+  const validateCardInfo = () => {
+    const errors = {};
+    
+    // Card number validation (16 digits)
+    if (!cardInfo.number) {
+      errors.number = 'Номерът на картата е задължителен';
+    } else {
+      const cleanNumber = cardInfo.number.replace(/\s/g, '');
+      if (!/^\d{13,19}$/.test(cleanNumber)) {
+        errors.number = 'Невалиден номер на картата';
+      }
+    }
+
+    // Cardholder name validation (letters and spaces only)
+    if (!cardInfo.name) {
+      errors.name = 'Името на картодържателя е задължително';
+    } else {
+      const nameRegex = /^[A-Za-zА-Яа-я\s]+$/;
+      if (!nameRegex.test(cardInfo.name)) {
+        errors.name = 'Името трябва да съдържа само букви';
+      } else if (cardInfo.name.length < 2) {
+        errors.name = 'Името трябва да е поне 2 символа';
+      }
+    }
+
+    // Expiry date validation (MM/YY format)
+    if (!cardInfo.expiry) {
+      errors.expiry = 'Датата на валидност е задължителна';
+    } else {
+      const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+      if (!expiryRegex.test(cardInfo.expiry)) {
+        errors.expiry = 'Невалиден формат (MM/YY)';
+      } else {
+        const [month, year] = cardInfo.expiry.split('/');
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear() % 100;
+        const currentMonth = currentDate.getMonth() + 1;
+        const inputYear = parseInt(year);
+        const inputMonth = parseInt(month);
+
+        if (inputYear < currentYear || (inputYear === currentYear && inputMonth < currentMonth)) {
+          errors.expiry = 'Картата е изтекла';
+        }
+      }
+    }
+
+    // CVV validation (3-4 digits)
+    if (!cardInfo.cvv) {
+      errors.cvv = 'CVV кодът е задължителен';
+    } else if (!/^\d{3,4}$/.test(cardInfo.cvv)) {
+      errors.cvv = 'Невалиден CVV код';
+    }
+
+    setCardErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleCardInputChange = (field, value) => {
+    let formattedValue = value;
+
+    // Format card number with spaces
+    if (field === 'number') {
+      formattedValue = value
+        .replace(/\D/g, '') // Remove non-digits
+        .replace(/(\d{4})/g, '$1 ') // Add space after every 4 digits
+        .trim()
+        .slice(0, 24); // Allow for longer card numbers (up to 19 digits + spaces)
+    }
+
+    // Format expiry date
+    if (field === 'expiry') {
+      formattedValue = value
+        .replace(/\D/g, '') // Remove non-digits
+        .replace(/^(\d{2})/, '$1/') // Add slash after month
+        .slice(0, 5); // Limit to MM/YY format
+    }
+
+    // Format CVV (numbers only)
+    if (field === 'cvv') {
+      formattedValue = value
+        .replace(/\D/g, '') // Remove non-digits
+        .slice(0, 4); // Limit to 4 digits
+    }
+
+    // Format cardholder name (letters and spaces only)
+    if (field === 'name') {
+      formattedValue = value
+        .replace(/[^A-Za-zА-Яа-я\s]/g, '') // Remove non-letters and non-spaces
+        .slice(0, 50); // Limit to 50 characters
+    }
+
+    setCardInfo(prev => ({
+      ...prev,
+      [field]: formattedValue
+    }));
+  };
+
+  const handleCardSubmit = () => {
+    if (validateCardInfo()) {
+      setSelectedPayment('card');
+      setShowCardModal(false);
     }
   };
 
@@ -181,7 +301,7 @@ const BucketPage = () => {
             <div className="payment-options">
               <div 
                 className={`payment-option ${selectedPayment === 'card' ? 'selected' : ''}`}
-                onClick={() => setSelectedPayment(selectedPayment === 'card' ? null : 'card')}
+                onClick={() => handlePaymentSelection('card')}
               >
                 <div className="payment-option-content">
                   <span className="icon">💳</span>
@@ -197,7 +317,7 @@ const BucketPage = () => {
 
               <div 
                 className={`payment-option ${selectedPayment === 'cash' ? 'selected' : ''}`}
-                onClick={() => setSelectedPayment(selectedPayment === 'cash' ? null : 'cash')}
+                onClick={() => handlePaymentSelection('cash')}
               >
                 <div className="payment-option-content">
                   <span className="icon">💵</span>
@@ -310,6 +430,81 @@ const BucketPage = () => {
                 disabled={!tempAddress.street || !tempAddress.number}
               >
                 Запази
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCardModal && (
+        <div className="address-modal-overlay">
+          <div className="address-modal">
+            <div className="modal-header">
+              <h3>Въведете информация за картата</h3>
+              <button className="close-btn" onClick={() => setShowCardModal(false)}>×</button>
+            </div>
+            <div className="modal-content">
+              <div className="card-form-section">
+                <div className="card-input-group">
+                  <label>Номер на картата <span className="required">*</span></label>
+                  <input 
+                    type="text" 
+                    value={cardInfo.number}
+                    onChange={(e) => handleCardInputChange('number', e.target.value)}
+                    placeholder="1234 5678 9012 3456"
+                    className={cardErrors.number ? 'error' : ''}
+                  />
+                  {cardErrors.number && <div className="error-message">{cardErrors.number}</div>}
+                </div>
+                <div className="card-input-group">
+                  <label>Име на картодържателя <span className="required">*</span></label>
+                  <input 
+                    type="text" 
+                    value={cardInfo.name}
+                    onChange={(e) => handleCardInputChange('name', e.target.value)}
+                    placeholder="Въведете име на картодържателя"
+                    className={cardErrors.name ? 'error' : ''}
+                  />
+                  {cardErrors.name && <div className="error-message">{cardErrors.name}</div>}
+                </div>
+                <div className="card-input-row">
+                  <div className="card-input-group">
+                    <label>Валидна до <span className="required">*</span></label>
+                    <input 
+                      type="text" 
+                      value={cardInfo.expiry}
+                      onChange={(e) => handleCardInputChange('expiry', e.target.value)}
+                      placeholder="MM/YY"
+                      className={cardErrors.expiry ? 'error' : ''}
+                    />
+                    {cardErrors.expiry && <div className="error-message">{cardErrors.expiry}</div>}
+                  </div>
+                  <div className="card-input-group">
+                    <label>CVV <span className="required">*</span></label>
+                    <input 
+                      type="text" 
+                      value={cardInfo.cvv}
+                      onChange={(e) => handleCardInputChange('cvv', e.target.value)}
+                      placeholder="123"
+                      className={cardErrors.cvv ? 'error' : ''}
+                    />
+                    {cardErrors.cvv && <div className="error-message">{cardErrors.cvv}</div>}
+                  </div>
+                </div>
+                <div className="card-info">
+                  <span className="icon">🔒</span>
+                  <p>Вашата информация е защитена и няма да бъде запазена</p>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="cancel-btn" onClick={() => setShowCardModal(false)}>Отказ</button>
+              <button 
+                className="save-btn" 
+                onClick={handleCardSubmit}
+                disabled={!cardInfo.name || !cardInfo.number || !cardInfo.expiry || !cardInfo.cvv}
+              >
+                Продължи
               </button>
             </div>
           </div>
