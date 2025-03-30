@@ -60,4 +60,9 @@ public class RestaurantService implements RestaurantServiceInterface {
     public void deleteRestaurant(Long id) {
         restaurantsRepository.deleteById(id);
     }
+
+    @Override
+    public List<Restaurants> filterRestaurantsByCategories(List<String> categories) {
+        return restaurantsRepository.findDistinctByMenuItemsCategoryIn(categories);
+    }
 }

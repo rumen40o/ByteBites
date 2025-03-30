@@ -17,4 +17,6 @@ public interface RestaurantServiceInterface {
     Restaurants updateRestaurant(Long id, RestaurantRequestDTO dto);
 
     void deleteRestaurant(Long id);
+
+    List<Restaurants> filterRestaurantsByCategories(List<String> categories);
 }

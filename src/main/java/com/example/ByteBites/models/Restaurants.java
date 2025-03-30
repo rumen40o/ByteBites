@@ -1,11 +1,9 @@
 package com.example.ByteBites.models;
 
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "restaurants")
@@ -30,6 +28,12 @@ public class Restaurants {
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private Accounts owner;
+
+    @OneToMany(mappedBy = "restaurants", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<MenuItems> menuItems;
+
+    public Restaurants() {}
 
     public Restaurants(String name, String description, String address) {
         this.name = name;
@@ -85,6 +89,11 @@ public class Restaurants {
         this.owner = owner;
     }
 
-    public Restaurants() {
+    public List<MenuItems> getMenuItems() {
+        return menuItems;
+    }
+
+    public void setMenuItems(List<MenuItems> menuItems) {
+        this.menuItems = menuItems;
     }
 }

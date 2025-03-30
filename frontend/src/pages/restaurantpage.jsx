@@ -22,26 +22,27 @@ const RestaurantPage = () => {
 
   const loadInitialData = async () => {
     try {
-      // Взимаме текущия потребител
       const userRes = await axios.get("http://localhost:8080/auth/logged/user", {
         withCredentials: true,
       });
       const currentUser = userRes.data;
       setUser(currentUser);
 
-      // Взимаме информация за ресторанта
       const restaurantRes = await axios.get(`http://localhost:8080/restaurants/${id}`, {
         withCredentials: true,
       });
       const restaurantData = restaurantRes.data;
       setRestaurant(restaurantData);
 
-      
-      if (currentUser.role === "OWNER" && restaurantData.owner.id === currentUser.id) {
+      // ✅ Проверка дали е OWNER и дали ресторантът му принадлежи
+      if (
+        currentUser?.role === "OWNER" &&
+        restaurantData?.owner &&
+        restaurantData.owner.id === currentUser.id
+      ) {
         setIsOwner(true);
       }
 
-      // Взимаме меню
       loadMenuItems();
     } catch (err) {
       console.error("Грешка при зареждане:", err);
@@ -54,7 +55,13 @@ const RestaurantPage = () => {
       const res = await axios.get(`http://localhost:8080/menu/restaurant/${id}`, {
         withCredentials: true,
       });
-      setMenuItems(res.data);
+
+      if (Array.isArray(res.data)) {
+        setMenuItems(res.data);
+      } else {
+        console.warn("⚠ Менюто не е масив! Получено:", res.data);
+        setMenuItems([]);
+      }
     } catch (err) {
       console.error("Грешка при зареждане на менюто:", err);
       setError("Неуспешно зареждане на менюто.");
@@ -98,7 +105,7 @@ const RestaurantPage = () => {
       deliveryAddress,
       items: orderItems.map((item) => ({
         menuItemId: item.menuItem.id,
-        quantity: item.quantity
+        quantity: item.quantity,
       })),
     };
 
@@ -150,7 +157,7 @@ const RestaurantPage = () => {
       )}
 
       <div className="menu-grid">
-        {menuItems.map((item) => (
+        {Array.isArray(menuItems) && menuItems.map((item) => (
           <div key={item.id} className="menu-item">
             <h3>{item.name}</h3>
             <p>Категория: {item.category}</p>
