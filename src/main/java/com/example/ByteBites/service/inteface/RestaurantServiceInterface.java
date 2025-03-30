@@ -14,9 +14,11 @@ public interface RestaurantServiceInterface {
 
     Optional<Restaurants> getRestaurantById(Long id);
 
-    Restaurants updateRestaurant(Long id, RestaurantRequestDTO dto);
+    Restaurants updateRestaurant(Long id, RestaurantRequestDTO dto, Accounts currentUser);
 
-    void deleteRestaurant(Long id);
+    void deleteRestaurant(Long id,Accounts currentUser);
 
     List<Restaurants> filterRestaurantsByCategories(List<String> categories);
+
+    List<Restaurants> getRestaurantsByOwnerId(Long ownerId);
 }

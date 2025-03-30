@@ -10,4 +10,6 @@ import java.util.List;
 public interface RestaurantsRepository extends JpaRepository<Restaurants, Long> {
     @Query("SELECT DISTINCT r FROM Restaurants r JOIN r.menuItems m WHERE m.category IN :categories")
     List<Restaurants> findDistinctByMenuItemsCategoryIn(@Param("categories") List<String> categories);
+
+    List<Restaurants> findByOwnerId(Long id);
 }

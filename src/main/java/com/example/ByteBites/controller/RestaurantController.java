@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/restaurants")
@@ -47,15 +48,36 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.filterRestaurantsByCategories(categories));
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<Restaurants> updateRestaurant(@PathVariable Long id, @RequestBody RestaurantRequestDTO dto) {
-        return ResponseEntity.ok(restaurantService.updateRestaurant(id, dto));
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<?> updateRestaurant(
+            @PathVariable Long id,
+            @RequestBody RestaurantRequestDTO dto,
+            @AuthenticationPrincipal Accounts currentUser) {
+        try {
+            Restaurants updated = restaurantService.updateRestaurant(id, dto, currentUser);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        }
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<String> deleteRestaurant(@PathVariable Long id) {
-        restaurantService.deleteRestaurant(id);
-        return ResponseEntity.ok("Ресторантът беше успешно изтрит!");
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<?> deleteRestaurant(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Accounts currentUser) {
+        try {
+            restaurantService.deleteRestaurant(id, currentUser);
+            return ResponseEntity.ok("Ресторантът беше успешно изтрит!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<Restaurants>> getRestaurantsByOwnerId(@PathVariable Long ownerId) {
+        return ResponseEntity.ok(restaurantService.getRestaurantsByOwnerId(ownerId));
     }
 }
 
