@@ -97,7 +97,7 @@ const RestaurantPage = () => {
         quantity: item.quantity
       })),
     };
-
+  
     axios
       .post(
         `http://localhost:8080/orders/create/customer/${user.id}/restaurant/${id}`,
