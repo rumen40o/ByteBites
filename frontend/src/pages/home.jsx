@@ -75,15 +75,6 @@ function Home() {
                   <FaUserCircle />
                 </button>
 
-                {user.role === "OWNER" && (
-                  <button
-                    className="btn btn-create-account"
-                    onClick={() => navigate("/add-restaurant")}
-                  >
-                    Add Restaurant
-                  </button>
-                )}
-
                 {menuOpen && (
                   <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded shadow-lg">
                     <button
