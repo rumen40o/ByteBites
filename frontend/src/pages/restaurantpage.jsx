@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import AddItemModal from "../components/AddItemModal";
 import DeliveryAddressModal from "../components/DeliveryAddressModal";
+import OrderSummary from "../components/OrderSummary";
 import "../css/RestaurantPage.css";
 
 const RestaurantPage = () => {
@@ -68,18 +69,30 @@ const RestaurantPage = () => {
     }
   };
 
-  const addToOrder = (item) => {
-    const existing = orderItems.find((o) => o.menuItem.id === item.id);
-    if (existing) {
-      setOrderItems(
-        orderItems.map((o) =>
-          o.menuItem.id === item.id
-            ? { ...o, quantity: o.quantity + 1 }
-            : o
-        )
-      );
+  const updateQuantity = (itemId, newQuantity) => {
+    if (newQuantity === 0) {
+      setOrderItems(orderItems.filter(item => item.id !== itemId));
     } else {
-      setOrderItems([...orderItems, { menuItem: item, quantity: 1 }]);
+      const existingItem = orderItems.find(item => item.id === itemId);
+      if (existingItem) {
+        setOrderItems(orderItems.map(item =>
+          item.id === itemId ? { ...item, quantity: newQuantity } : item
+        ));
+      }
+    }
+  };
+
+  const addToOrder = (item) => {
+    const existingItem = orderItems.find(cartItem => cartItem.id === item.id);
+    if (existingItem) {
+      updateQuantity(item.id, existingItem.quantity + 1);
+    } else {
+      setOrderItems([...orderItems, {
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: 1
+      }]);
     }
   };
 
@@ -128,67 +141,60 @@ const RestaurantPage = () => {
 
   return (
     <div className="restaurant-container">
-      {restaurant && (
-        <div className="restaurant-info">
-          <img src={restaurant.imageUrl} alt={restaurant.name} className="restaurant-banner" />
-          <h1 className="restaurant-name">{restaurant.name}</h1>
-          <p className="restaurant-description">{restaurant.description}</p>
-          <p className="restaurant-address">📍 {restaurant.address}</p>
-        </div>
-      )}
-
-      <h2>Меню на ресторанта</h2>
-
-      {error && <p className="error-message">{error}</p>}
-
-      {isOwner && (
-        <>
-          <button onClick={() => setIsModalOpen(true)} className="add-item-button">
-            ➕ Edit menu
-          </button>
-
-          <AddItemModal
-            isOpen={isModalOpen}
-            close={() => setIsModalOpen(false)}
-            restaurantId={id}
-            reloadMenu={loadMenuItems}
-          />
-        </>
-      )}
-
-      <div className="menu-grid">
-        {Array.isArray(menuItems) && menuItems.map((item) => (
-          <div key={item.id} className="menu-item">
-            <h3>{item.name}</h3>
-            <p>Категория: {item.category}</p>
-            <p>Цена: {item.price.toFixed(2)} лв</p>
-            <button onClick={() => addToOrder(item)}>Добави</button>
+      <div className="content-section">
+        {restaurant && (
+          <div className="restaurant-info">
+            <img src={restaurant.imageUrl} alt={restaurant.name} className="restaurant-banner" />
+            <h1 className="restaurant-name">{restaurant.name}</h1>
+            <p className="restaurant-description">{restaurant.description}</p>
+            <p className="restaurant-address">📍 {restaurant.address}</p>
           </div>
-        ))}
+        )}
+
+        <h2>Меню на ресторанта</h2>
+
+        {error && <p className="error-message">{error}</p>}
+
+        {isOwner && (
+          <>
+            <button onClick={() => setIsModalOpen(true)} className="add-item-button">
+              ➕ Edit menu
+            </button>
+
+            <AddItemModal
+              isOpen={isModalOpen}
+              close={() => setIsModalOpen(false)}
+              restaurantId={id}
+              reloadMenu={loadMenuItems}
+            />
+          </>
+        )}
+
+        <div className="menu-grid">
+          {menuItems.map((item) => (
+            <div key={item.id} className="menu-item">
+              <h3>{item.name}</h3>
+              <p>Категория: {item.category}</p>
+              <p>Цена: {item.price.toFixed(2)} лв</p>
+              <button onClick={() => addToOrder(item)}>Добави</button>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {orderItems.length > 0 && (
-        <div className="order-section">
-          <h3>Твоята поръчка</h3>
-          <ul>
-            {orderItems.map((o) => (
-              <li key={o.menuItem.id} className="order-item">
-                <span>{o.menuItem.name} – {o.quantity} бр.</span>
-                <div className="order-buttons">
-                  <button onClick={() => decreaseFromOrder(o.menuItem.id)}>−</button>
-                  <button onClick={() => addToOrder(o.menuItem)}>+</button>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <button
-            onClick={() => setIsAddressModalOpen(true)}
-            className="confirm-button"
-          >
-            Потвърди поръчката
-          </button>
-        </div>
-      )}
+      <div className="order-section">
+        {orderItems.length > 0 && restaurant && (
+          <OrderSummary 
+            cart={orderItems}
+            onUpdateQuantity={updateQuantity}
+            restaurantInfo={{
+              name: restaurant.name,
+              address: restaurant.address,
+              id: restaurant.id
+            }}
+          />
+        )}
+      </div>
 
       <DeliveryAddressModal
         isOpen={isAddressModalOpen}
