@@ -164,7 +164,7 @@ function Home() {
                 <div className="step-icon">
                   <FaMapMarkerAlt />
                 </div>
-                <h3>TELL US WHERE YOU WANT US</h3>
+                <h3>Gey</h3>
                 <p></p>
               </div>
               <div className="order-step">
