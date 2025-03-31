@@ -32,6 +32,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('OWNER') or hasRole('USER')")
     public ResponseEntity<List<Restaurants>> getAllRestaurants() {
         return ResponseEntity.ok(restaurantService.getAllRestaurants());
     }
@@ -44,6 +45,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/filter")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<Restaurants>> filterRestaurants(@RequestBody List<String> categories) {
         return ResponseEntity.ok(restaurantService.filterRestaurantsByCategories(categories));
     }
