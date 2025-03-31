@@ -3,6 +3,7 @@ package com.example.ByteBites.controller;
 import com.example.ByteBites.models.*;
 import com.example.ByteBites.models.DTO.OrderRequestDTO;
 import com.example.ByteBites.service.OrderService;
+import com.example.ByteBites.service.inteface.OrderServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderServiceInterface orderService;
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;

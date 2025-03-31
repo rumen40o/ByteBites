@@ -3,6 +3,7 @@ package com.example.ByteBites.controller;
 import com.example.ByteBites.models.Accounts;
 import com.example.ByteBites.models.MenuItems;
 import com.example.ByteBites.service.MenuService;
+import com.example.ByteBites.service.inteface.MenuServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @CrossOrigin(origins ="http://localhost:3000")
 public class MenuController {
 
-    private final MenuService menuService;
+    private final MenuServiceInterface menuService;
 
     public MenuController(MenuService menuService) {
         this.menuService = menuService;

@@ -2,9 +2,11 @@ package com.example.ByteBites.service.inteface;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.function.Function;
+
 
 public interface JWTServiceInterface {
     String extractUsername(String token);

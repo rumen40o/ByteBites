@@ -2,6 +2,7 @@ package com.example.ByteBites.controller;
 
 import com.example.ByteBites.models.*;
 import com.example.ByteBites.service.DeliveryService;
+import com.example.ByteBites.service.inteface.DeliveryServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +15,7 @@ import java.util.List;
 @CrossOrigin(origins ="http://localhost:3000")
 public class DeliveryController {
 
-    private final DeliveryService deliveryService;
+    private final DeliveryServiceInterface deliveryService;
 
     public DeliveryController(DeliveryService deliveryService) {
         this.deliveryService = deliveryService;

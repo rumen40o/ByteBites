@@ -25,17 +25,17 @@ public class MenuService implements MenuServiceInterface {
         this.restaurantsRepository = restaurantsRepository;
     }
 
-
+    @Override
     public List<MenuItems> getAllMenuItems() {
         return menuItemsRepository.findAll();
     }
 
-
+    @Override
     public Optional<MenuItems> getMenuItemById(Long id) {
         return menuItemsRepository.findById(id);
     }
 
-
+    @Override
     public List<MenuItems> getMenuItemsByRestaurant(Long restaurantId) {
         Optional<Restaurants> restaurantOpt = restaurantsRepository.findById(restaurantId);
         return restaurantOpt.map(menuItemsRepository::findByRestaurants).orElseThrow(
@@ -43,7 +43,7 @@ public class MenuService implements MenuServiceInterface {
         );
     }
 
-
+    @Override
     public MenuItems addMenuItem(MenuItems menuItem, Long restaurantId, Accounts currentUser) {
         Restaurants restaurant = restaurantsRepository.findById(restaurantId)
                 .orElseThrow(() -> new RuntimeException("Ресторантът не съществува!"));
@@ -56,7 +56,7 @@ public class MenuService implements MenuServiceInterface {
         return menuItemsRepository.save(menuItem);
     }
 
-
+    @Override
     public MenuItems updateMenuItem(Long id, MenuItems updatedItem, Accounts currentUser) {
         MenuItems existingItem = menuItemsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ястието не е намерено!"));
@@ -73,7 +73,7 @@ public class MenuService implements MenuServiceInterface {
         return menuItemsRepository.save(existingItem);
     }
 
-
+    @Override
     public void deleteMenuItem(Long id, Accounts currentUser) {
         MenuItems item = menuItemsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Артикулът не е намерен"));

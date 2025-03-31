@@ -32,7 +32,7 @@ public class RestaurantService implements RestaurantServiceInterface {
         this.orderItemsRepository = orderItemsRepository;
         this.menuItemsRepository = menuItemsRepository;
     }
-
+    @Override
     public Restaurants createRestaurant(RestaurantRequestDTO dto, Accounts currentUser) {
         Restaurants restaurant = new Restaurants();
         restaurant.setName(dto.getName());
@@ -42,15 +42,15 @@ public class RestaurantService implements RestaurantServiceInterface {
         restaurant.setOwner(currentUser);
         return restaurantsRepository.save(restaurant);
     }
-
+    @Override
     public List<Restaurants> getAllRestaurants() {
         return restaurantsRepository.findAll();
     }
-
+    @Override
     public Optional<Restaurants> getRestaurantById(Long id) {
         return restaurantsRepository.findById(id);
     }
-
+    @Override
     public Restaurants updateRestaurant(Long id, RestaurantRequestDTO dto,Accounts currentUser) {
         Restaurants restaurant = restaurantsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ресторантът не е намерен!"));
@@ -68,6 +68,7 @@ public class RestaurantService implements RestaurantServiceInterface {
     }
 
     @Transactional
+    @Override
     public void deleteRestaurant(Long id, Accounts currentUser) {
         Restaurants restaurant = restaurantsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ресторантът не е намерен!"));
@@ -93,7 +94,7 @@ public class RestaurantService implements RestaurantServiceInterface {
     public List<Restaurants> filterRestaurantsByCategories(List<String> categories) {
         return restaurantsRepository.findDistinctByMenuItemsCategoryIn(categories);
     }
-
+    @Override
     public List<Restaurants> getRestaurantsByOwnerId(Long id) {
         return restaurantsRepository.findByOwnerId(id);
     }
