@@ -129,22 +129,7 @@ function Home() {
                   Work with us
                 </button>
                 <button className="globe-btn">
-                  <svg className="globe-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
-                      10-4.48 10-10S17.52 2 12 2zm5 13h-2.07c-.14
-                      1.19-.58 2.27-1.23 3.17 1.56-.86 2.68-2.4
-                      3.3-4.17zM6.07 15H4c.62 1.77 1.74 3.31
-                      3.3 4.17-.65-.9-1.09-1.98-1.23-3.17zM4
-                      9h2.07c.14-1.19.58-2.27 1.23-3.17C5.74
-                      6.69 4.62 8.23 4 9zm10-5.9c.91 1.11
-                      1.53 2.48 1.72 3.9h-3.44c.19-1.42.81-2.79
-                      1.72-3.9zM9.28 7c.19-1.42.81-2.79 1.72-3.9
-                      -1.56.86-2.68 2.4-3.3 4.17H9.28zm-3.21
-                      7c.14 1.19.58 2.27 1.23 3.17.62-.88 1.04-1.93
-                      1.23-3.17H6.07zM10 12c0 .7-.1 1.37-.28
-                      2h4.56c-.18-.63-.28-1.3-.28-2s.1-1.37.28-2h-4.56c.18.63.28
-                      1.3.28 2zm5.65-5.83c.65.9 1.09 1.98 1.23 3.17h2.07c-.62-1.77-1.74-3.31-3.3-4.17z"/>
-                  </svg>
+                <svg className="globe-icon" viewBox="0 1 20 20" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(2 3)"><path d="m8 16c4.4380025 0 8-3.5262833 8-7.96428571 0-4.43800246-3.5619975-8.03571429-8-8.03571429-4.43800245 0-8 3.59771183-8 8.03571429 0 4.43800241 3.56199755 7.96428571 8 7.96428571z"/><path d="m1 5h14"/><path d="m1 11h14"/><path d="m8 16c2.2190012 0 4-3.5262833 4-7.96428571 0-4.43800246-1.7809988-8.03571429-4-8.03571429-2.21900123 0-4 3.59771183-4 8.03571429 0 4.43800241 1.78099877 7.96428571 4 7.96428571z"/></g></svg>
                 </button>
               </div>
               </>
@@ -238,12 +223,6 @@ function Home() {
         <div className="footer-content">
           <div className="footer-section">
             <h3>USEFUL INFORMATION</h3>
-            <ul>
-              <li><a href="#">ABOUT US</a></li>
-              <li><a href="#">CONTACT</a></li>
-              <li><a href="#">TERMS & CONDITIONS</a></li>
-              <li><a href="#">PRIVACY POLICY</a></li>
-            </ul>
           </div>
         </div>
 
@@ -258,6 +237,11 @@ function Home() {
             <a href="#" className="social-link"><FaYoutube /></a>
           </div>
 
+          <div className="footer-btn">
+            <ul>
+                <li><a href="#">About us</a> <a href="#">Terms & Conditions</a> <a href="#">Privacy policy</a></li>
+              </ul>
+            </div>    
           <div className="copyright">
             © 2025 ByteBites. All Rights Reserved
           </div>

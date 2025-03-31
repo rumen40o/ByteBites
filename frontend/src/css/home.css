@@ -71,18 +71,21 @@ html {
 }
 
 .globe-icon {
-  width: 30px;
-  height: 30px;
-  fill: var(--accent-color);
-  display: block;
+  width: 60px;
+  height: 60px;
+  color: var(--accent-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s ease-in-out;
 }
 
 .globe-btn {
   cursor: pointer;
   width: 60px;
   height: 60px;
-  border-radius: 50%;
-  background-color: var(--bg-color);
+  border-radius: 100%;
+  background-color: white;
   border: none;
   display: flex;
   justify-content: center;
@@ -90,6 +93,10 @@ html {
   transition: 0.2s ease-in-out;
   z-index: 10;
   padding: 0;
+}
+
+.globe-icon:hover {
+  color: var(--bg-color);
 }
 
 .globe-btn:hover {
@@ -342,23 +349,24 @@ html {
   margin-bottom: 15px;
 }
 
-.footer-section ul {
+.footer-btn ul {
   list-style: none;
   padding: 0;
 }
 
-.footer-section ul li {
+.footer-btn ul li {
   margin-bottom: 8px;
 }
 
-.footer-section ul li a {
+.footer-btn ul li a {
+  padding: 0 1rem;
   color: var(--bfont-color);
   text-decoration: none;
   font-size: 1rem;
   transition: color 0.3s ease;
 }
 
-.footer-section ul li a:hover {
+.footer-btn ul li a:hover {
   color: var(--accent-color);
 }
 
@@ -409,7 +417,8 @@ html {
 
 .copyright {
   color: var(--bfont-color);
-  font-size: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
   text-align: center;
 }
 
