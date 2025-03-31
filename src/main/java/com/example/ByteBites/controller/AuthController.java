@@ -4,6 +4,7 @@ import com.example.ByteBites.models.Accounts;
 import com.example.ByteBites.models.AuthRequest;
 import com.example.ByteBites.models.RegisterRequest;
 import com.example.ByteBites.service.AuthService;
+import com.example.ByteBites.service.inteface.AuthServiceInterface;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins ="http://localhost:3000")
 public class AuthController {
 
-    private final AuthService authenticationService;
+    private final AuthServiceInterface authenticationService;
 
-    public AuthController(AuthService authenticationService) {
+    public AuthController(AuthServiceInterface authenticationService) {
         this.authenticationService = authenticationService;
     }
 

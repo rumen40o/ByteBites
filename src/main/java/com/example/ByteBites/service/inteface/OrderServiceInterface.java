@@ -4,8 +4,10 @@ import com.example.ByteBites.models.DTO.OrderRequestDTO;
 import com.example.ByteBites.models.OrderItems;
 import com.example.ByteBites.models.OrderStatus;
 import com.example.ByteBites.models.Orders;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 public interface OrderServiceInterface {
     Orders createOrder(Long customerId, Long restaurantId, OrderRequestDTO request);

@@ -2,9 +2,12 @@ package com.example.ByteBites.service.inteface;
 
 import com.example.ByteBites.models.Accounts;
 import com.example.ByteBites.models.MenuItems;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+
 
 public interface MenuServiceInterface {
     List<MenuItems> getAllMenuItems();

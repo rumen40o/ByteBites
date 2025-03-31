@@ -2,8 +2,10 @@ package com.example.ByteBites.controller;
 
 import com.example.ByteBites.models.*;
 import com.example.ByteBites.service.DeliveryService;
+import com.example.ByteBites.service.inteface.DeliveryServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,28 +15,32 @@ import java.util.List;
 @CrossOrigin(origins ="http://localhost:3000")
 public class DeliveryController {
 
-    private final DeliveryService deliveryService;
+    private final DeliveryServiceInterface deliveryService;
 
     public DeliveryController(DeliveryService deliveryService) {
         this.deliveryService = deliveryService;
     }
 
     @GetMapping("/available")
+    @PreAuthorize("hasRole('DELIVER')")
     public ResponseEntity<List<Orders>> getAvailableDeliveries() {
         return ResponseEntity.ok(deliveryService.getAvailableDeliveries());
     }
 
     @PostMapping("/accept/order/{orderId}/deliver/{deliverId}")
+    @PreAuthorize("hasRole('DELIVER')")
     public ResponseEntity<String> acceptDelivery(@PathVariable Long orderId, @PathVariable Long deliverId) {
         return ResponseEntity.ok(deliveryService.acceptDelivery(orderId, deliverId));
     }
 
     @PutMapping("/{deliveryId}/status")
+    @PreAuthorize("hasRole('DELIVER')")
     public ResponseEntity<String> updateDeliveryStatus(@PathVariable Long deliveryId, @RequestParam DeliveryStatus status) {
         return ResponseEntity.ok(deliveryService.updateDeliveryStatus(deliveryId, status));
     }
 
     @GetMapping("/{deliverId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Deliveries>> getDeliveriesByDeliver(@PathVariable Long deliverId) {
         return ResponseEntity.ok(deliveryService.getDeliveriesByDeliver(deliverId));
     }

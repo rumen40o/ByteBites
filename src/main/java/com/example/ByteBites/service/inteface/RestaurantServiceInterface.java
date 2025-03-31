@@ -3,9 +3,11 @@ package com.example.ByteBites.service.inteface;
 import com.example.ByteBites.models.Accounts;
 import com.example.ByteBites.models.DTO.RestaurantRequestDTO;
 import com.example.ByteBites.models.Restaurants;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 
 public interface RestaurantServiceInterface {
     Restaurants createRestaurant(RestaurantRequestDTO dto, Accounts currentUser);

@@ -31,6 +31,7 @@ public class OrderService implements OrderServiceInterface {
     }
 
     @Transactional
+    @Override
     public Orders createOrder(Long customerId, Long restaurantId, OrderRequestDTO request) {
         Accounts customer = accountsRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Клиентът не е намерен!"));
@@ -75,12 +76,12 @@ public class OrderService implements OrderServiceInterface {
 
         return savedOrder;
     }
-
+    @Override
     public List<Orders> getAllOrders() {
         return ordersRepository.findAll();
     }
 
-
+    @Override
     public List<Orders> getOrdersByCustomer(Long customerId) {
         Accounts customer = accountsRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Клиентът не е намерен!"));
@@ -88,7 +89,7 @@ public class OrderService implements OrderServiceInterface {
         return ordersRepository.findByCustomer(customer);
     }
 
-
+    @Override
     public Orders updateOrderStatus(Long orderId, OrderStatus status) {
         Orders order = ordersRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Поръчката не е намерена!"));
@@ -97,14 +98,14 @@ public class OrderService implements OrderServiceInterface {
         return ordersRepository.save(order);
     }
 
-
+    @Override
     public void deleteOrder(Long orderId) {
         if (!ordersRepository.existsById(orderId)) {
             throw new RuntimeException("Поръчката не е намерена!");
         }
         ordersRepository.deleteById(orderId);
     }
-
+    @Override
     public List<OrderItems> getOrderItemsByOrder(Long orderId) {
         Orders order = ordersRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Поръчката не е намерена!"));
