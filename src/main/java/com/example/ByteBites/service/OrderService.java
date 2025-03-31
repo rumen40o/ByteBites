@@ -53,11 +53,10 @@ public class OrderService implements OrderServiceInterface {
             totalPrice += menuItem.getPrice() * itemDTO.getQuantity();
         }
 
-        // ⬇️ Добавяме таксите само веднъж
         if (totalPrice >= 100) {
-            totalPrice += 0.15; // такса за услуга
+            totalPrice += 0.15;
         } else {
-            totalPrice += 0.15 + 4.99; // такса за услуга + доставка
+            totalPrice += 0.15 + 4.99;
         }
 
         Orders order = new Orders();
