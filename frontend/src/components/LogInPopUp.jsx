@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../css/LoginModal.css";
+import "../css/LogInPopUp.css";
+import "../css/Buttons.css"
+import "../css/RegistrationPopUp.css"
 import image from "../images/sushi-1.png";
 
 const LogInPopUp = ({ close, openRegister, onLoginSuccess }) => {
@@ -47,48 +49,48 @@ const LogInPopUp = ({ close, openRegister, onLoginSuccess }) => {
   return (
     <div className="modal-overlay" onClick={close}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="loginpopup">
+        <div className="pop-up">
           <div className="responsive-wrapper">
             <div className="square">
               <div className="white-square">
-                <div className="login-container">
-                  <h1>Log in</h1>
+                <div className="container">
+                  <div className="title-login"><h className="title-text">Log in</h></div>
 
-                  <div className="email">
+                  <div className="input-layout">
                     <input
                       type="text"
                       required
                       value={identifier}
                       onChange={(e) => setIdentifier(e.target.value)}
                     />
-                    <div className="labelline">ENTER EMAIL</div>
+                    <div className="label">EMAIL</div>
                   </div>
 
-                  <div className="password">
+                  <div className="input-layout">
                     <input
                       type="password"
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                    <div className="labelline">ENTER PASSWORD</div>
+                    <div className="label">PASSWORD</div>
                   </div>
 
                   {serverError && <div className="error">{serverError}</div>}
-
-                  <div className="login-button">
-                    <button className="loginbutton" onClick={handleLogin}>
-                      LOG IN
-                    </button>
-                  </div>
-
-                  <div className="createacc">
-                    <p>Don't have an account?</p>
-                    <div className="createacc-button">
-                      <button className="createaccbutton" onClick={openRegister}>
-                        Create one
+      
+                  <div className="login-entry">
+                    <div className="entry-btn">
+                      <button className="blue-btn" onClick={handleLogin}>
+                        LOG IN
                       </button>
                     </div>
+                  </div>
+                  
+                  <div className="switch-btn">
+                    <p className="switch-text">Don't have an account?</p>
+                    <button className="white-btn" onClick={openRegister}>
+                      Create one
+                    </button>
                   </div>
                 </div>
               </div>
@@ -109,4 +111,4 @@ const LogInPopUp = ({ close, openRegister, onLoginSuccess }) => {
   );
 };
 
-export default LoginModal;
+export default LogInPopUp;

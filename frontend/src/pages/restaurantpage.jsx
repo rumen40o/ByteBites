@@ -4,8 +4,6 @@ import axios from "axios";
 import AddItemModal from "../components/AddItemModal";
 import "../css/RestaurantPage.css";
 
-
-
 const RestaurantPage = () => {
     const { id } = useParams();
     const [customerId, setCustomerId] = useState(null);
@@ -14,7 +12,6 @@ const RestaurantPage = () => {
     const [userRole, setUserRole] = useState("");
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
 
     useEffect(() => {
         getCurrentUser();

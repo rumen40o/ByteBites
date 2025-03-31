@@ -1,12 +1,24 @@
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { FaUserCircle, FaGlobe, FaMapMarkerAlt, FaHamburger, FaTruck, FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
-import LoginModal from "../components/LoginModal";
-import RegisterModal from "../components/RegisterModal";
-import "../css/home.css";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  FaUserCircle,
+  FaGlobe,
+  FaMapMarkerAlt,
+  FaHamburger,
+  FaTruck,
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaYoutube
+} from "react-icons/fa";
 
-// Import images
+import LogInPopUp from "../components/LogInPopUp";
+import "../css/home.css";
+import RegisterPopUp from "../components/RegisterPopUp";
+import "../css/home.css";
+import "../css/Buttons.css"
+
 import logo from "../images/ByteBitesLogoHorizontal.png";
 import burgerDecor from "../images/burger-1.png";
 import sushiBoard from "../images/sushi-1.png";
@@ -50,6 +62,10 @@ function Home() {
     }
   };
 
+  const Navbar = () => {
+    const [isOpen, setIsOpen] = useState(false);
+  }
+
   const foodTypes = [
     { icon: pizzaIcon, label: "PIZZA" },
     { icon: burgerIcon, label: "BURGER" },
@@ -64,15 +80,14 @@ function Home() {
       <header className="header">
         <div className="header-content">
           <img src={logo} alt="ByteBites Logo" className="logo" />
-          
-          <div className="auth-buttons">
+
+          <div className="header-btn-content">
             {user ? (
               <div className="relative">
                 <button
                   className="text-5xl text-gray-700 hover:text-gray-900 transition"
                   onClick={() => setMenuOpen(!menuOpen)}
-                >
-                  <FaUserCircle />
+                > <FaUserCircle/>
                 </button>
 
                 {user.role === "OWNER" && (
@@ -103,42 +118,57 @@ function Home() {
               </div>
             ) : (
               <>
-                <button className="btn btn-login" onClick={() => setShowLogin(true)}>
+              <div className="header-btn">
+              <button className="white-btn" onClick={() => setShowLogin(true)}>
                   Log in
                 </button>
-                <button className="btn btn-create-account" onClick={() => setShowRegister(true)}>
+                <button className="white-btn" onClick={() => setShowRegister(true)}>
                   Create Account
                 </button>
-                <button className="btn btn-driver" onClick={() => document.getElementById('work-with-us').scrollIntoView({ behavior: 'smooth' })}>
-                  Become a Driver
+                <button className="white-btn" onClick={() => document.getElementById('work-with-us').scrollIntoView({ behavior: 'smooth' })}>
+                  Work with us
                 </button>
-                <button className="language-selector">
-                  <FaGlobe />
+                <button className="globe-btn">
+                  <svg className="globe-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
+                      10-4.48 10-10S17.52 2 12 2zm5 13h-2.07c-.14
+                      1.19-.58 2.27-1.23 3.17 1.56-.86 2.68-2.4
+                      3.3-4.17zM6.07 15H4c.62 1.77 1.74 3.31
+                      3.3 4.17-.65-.9-1.09-1.98-1.23-3.17zM4
+                      9h2.07c.14-1.19.58-2.27 1.23-3.17C5.74
+                      6.69 4.62 8.23 4 9zm10-5.9c.91 1.11
+                      1.53 2.48 1.72 3.9h-3.44c.19-1.42.81-2.79
+                      1.72-3.9zM9.28 7c.19-1.42.81-2.79 1.72-3.9
+                      -1.56.86-2.68 2.4-3.3 4.17H9.28zm-3.21
+                      7c.14 1.19.58 2.27 1.23 3.17.62-.88 1.04-1.93
+                      1.23-3.17H6.07zM10 12c0 .7-.1 1.37-.28
+                      2h4.56c-.18-.63-.28-1.3-.28-2s.1-1.37.28-2h-4.56c.18.63.28
+                      1.3.28 2zm5.65-5.83c.65.9 1.09 1.98 1.23 3.17h2.07c-.62-1.77-1.74-3.31-3.3-4.17z"/>
+                  </svg>
                 </button>
+              </div>
               </>
             )}
           </div>
         </div>
       </header>
-
-      <main>
+      <img src={sushiBoard} alt="" className="background-img sushi-board" />
+      <img src={burgerDecor} alt="" className="background-img burger" />
+      <main className="page-container">
         <section className="hero-section">
-          <img src={sushiBoard} alt="" className="decorative-image sushi-board" />
-          <img src={burgerDecor} alt="" className="decorative-image burger" />
-          
-          <h1 className="hero-title">Welcome to ByteBites</h1>
+          <h9 className="hero-title">Welcome to ByteBites</h9>
           <p className="hero-subtitle">
             ByteBites is a delicious service offering a unique experience
             that helps you satisfy your hunger.
           </p>
-          <button className="search-button">
+          <button className="blue-btn">
             SEARCH ALL RESTAURANTS
           </button>
         </section>
 
-        <div className="food-types-container">
+        <div className="content-container">
           <section className="food-types">
-            <h2 className="section-title">TYPES OF FOOD</h2>
+            <h1 className="section-title">TYPES OF FOOD</h1>
             <div className="food-grid">
               {foodTypes.map((food, index) => (
                 <div key={index} className="food-item">
@@ -156,28 +186,25 @@ function Home() {
                 <div className="step-icon">
                   <FaMapMarkerAlt />
                 </div>
-                <h3>TELL US WHERE YOU WANT US</h3>
-                <p></p>
+                <p1>Share your location</p1>
               </div>
               <div className="order-step">
                 <div className="step-icon">
                   <FaHamburger />
                 </div>
-                <h3>CHOOSE WHAT TO EAT</h3>
-                <p></p>
+                <p1>Choose your food</p1>
               </div>
               <div className="order-step">
                 <div className="step-icon">
                   <FaTruck />
                 </div>
-                <h3>ORDER AND TRACK</h3>
-                <p></p>
+                <p1>Order and track </p1>
               </div>
             </div>
           </section>
 
           <section className="work-with-us" id="work-with-us">
-            <h2 className="section-title">WANT TO WORK WITH US?</h2>
+            <h3 className="section-title">WANT TO WORK WITH US?</h3>
             <div className="opportunities">
               <div className="opportunity-card">
                 <div className="opportunity-image">
@@ -186,7 +213,7 @@ function Home() {
                 <p className="opportunity-text">
                   ByteBytes provides an opportunity for any restaurant-related business to expand its operations in the online space.
                 </p>
-                <button className="opportunity-button" onClick={() => setShowOwnerRegister(true)}>
+                <button className="white-btn" onClick={() => setShowOwnerRegister(true)}>
                   GROW YOUR BUSINESS
                 </button>
               </div>
@@ -198,7 +225,7 @@ function Home() {
                 <p className="opportunity-text">
                   Do you like to get around the city by car, motorbike or bicycle? What's better than getting paid for it?
                 </p>
-                <button className="opportunity-button" onClick={() => setShowDeliverRegister(true)}>
+                <button className="white-btn" onClick={() => setShowDeliverRegister(true)}>
                   BECOME A DELIVER
                 </button>
               </div>
@@ -210,41 +237,23 @@ function Home() {
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-section">
-            <h3>LET US HELP</h3>
-            <ul>
-              <li><a href="#">CONTACT US</a></li>
-              <li><a href="#">TERMS OF USE</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
             <h3>USEFUL INFORMATION</h3>
             <ul>
               <li><a href="#">ABOUT US</a></li>
               <li><a href="#">CONTACT</a></li>
-              <li><a href="#">FAQ</a></li>
               <li><a href="#">TERMS & CONDITIONS</a></li>
               <li><a href="#">PRIVACY POLICY</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <h3>GET TO KNOW US</h3>
-            <ul>
-              <li><a href="#work-with-us" className="become-rider-link">BECOME A DRIVER</a></li>
-              <li><a href="#work-with-us" className="become-rider-link">GROW YOUR BUSINESS</a></li>
             </ul>
           </div>
         </div>
 
         <div className="footer-bottom">
           <div className="contact-number">
-            <a href="tel:0700-1-2525">📞 0700-1-2525</a>
+            <a href="tel:+359 87 969 6969">📞 +359 87 969 6969</a>
           </div>
-          
+
           <div className="social-links">
             <a href="#" className="social-link"><FaFacebookF /></a>
-            <a href="#" className="social-link"><FaTwitter /></a>
             <a href="#" className="social-link"><FaInstagram /></a>
             <a href="#" className="social-link"><FaYoutube /></a>
           </div>
@@ -256,18 +265,31 @@ function Home() {
       </footer>
 
       {showLogin && (
-        <LoginModal
+        <LogInPopUp
           close={() => setShowLogin(false)}
           openRegister={() => {
             setShowLogin(false);
             setShowRegister(true);
           }}
-          onLoginSuccess={() => window.location.reload()}
+          onLoginSuccess={() => {
+            setShowLogin(false);
+            window.location.reload();
+          }}
         />
       )}
-      {showRegister && <RegisterModal close={() => setShowRegister(false)} role="USER" />}
-      {showDeliverRegister && <RegisterModal close={() => setShowDeliverRegister(false)} role="DELIVER" />}
-      {showOwnerRegister && <RegisterModal close={() => setShowOwnerRegister(false)} role="OWNER" />}
+
+        {showRegister && (
+          <RegisterPopUp
+            close={() => setShowRegister(false)}
+            openLogin={() => {
+              setShowRegister(false);
+              setShowLogin(true);
+            }}
+            role="USER"
+          />
+        )}
+        {showDeliverRegister && <RegisterPopUp close={() => setShowDeliverRegister(false)} role="DELIVER" />}
+        {showOwnerRegister && <RegisterPopUp close={() => setShowOwnerRegister(false)} role="OWNER" />}
     </div>
   );
 }
