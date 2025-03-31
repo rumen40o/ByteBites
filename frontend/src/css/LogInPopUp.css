@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.loginpopup {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.responsive-wrapper {
+  width: 1467px;
+  height: 910px;
+  transform-origin: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.square {
+  width: 1467px;
+  height: 910px;
+  background-color: #f8a334;
+  border-radius: 80px;
+  box-shadow: 0px 0px 20px #00000050;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.white-square {
+  width: 978px;
+  height: 910px;
+  background-color: #f5f5f5;
+  border-radius: 80px;
+  box-shadow: inset -5px 0px 20px #00000020;
+  display: flex;
+  align-items: center;
+}
+
+.login-container {
+  width: calc(100% - 255px);
+  margin-left: 85px;
+  margin-right: 260px;
+  padding-top: 130px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+h1 {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 73px;
+  color: #5581a1;
+  text-align: left;
+  width: 100%;
+  padding-bottom: 145px;
+}
+
+.email,
+.password {
+  width: 100%;
+  padding-bottom: 40px;
+  position: relative;
+}
+
+input {
+  font-family: "DM Sans", sans-serif;
+  outline: none;
+  width: 100%;
+  border-radius: 36px;
+  padding: 0 20px;
+  font-size: 1.5em;
+  line-height: 63px;
+  background: transparent;
+  border: 3px solid #808080;
+  transition: 0.1s ease;
+  z-index: 1111;
+}
+
+input:hover {
+  border: 3px solid #5581a1;
+}
+
+.labelline {
+  text-align: left;
+  top: 11px;
+  left: 20px;
+  font-family: "DM Sans", sans-serif;
+  position: absolute;
+  font-size: 2em;
+  background-color: #f5f5f5;
+  padding: 0 2px;
+  color: #808080;
+  transition: 0.2s ease-in-out;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+input:focus,
+input:valid {
+  color: #5581a1;
+  border: 3px solid #5581a1;
+}
+
+input:focus + .labelline,
+input:valid + .labelline {
+  font-weight: 600;
+  color: #5581a1;
+  top: -10px;
+  left: 30px;
+  font-size: 1em;
+  z-index: 1111;
+}
+
+.login-button {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 150px;
+}
+
+.loginbutton {
+  font-size: 2em;
+  padding: 8px 18px;
+  border-radius: 50px;
+  background-color: #5581a1;
+  border: none;
+  color: #f5f5f5;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.1s;
+  cursor: pointer;
+  border: 4px solid #5581a1;
+}
+
+.loginbutton:hover {
+  color: #5581a1;
+  background-color: #f5f5f5;
+}
+
+.loginbutton:active {
+  box-shadow: 0px 0px 10px #00000050;
+}
+
+.createacc {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 85px;
+}
+
+p {
+  text-align: center;
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.8em;
+  font-weight: 300;
+  padding-bottom: 10px;
+}
+
+.createacc-button {
+  padding: 0 5px;
+}
+
+.createaccbutton {
+  font-size: 2em;
+  padding: 8px 18px;
+  border-radius: 50px;
+  background-color: #f5f5f5;
+  border: none;
+  color: #5581a1;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.1s;
+  cursor: pointer;
+  border: 4px solid #5581a1;
+}
+
+.createaccbutton:hover {
+  color: #f5f5f5;
+  background-color: #5581a1;
+}
+
+.createaccbutton:active {
+  box-shadow: 0px 0px 10px #00000050;
+}
+
+.sushi-image {
+  position: absolute;
+  right: 0px;
+  bottom: 250px;
+  height: 420px;
+  object-fit: contain;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0px 0px 10px #00000050);
+}
+
+.close-btn {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s ease-in-out;
+  z-index: 10;
+  padding: 0;
+}
+
+.close-icon {
+  width: 30px;
+  height: 30px;
+  stroke: #f8a334;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.close-btn:hover {
+  box-shadow: 0px 0px 20px #00000020;
+}
+
+.close-btn:active {
+  background-color: #f8a334;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  position: relative;
+  background: transparent;
+  border-radius: 10px;
+}
