@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import "../css/RegisterModal.css";
+import "../css/RegisterPopUp.css";
+import "../css/Buttons.css"
+import "../css/RegistrationPopUp.css"
+import image from "../images/burger-1.png";
 
-const RegisterModal = ({ close, role }) => {
+const RegisterModal = ({ close, openLogin, role }) => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -13,6 +16,28 @@ const RegisterModal = ({ close, role }) => {
         const phoneRegex = /^(\+359|0)[8-9][0-9]{8}$/;
         return phoneRegex.test(number);
     };
+
+    useEffect(() => {
+        function resizePopup() {
+          const wrapper = document.querySelector(".responsive-wrapper");
+          if (!wrapper) return;
+    
+          const availableWidth = window.innerWidth * 0.9;
+          const availableHeight = window.innerHeight * 0.9;
+    
+          const scaleX = availableWidth / 1467;
+          const scaleY = availableHeight / 910;
+          const scale = Math.min(scaleX, scaleY, 1);
+    
+          wrapper.style.transform = `scale(${scale})`;
+        }
+    
+        resizePopup();
+        window.addEventListener("resize", resizePopup);
+        return () => window.removeEventListener("resize", resizePopup);
+      }, []);
+
+
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -40,73 +65,94 @@ const RegisterModal = ({ close, role }) => {
     };
 
     return (
-        <div className="overlay">
-            <div className="register-container">
-                <button 
-                    onClick={close}
-                    className="close_button"
-                >
-                    ✖
-                </button>
-                <div className="register-content">
-                    <div className="form-section">
-                        <h2 className="text">
-                        {role === "DELIVER" ? "Стани Доставчик"
-                            : role === "OWNER"
-                            ? "Стани Собственик"
-                            : "Регистрация"}
-                        </h2>
-                        <form onSubmit={handleRegister} className="form">
-                            <input
-                                type="text"
-                                placeholder="Потребителско име"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="inputs"
-                                required
-                            />
-                            <input
-                                type="email"
-                                placeholder="Имейл"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="inputs"
-                                required
-                            />
-                            <input
-                                type="password"
-                                placeholder="Парола"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="inputs"
-                                required
-                            />
-                            <input
-                                type="tel"
-                                placeholder="+359888123456 или 0888123456"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                className="inputs"
-                                required
-                            />
-                            {error && <p className="error-message">{error}</p>}
-                            <button
-                                type="submit"
-                                className="register-btn"
-                            >
-                                {role === "DELIVER" ? "Стани Доставчик"
+        <div className="modal-overlay" onClick={close}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="pop-up">
+          <div className="responsive-wrapper">
+            <div className="square">
+              <div className="white-square">
+                <div className="container">
+                  <div className="title-register">
+                    <h className="title-text">
+                    {role === "DELIVER" ? "Become a Rider"
                                 : role === "OWNER"
-                                ? "Стани Собственик"
-                                : "Регисрирай се"}
-                            </button>
-                        </form>
+                                ? "Owner register"
+                                : "Register"}
+                    </h>
                     </div>
-                    <div className="image-section">
-                        <img src="sushi.png" alt="Sushi Image"/>
+                  <div className="input-layout">
+                    <input
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="form-input"
+                      required
+                    />
+                    <div className="label">NAME</div>
+                  </div>
+
+                  <div className="input-layout">
+                    <input
+                      type="text"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="form-input"
+                      required
+                    />
+                    <div className="label">EMAIL</div>
+                  </div>
+
+                  <div className="input-layout">
+                    <input
+                      type="password"
+                      required
+                      value={password}
+                      className="form-input"
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <div className="label">PASSWORD</div>
+                  </div>
+
+                  <div className="input-layout">
+                    <input
+                      type="text"
+                      value={phoneNumber}
+                      className="form-input"
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      required
+                    />
+                    <div className="label">PHONE NUMBER</div>
+                  </div>
+                  <div className="register-entry">
+                    <div className="entry-btn">
+                      <button className="blue-btn" onClick={handleRegister}>
+                        CREATE ACCOUNT
+                      </button>
                     </div>
+                  </div>
+                  
+                  <div className="switch-btn">
+                    <p className="switch-text">Already have an account?</p>
+                    <button className="white-btn" onClick={openLogin}>
+                      Log in
+                    </button>
+                  </div>
                 </div>
+              </div>
+
+              <img className="image" src={image} alt="Burger" />
+
+              <button className="close-btn" aria-label="Close" onClick={close}>
+                <svg viewBox="0 0 24 24" className="close-icon" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                </svg>
+              </button>
             </div>
+          </div>
         </div>
+      </div>
+    </div>
     );
 };
 
