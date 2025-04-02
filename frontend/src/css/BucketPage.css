@@ -401,6 +401,8 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
   }
   
   .address-modal {
@@ -411,6 +413,29 @@
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transform: scale(0.95);
+    opacity: 0;
+    animation: modalSlideIn 0.3s ease forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes modalSlideIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
   
   .modal-header {
@@ -614,13 +639,35 @@
     justify-content: center;
     color: #00a082;
     font-weight: bold;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .payment-check span {
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
   }
   
   .payment-option.selected .payment-check {
     border-color: #00a082;
     background-color: #00a082;
     color: white;
+  }
+  
+  .payment-option.selected .payment-check span {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .payment-option:hover .payment-check {
+    border-color: #00a082;
+    transform: scale(1.1);
+  }
+  
+  .payment-option.selected:hover .payment-check {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 160, 130, 0.3);
   }
   
   @media (max-width: 600px) {
@@ -639,6 +686,23 @@
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: formFadeIn 0.4s ease forwards;
+    animation-delay: 0.1s;
+    opacity: 0;
+  }
+  
+  @keyframes formFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   .card-form {

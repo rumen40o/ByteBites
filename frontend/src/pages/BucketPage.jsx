@@ -72,7 +72,7 @@ const BucketPage = () => {
       errors.number = 'Номерът на картата е задължителен';
     } else {
       const cleanNumber = cardInfo.number.replace(/\s/g, '');
-      if (!/^\d{13,19}$/.test(cleanNumber)) {
+      if (!/^\d{16}$/.test(cleanNumber)) {
         errors.number = 'Невалиден номер на картата';
       }
     }
@@ -130,7 +130,7 @@ const BucketPage = () => {
         .replace(/\D/g, '') // Remove non-digits
         .replace(/(\d{4})/g, '$1 ') // Add space after every 4 digits
         .trim()
-        .slice(0, 24); // Allow for longer card numbers (up to 19 digits + spaces)
+        .slice(0, 19); // Limit to 16 digits + 3 spaces
     }
 
     // Format expiry date
