@@ -3,8 +3,10 @@ package com.example.ByteBites.controller;
 import com.example.ByteBites.models.*;
 import com.example.ByteBites.models.DTO.OrderRequestDTO;
 import com.example.ByteBites.service.OrderService;
+import com.example.ByteBites.service.inteface.OrderServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
 
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderServiceInterface orderService;
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
@@ -23,6 +25,7 @@ public class OrderController {
 
 
     @PostMapping("/create/customer/{customerId}/restaurant/{restaurantId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Orders> createOrder(
             @PathVariable Long customerId,
             @PathVariable Long restaurantId,
@@ -45,6 +48,7 @@ public class OrderController {
 
 
     @PutMapping("/{orderId}/status")
+    @PreAuthorize("hasRole('DELIVER')")
     public ResponseEntity<Orders> updateOrderStatus(
             @PathVariable Long orderId,
             @RequestParam OrderStatus status) {
@@ -53,6 +57,7 @@ public class OrderController {
 
 
     @DeleteMapping("/{orderId}")
+    @PreAuthorize("hasRole('DELIVER')")
     public ResponseEntity<String> deleteOrder(@PathVariable Long orderId) {
         orderService.deleteOrder(orderId);
         return ResponseEntity.ok("Поръчката беше изтрита успешно!");

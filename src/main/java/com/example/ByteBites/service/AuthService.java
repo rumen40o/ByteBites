@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-
 public class AuthService implements AuthServiceInterface {
     private final AccountRepository userRepository;
     private final JWTService jwtService;
@@ -34,7 +33,7 @@ public class AuthService implements AuthServiceInterface {
         this.passwordEncoder = passwordEncoder;
     }
 
-
+@Override
     public ResponseEntity<String> register(RegisterRequest request) {
         try {
             if (userRepository.findByUsername(request.getUsername()).isPresent() ||
@@ -61,7 +60,7 @@ public class AuthService implements AuthServiceInterface {
         }
     }
 
-
+    @Override
     public ResponseEntity<String> login(AuthRequest request) {
         try {
             Optional<Accounts> userOpt = userRepository.findByUsername(request.getIdentifier())

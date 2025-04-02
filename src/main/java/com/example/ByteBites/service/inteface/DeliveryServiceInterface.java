@@ -3,8 +3,10 @@ package com.example.ByteBites.service.inteface;
 import com.example.ByteBites.models.Deliveries;
 import com.example.ByteBites.models.DeliveryStatus;
 import com.example.ByteBites.models.Orders;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 public interface DeliveryServiceInterface {
     List<Orders> getAvailableDeliveries();

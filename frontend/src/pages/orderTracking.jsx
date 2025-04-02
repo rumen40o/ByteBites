@@ -49,7 +49,6 @@ const OrderTrackingPage = () => {
             <div className="bg-white rounded-lg shadow-md p-6">
                 <h1 className="text-3xl font-bold mb-6">Проследяване на поръчки</h1>
                 
-                {/* Tabs */}
                 <div className="flex border-b mb-6">
                     <button
                         className={`px-6 py-2 text-lg font-medium ${
@@ -73,7 +72,6 @@ const OrderTrackingPage = () => {
                     </button>
                 </div>
 
-                {/* Active Orders Tab */}
                 {activeTab === 'active' && (
                     <div>
                         {activeOrders.length === 0 ? (
@@ -104,7 +102,6 @@ const OrderTrackingPage = () => {
                     </div>
                 )}
 
-                {/* Order History Tab */}
                 {activeTab === 'history' && (
                     <div>
                         {completedOrders.length === 0 ? (

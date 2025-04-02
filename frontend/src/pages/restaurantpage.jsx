@@ -35,7 +35,6 @@ const RestaurantPage = () => {
       const restaurantData = restaurantRes.data;
       setRestaurant(restaurantData);
 
-      // ✅ Проверка дали е OWNER и дали ресторантът му принадлежи
       if (
         currentUser?.role === "OWNER" &&
         restaurantData?.owner &&

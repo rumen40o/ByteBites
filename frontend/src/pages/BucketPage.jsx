@@ -67,7 +67,6 @@ const BucketPage = () => {
   const validateCardInfo = () => {
     const errors = {};
     
-    // Card number validation (16 digits)
     if (!cardInfo.number) {
       errors.number = 'Номерът на картата е задължителен';
     } else {
@@ -77,7 +76,6 @@ const BucketPage = () => {
       }
     }
 
-    // Cardholder name validation (letters and spaces only)
     if (!cardInfo.name) {
       errors.name = 'Името на картодържателя е задължително';
     } else {
@@ -89,7 +87,6 @@ const BucketPage = () => {
       }
     }
 
-    // Expiry date validation (MM/YY format)
     if (!cardInfo.expiry) {
       errors.expiry = 'Датата на валидност е задължителна';
     } else {
@@ -110,7 +107,6 @@ const BucketPage = () => {
       }
     }
 
-    // CVV validation (3-4 digits)
     if (!cardInfo.cvv) {
       errors.cvv = 'CVV кодът е задължителен';
     } else if (!/^\d{3,4}$/.test(cardInfo.cvv)) {
@@ -124,35 +120,33 @@ const BucketPage = () => {
   const handleCardInputChange = (field, value) => {
     let formattedValue = value;
 
-    // Format card number with spaces
     if (field === 'number') {
       formattedValue = value
-        .replace(/\D/g, '') // Remove non-digits
-        .replace(/(\d{4})/g, '$1 ') // Add space after every 4 digits
+        .replace(/\D/g, '')
+        .replace(/(\d{4})/g, '$1 ')
         .trim()
-        .slice(0, 19); // Limit to 16 digits + 3 spaces
+
+        .slice(0, 19); 
+
     }
 
-    // Format expiry date
     if (field === 'expiry') {
       formattedValue = value
-        .replace(/\D/g, '') // Remove non-digits
-        .replace(/^(\d{2})/, '$1/') // Add slash after month
-        .slice(0, 5); // Limit to MM/YY format
+        .replace(/\D/g, '')
+        .replace(/^(\d{2})/, '$1/')
+        .slice(0, 5);
     }
 
-    // Format CVV (numbers only)
     if (field === 'cvv') {
       formattedValue = value
-        .replace(/\D/g, '') // Remove non-digits
-        .slice(0, 4); // Limit to 4 digits
+        .replace(/\D/g, '')
+        .slice(0, 4);
     }
 
-    // Format cardholder name (letters and spaces only)
     if (field === 'name') {
       formattedValue = value
-        .replace(/[^A-Za-zА-Яа-я\s]/g, '') // Remove non-letters and non-spaces
-        .slice(0, 50); // Limit to 50 characters
+        .replace(/[^A-Za-zА-Яа-я\s]/g, '')
+        .slice(0, 50);
     }
 
     setCardInfo(prev => ({
@@ -258,7 +252,6 @@ const BucketPage = () => {
           <div className="delivery-section">
             <h2>Информация за доставката</h2>
             <div className="map-container">
-              {/* Map will be implemented here */}
             </div>
             {selectedAddress ? (
               <div className="address-row" onClick={() => setShowAddressModal(true)}>

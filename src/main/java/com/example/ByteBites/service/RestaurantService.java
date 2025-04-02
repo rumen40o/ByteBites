@@ -32,9 +32,7 @@ public class RestaurantService implements RestaurantServiceInterface {
         this.orderItemsRepository = orderItemsRepository;
         this.menuItemsRepository = menuItemsRepository;
     }
-
-
-    // Създаване на ресторант
+    @Override
     public Restaurants createRestaurant(RestaurantRequestDTO dto, Accounts currentUser) {
         Restaurants restaurant = new Restaurants();
         restaurant.setName(dto.getName());
@@ -44,18 +42,15 @@ public class RestaurantService implements RestaurantServiceInterface {
         restaurant.setOwner(currentUser);
         return restaurantsRepository.save(restaurant);
     }
-
-    // Връща всички ресторанти
+    @Override
     public List<Restaurants> getAllRestaurants() {
         return restaurantsRepository.findAll();
     }
-
-    // Връща ресторант по ID
+    @Override
     public Optional<Restaurants> getRestaurantById(Long id) {
         return restaurantsRepository.findById(id);
     }
-
-    // Обновяване
+    @Override
     public Restaurants updateRestaurant(Long id, RestaurantRequestDTO dto,Accounts currentUser) {
         Restaurants restaurant = restaurantsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ресторантът не е намерен!"));
@@ -72,30 +67,25 @@ public class RestaurantService implements RestaurantServiceInterface {
         return restaurantsRepository.save(restaurant);
     }
 
-    // Изтриване
     @Transactional
+    @Override
     public void deleteRestaurant(Long id, Accounts currentUser) {
         Restaurants restaurant = restaurantsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ресторантът не е намерен!"));
 
-        // ✅ Проверка дали текущият потребител е собственик
         if (!restaurant.getOwner().getId().equals(currentUser.getId())) {
             throw new RuntimeException("Нямате права да изтриете този ресторант.");
         }
 
-        // 🧾 Изтриваме артикулите от поръчките на този ресторант
         List<Orders> restaurantOrders = ordersRepository.findByRestaurantId(id);
         for (Orders order : restaurantOrders) {
             orderItemsRepository.deleteByOrderId(order.getId());
         }
 
-        // 🧾 Изтриваме самите поръчки
         ordersRepository.deleteAll(restaurantOrders);
 
-        // 🍔 Изтриваме всички меню елементи за този ресторант
         menuItemsRepository.deleteByRestaurantsId(id);
 
-        // 🏁 Накрая изтриваме ресторанта
         restaurantsRepository.deleteById(id);
     }
 
@@ -104,7 +94,7 @@ public class RestaurantService implements RestaurantServiceInterface {
     public List<Restaurants> filterRestaurantsByCategories(List<String> categories) {
         return restaurantsRepository.findDistinctByMenuItemsCategoryIn(categories);
     }
-
+    @Override
     public List<Restaurants> getRestaurantsByOwnerId(Long id) {
         return restaurantsRepository.findByOwnerId(id);
     }

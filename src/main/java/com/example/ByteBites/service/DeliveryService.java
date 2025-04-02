@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-
 public class DeliveryService implements DeliveryServiceInterface {
     private final DeliveriesRepository deliveriesRepository;
     private final OrdersRepository ordersRepository;
@@ -25,12 +24,12 @@ public class DeliveryService implements DeliveryServiceInterface {
         this.accountsRepository = accountsRepository;
     }
 
-
+    @Override
     public List<Orders> getAvailableDeliveries() {
         return ordersRepository.findByStatus(OrderStatus.PENDING);
     }
 
-
+    @Override
     public String acceptDelivery(Long orderId, Long deliverId) {
         Optional<Orders> orderOpt = ordersRepository.findById(orderId);
         Optional<Accounts> deliverOpt = accountsRepository.findById(deliverId);
@@ -58,7 +57,7 @@ public class DeliveryService implements DeliveryServiceInterface {
         return "Успешно приехте поръчката за доставка!";
     }
 
-
+    @Override
     public String updateDeliveryStatus(Long deliveryId, DeliveryStatus status) {
         Optional<Deliveries> deliveryOpt = deliveriesRepository.findById(deliveryId);
 
@@ -85,7 +84,7 @@ public class DeliveryService implements DeliveryServiceInterface {
         return "Статусът на доставката е променен!";
     }
 
-
+    @Override
     public List<Deliveries> getDeliveriesByDeliver(Long deliverId) {
         Optional<Accounts> deliverOpt = accountsRepository.findById(deliverId);
         return deliverOpt.map(deliveriesRepository::findByDeliver).orElse(null);

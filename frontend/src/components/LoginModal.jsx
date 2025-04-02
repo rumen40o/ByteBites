@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../css/LoginModal.css";
-import image from "../images/sushi-1.png"
+import "../css/LoginPopUp.css";
+import "../css/Buttons.css"
+import "../css/RegistrationPopUp.css"
+import image from "../images/sushi-1.png";
 
 const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
     const [identifier, setIdentifier] = useState("");
@@ -26,6 +28,26 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
     
         return Object.keys(newErrors).length === 0;
     };
+
+    useEffect(() => {
+        function resizePopup() {
+          const wrapper = document.querySelector(".responsive-wrapper");
+          if (!wrapper) return;
+    
+          const availableWidth = window.innerWidth * 0.9;
+          const availableHeight = window.innerHeight * 0.9;
+    
+          const scaleX = availableWidth / 1467;
+          const scaleY = availableHeight / 910;
+          const scale = Math.min(scaleX, scaleY, 1);
+    
+          wrapper.style.transform = `scale(${scale})`;
+        }
+    
+        resizePopup();
+        window.addEventListener("resize", resizePopup);
+        return () => window.removeEventListener("resize", resizePopup);
+      }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -80,57 +102,68 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
 
 
     return (
-        <div class="overlay">
-            <div class="login-container">
-                <button 
-                    onClick={close}
-                    className="close_button"
-                >
-                    ✖
-                </button>
-                <div class="login-content">
-                <div class="form-section">
-                <h2 className="text">Вход</h2>
-                <form onSubmit={handleLogin} className="form">
+        <div className="modal-overlay" onClick={close}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="pop-up">
+          <div className="responsive-wrapper">
+            <div className="square">
+              <div className="white-square">
+                <div className="container">
+                  <div className="title-login"><h className="title-text">Log in</h></div>
+
+                  <div className="input-layout">
                     <input
-                        type="text"
-                        placeholder="Имейл или Потребителско име"
-                        value={identifier}
-                        className="inputs"
-                        onChange={(e) => setIdentifier(e.target.value)}
+                      type="text"
+                      required
+                      value={identifier}
+                      onChange={(e) => setIdentifier(e.target.value)}
+                      className="form-input"
                     />
-                        {error.identifier && <p className="text-red-500 text-xs mt-1">{error.identifier}</p>}
+                    <div className="label">EMAIL</div>
+                  </div>
+
+                  <div className="input-layout">
                     <input
-                        type="password"
-                        placeholder="Парола"
-                        value={password}
-                        className="inputs"
-                        onChange={(e) => setPassword(e.target.value)}
+                      type="password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="form-input"
                     />
-                    {error.password && <p className="text-red-500 text-xs mt-1">{error.password}</p>}
-                    
-                    <button
-                        type="submit"
-                        class="login-btn"
-                    >
-                        Вход
+                    <div className="label">PASSWORD</div>
+                  </div>
+
+                  {serverError && <div className="error">{serverError}</div>}
+      
+                  <div className="login-entry">
+                    <div className="entry-btn">
+                      <button className="blue-btn" onClick={handleLogin}>
+                        LOG IN
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="switch-btn">
+                    <p className="switch-text">Don't have an account?</p>
+                    <button className="white-btn" onClick={openRegister}>
+                      Create one
                     </button>
-                </form>
-                <p>
-                    Нямате акаунт?{" "}
-                    <button 
-                        onClick={openRegister}
-                        className="register_button"
-                    >
-                        Регистрирайте се
-                    </button>
-                </p>
+                  </div>
                 </div>
-                <div class="image-section">
-                    <img src={image} alt="Sushi Image"/>
-                </div>
+              </div>
+
+              <img className="sushi-image" src={image} alt="Sushi" />
+
+              <button className="close-btn" aria-label="Close" onClick={close}>
+                <svg viewBox="0 0 24 24" className="close-icon" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                </svg>
+              </button>
             </div>
+          </div>
         </div>
+      </div>
     </div>
                 
     );
