@@ -71,7 +71,7 @@ const BucketPage = () => {
       errors.number = 'Номерът на картата е задължителен';
     } else {
       const cleanNumber = cardInfo.number.replace(/\s/g, '');
-      if (!/^\d{13,19}$/.test(cleanNumber)) {
+      if (!/^\d{16}$/.test(cleanNumber)) {
         errors.number = 'Невалиден номер на картата';
       }
     }
@@ -125,7 +125,9 @@ const BucketPage = () => {
         .replace(/\D/g, '')
         .replace(/(\d{4})/g, '$1 ')
         .trim()
-        .slice(0, 24);
+
+        .slice(0, 19); 
+
     }
 
     if (field === 'expiry') {
