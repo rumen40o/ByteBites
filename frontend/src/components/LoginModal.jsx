@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../css/LoginPopUp.css";
 import "../css/Buttons.css"
 import "../css/RegistrationPopUp.css"
 import image from "../images/sushi-1.png";
+import {
+  loginUser
+} from '../api/api'
 
 const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
     const [identifier, setIdentifier] = useState("");
@@ -58,11 +60,7 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
         }
     
         try {
-            const response = await axios.post(
-                "http://localhost:8080/auth/login",
-                { identifier, password },
-                { withCredentials: true }
-            );
+            const response = await loginUser({ identifier, password });
     
 
             const loggedUser = response.data;

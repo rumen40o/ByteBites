@@ -4,7 +4,10 @@ import { FaUserCircle, FaGlobe, FaMapMarkerAlt, FaHamburger, FaTruck, FaFacebook
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
 import "../css/home.css";
-import axios from "axios";
+import {
+  getCurrentUser,
+  logoutUser
+} from '../api/api'
 
 // Import images
 import logo from "../images/ByteBitesLogoHorizontal.png";
@@ -29,7 +32,7 @@ function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:8080/auth/logged/user", { withCredentials: true })
+    getCurrentUser()
       .then((res) => {
         setUser(res.data);
         if (res.data.role === "DELIVER") {
@@ -41,7 +44,7 @@ function Home() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8080/auth/logout", {}, { withCredentials: true });
+      await logoutUser();
       setUser(null);
       setMenuOpen(false);
       window.location.reload();
@@ -258,8 +261,27 @@ function Home() {
             role="USER"
           />
         )}
-        {showDeliverRegister && <RegisterModal close={() => setShowDeliverRegister(false)} role="DELIVER" />}
-        {showOwnerRegister && <RegisterModal close={() => setShowOwnerRegister(false)} role="OWNER" />}
+        {showDeliverRegister && (
+  <RegisterModal
+    close={() => setShowDeliverRegister(false)}
+    openLogin={() => {
+      setShowDeliverRegister(false);
+      setShowLogin(true);
+    }}
+    role="DELIVER"
+  />
+)}
+
+{showOwnerRegister && (
+  <RegisterModal
+    close={() => setShowOwnerRegister(false)}
+    openLogin={() => {
+      setShowOwnerRegister(false);
+      setShowLogin(true);
+    }}
+    role="OWNER"
+  />
+)}
     </div>
   );
 }

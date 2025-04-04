@@ -1,12 +1,14 @@
 import { useState } from "react";
-import axios from "axios";
+import {
+  addRestaurant
+} from '../api/api'
 
 const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
   const [restaurant, setRestaurant] = useState({
     name: "",
     description: "",
     address: "",
-    imageUrl: ""
+    imageUrl: "" 
   });
 
   const handleChange = (e) => {
@@ -20,9 +22,7 @@ const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
     }
 
     try {
-      await axios.post("http://localhost:8080/restaurants/add", restaurant, {
-        withCredentials: true
-      });
+      await addRestaurant(restaurant)
       onAddSuccess();
       close();
     } catch (err) {

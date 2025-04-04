@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import "../css/RegisterPopUp.css";
 import "../css/Buttons.css"
 import "../css/RegistrationPopUp.css"
 import image from "../images/burger-1.png";
+import {
+  registerUser
+} from '../api/api';
 
 const RegisterModal = ({ close, openLogin, role }) => {
     const [username, setUsername] = useState("");
@@ -49,15 +51,16 @@ const RegisterModal = ({ close, openLogin, role }) => {
         }
 
         try {
-            const response = await axios.post("http://localhost:8080/auth/register", {
-                username,
-                email,
-                password,
-                phone_number: phoneNumber,
-                role 
-            });
+            const response = await registerUser({
+              username,
+              email,
+              password,
+              phone_number: phoneNumber,
+              role
+          });
 
             console.log("Registration successful:", response.data);
+            console.log(role)
             close();
         } catch (err) {
             setError(err.response?.data || "Грешка при регистрация!");

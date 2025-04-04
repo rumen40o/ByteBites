@@ -31,7 +31,14 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS настройки
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(
+                                "/auth/**",
+                                "/restaurants/all",
+                                "/restaurants/filter",
+                                "/restaurants/{id}",         // ако искаш конкретно по ID, добави това също
+                                "/restaurants/**",           // трябва да е най-накрая от ресторантите!
+                                "/menu/restaurant/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

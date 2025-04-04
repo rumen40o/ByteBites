@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../css/BucketPage.css';
-import axios from 'axios';
+import{
+  getCurrentUser,
+  createOrder
+} from '../api/api';
 
 const BucketPage = () => {
   const navigate = useNavigate();
@@ -168,7 +171,7 @@ const BucketPage = () => {
         throw new Error("No restaurant ID found");
       }
 
-      const userResponse = await axios.get("http://localhost:8080/auth/logged/user", { withCredentials: true });
+      const userResponse = await getCurrentUser();
       const user = userResponse.data;
 
       if (!user) {
@@ -183,11 +186,7 @@ const BucketPage = () => {
         }))
       };
 
-      await axios.post(
-        `http://localhost:8080/orders/create/customer/${user.id}/restaurant/${restaurantInfo.id}`,
-        orderData,
-        { withCredentials: true }
-      );
+      await createOrder(user.id, restaurantInfo.id, orderData);
 
       setShowSuccessModal(true);
     } catch (error) {
