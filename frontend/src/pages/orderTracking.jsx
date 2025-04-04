@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { getCurrentUser, getOrdersByCustomer } from "../api/api";
 import OrderStatusIndicator from "../components/OrderStatusIndicator";
 
 const OrderTrackingPage = () => {
@@ -12,11 +12,11 @@ const OrderTrackingPage = () => {
     useEffect(() => {
         const fetchUserAndOrders = async () => {
             try {
-                const userResponse = await axios.get("http://localhost:8080/auth/logged/user", { withCredentials: true });
+                const userResponse = await getCurrentUser();
                 setUser(userResponse.data);
                 
                 if (userResponse.data) {
-                    const ordersResponse = await axios.get(`http://localhost:8080/orders/customer/${userResponse.data.id}`, { withCredentials: true });
+                    const ordersResponse = await getOrdersByCustomer(userResponse.data.id);
                     setOrders(ordersResponse.data);
                 }
             } catch (error) {

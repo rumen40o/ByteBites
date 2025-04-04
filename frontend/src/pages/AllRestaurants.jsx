@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import "../css/AllRestaurants.css";
 import { useNavigate } from "react-router-dom";
+import "../css/AllRestaurants.css";
+import {
+  getAllRestaurants,
+  getCurrentUser,
+  logoutUser,
+  filterRestaurantsByCategories,
+} from "../api/api";
+
 import {
   FaUserCircle,
   FaGlobe,
 } from "react-icons/fa";
+
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
-import logo from "../images/ByteBitesLogoHorizontal.png";
 import AddRestaurantModal from "../components/AddRestaurantModal";
+import logo from "../images/ByteBitesLogoHorizontal.png";
 
 const AllRestaurants = () => {
   const navigate = useNavigate();
@@ -25,7 +32,7 @@ const AllRestaurants = () => {
   const categories = ["PIZZA", "PASTA", "BURGER", "SUSHI", "RAMEN", "SANDWICH"];
 
   useEffect(() => {
-    getCurrentUser();
+    fetchUser();
     loadRestaurants();
   }, []);
 
@@ -33,15 +40,13 @@ const AllRestaurants = () => {
     if (selectedCategories.length === 0) {
       loadRestaurants();
     } else {
-      filterRestaurantsByCategory(selectedCategories);
+      filterByCategories(selectedCategories);
     }
   }, [selectedCategories]);
 
-  const getCurrentUser = async () => {
+  const fetchUser = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/auth/logged/user", {
-        withCredentials: true,
-      });
+      const res = await getCurrentUser();
       setUser(res.data);
     } catch {
       setUser(null);
@@ -50,9 +55,7 @@ const AllRestaurants = () => {
 
   const loadRestaurants = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/restaurants/all", {
-        withCredentials: true,
-      });
+      const res = await getAllRestaurants();
       setRestaurants(res.data);
     } catch (err) {
       console.error("Грешка при зареждане на ресторанти:", err);
@@ -60,13 +63,9 @@ const AllRestaurants = () => {
     }
   };
 
-  const filterRestaurantsByCategory = async (categories) => {
+  const filterByCategories = async (cats) => {
     try {
-      const res = await axios.post(
-        "http://localhost:8080/restaurants/filter",
-        categories,
-        { withCredentials: true }
-      );
+      const res = await  filterRestaurantsByCategories(cats);
       setRestaurants(res.data);
     } catch (err) {
       console.error("Грешка при филтриране:", err);
@@ -76,7 +75,7 @@ const AllRestaurants = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8080/auth/logout", {}, { withCredentials: true });
+      await logoutUser();
       setUser(null);
       setMenuOpen(false);
       window.location.reload();
@@ -152,7 +151,7 @@ const AllRestaurants = () => {
 
       <h2 className="restaurants-title">Всички ресторанти</h2>
 
-      {/* 🔍 Категории за филтриране */}
+      {/* 🔍 Филтри */}
       <div className="category-filters">
         {categories.map((cat) => (
           <label key={cat} className="filter-label">
@@ -163,9 +162,7 @@ const AllRestaurants = () => {
               onChange={(e) => {
                 const value = e.target.value;
                 setSelectedCategories((prev) =>
-                  prev.includes(value)
-                    ? prev.filter((c) => c !== value)
-                    : [...prev, value]
+                  prev.includes(value) ? prev.filter((c) => c !== value) : [...prev, value]
                 );
               }}
             />

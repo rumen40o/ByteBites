@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import AddItemModal from "../components/AddItemModal";
 import DeliveryAddressModal from "../components/DeliveryAddressModal";
 import OrderSummary from "../components/OrderSummary";
 import "../css/RestaurantPage.css";
+import {
+  getCurrentUser,
+  getRestaurantById,
+  getMenuByRestaurant,
+  createOrder,
+} from '../api/api'
 
 const RestaurantPage = () => {
   const { id } = useParams();
@@ -23,15 +28,11 @@ const RestaurantPage = () => {
 
   const loadInitialData = async () => {
     try {
-      const userRes = await axios.get("http://localhost:8080/auth/logged/user", {
-        withCredentials: true,
-      });
+      const userRes = await getCurrentUser()
       const currentUser = userRes.data;
       setUser(currentUser);
 
-      const restaurantRes = await axios.get(`http://localhost:8080/restaurants/${id}`, {
-        withCredentials: true,
-      });
+      const restaurantRes = await getRestaurantById(id)
       const restaurantData = restaurantRes.data;
       setRestaurant(restaurantData);
 
@@ -52,9 +53,7 @@ const RestaurantPage = () => {
 
   const loadMenuItems = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/menu/restaurant/${id}`, {
-        withCredentials: true,
-      });
+      const res = await getMenuByRestaurant(id)
 
       if (Array.isArray(res.data)) {
         setMenuItems(res.data);
@@ -121,12 +120,7 @@ const RestaurantPage = () => {
       })),
     };
 
-    axios
-      .post(
-        `http://localhost:8080/orders/create/customer/${user.id}/restaurant/${id}`,
-        orderData,
-        { withCredentials: true }
-      )
+    createOrder(user.id, id, orderItems)
       .then(() => {
         alert("Поръчката е създадена успешно!");
         setOrderItems([]);

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import "../css/AddItemModal.css";
+import {
+    getMenuByRestaurant,
+    updateMenuItem,
+    addMenuItem,
+    deleteMenuItem
+} from '../api/api'
 
 const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
     const [menuItems, setMenuItems] = useState([]);
@@ -21,9 +26,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
 
     const loadMenuItems = async () => {
         try {
-            const res = await axios.get(`http://localhost:8080/menu/restaurant/${restaurantId}`, {
-                withCredentials: true
-            });
+            const res = await getMenuByRestaurant(restaurantId)
             setMenuItems(res.data);
         } catch (err) {
             console.error("Грешка при зареждане на менюто:", err);
@@ -39,18 +42,10 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
         try {
             if (editingItemId) {
                 
-                await axios.put(
-                    `http://localhost:8080/menu/item/${editingItemId}`,
-                    newItem,
-                    { withCredentials: true }
-                );
+                await updateMenuItem(editingItemId, newItem)
             } else {
                 
-                await axios.post(
-                    `http://localhost:8080/menu/add/restaurant/${restaurantId}`,
-                    newItem,
-                    { withCredentials: true }
-                );
+                await addMenuItem(restaurantId, newItem)
             }
 
             setNewItem({ name: "", price: "", category: "PIZZA" });
@@ -67,7 +62,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/menu/item/${id}`, { withCredentials: true });
+            await deleteMenuItem(id)
             loadMenuItems();
             if (reloadMenu) reloadMenu();
         } catch (err) {

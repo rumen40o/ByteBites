@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import {
+    getCurrentUser,
+    getRestaurantsByOwner,
+    deleteRestaurant,
+    updateRestaurant
+} from '../api/api'
 import { useNavigate } from "react-router-dom";
 import "../css/profile.css";
 import EditRestaurantModal from "../components/EditRestaurantModal";
@@ -16,7 +21,7 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get("http://localhost:8080/auth/logged/user", { withCredentials: true });
+                const res = await getCurrentUser();
                 setUser(res.data);
 
                 if (res.data.role === "OWNER") {
@@ -31,9 +36,7 @@ const ProfilePage = () => {
 
         const fetchRestaurants = async (ownerId) => {
             try {
-                const res = await axios.get(`http://localhost:8080/restaurants/owner/${ownerId}`, {
-                    withCredentials: true
-                });
+                const res = await getRestaurantsByOwner(ownerId)
                 setRestaurants(res.data);
             } catch (err) {
                 console.error("Грешка при зареждане на ресторанти:", err);
@@ -47,9 +50,7 @@ const ProfilePage = () => {
         if (!window.confirm("Сигурни ли сте, че искате да изтриете този ресторант?")) return;
     
         try {
-            await axios.delete(`http://localhost:8080/restaurants/delete/${restaurantId}`, {
-                withCredentials: true
-            });
+            await deleteRestaurant(restaurantId)
             setRestaurants(prev => prev.filter(r => r.id !== restaurantId));
             alert("Ресторантът беше успешно изтрит!");
         } catch (err) {
@@ -65,9 +66,7 @@ const ProfilePage = () => {
       
       const handleUpdate = async (id, updatedData) => {
         try {
-          const res = await axios.put(`http://localhost:8080/restaurants/update/${id}`, updatedData, {
-            withCredentials: true
-          });
+          const res = await updateRestaurant(id,updatedData)
           setRestaurants((prev) =>
             prev.map((r) => (r.id === id ? res.data : r))
           );

@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {
+    getCurrentUser,
+    getAvailableDeliveries,
+    getDeliveriesByDeliverer,
+    acceptDelivery,
+    changeDeliveryStatus,
+  logoutUser,   
+} from '../api/api'
 
 const DeliverPage = () => {
     const navigate = useNavigate();
@@ -12,25 +20,23 @@ const DeliverPage = () => {
     const [deliverId, setDeliverId] = useState(null);
 
     useEffect(() => {
-        getCurrentUser();
+        getUser();
     }, []);
 
-    const getCurrentUser = async () => {
+    const getUser = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/auth/logged/user", { withCredentials: true });
-            console.log("Вход потребител:", response.data);
-            setDeliverId(response.data.id);
-            loadAvailableOrders();
-            loadDeliveries(response.data.id);
+          const response = await getCurrentUser();
+          setDeliverId(response.data.id);
+          loadAvailableOrders();
+          loadDeliveries(response.data.id);
         } catch (error) {
-            console.error("Грешка при вземане на текущия потребител:", error);
-            setError("Неуспешно зареждане на потребител!");
+          setError("Неуспешно зареждане на потребител!");
         }
-    };
+      };
 
     const loadAvailableOrders = async () => {
         try {
-            const response = await axios.get("http://localhost:8080/deliveries/available", { withCredentials: true });
+            const response = await getAvailableDeliveries();
             console.log("Налични поръчки:", response.data);
             setAvailableOrders(response.data);
         } catch (error) {
@@ -42,7 +48,7 @@ const DeliverPage = () => {
     const loadDeliveries = async (deliverId) => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://localhost:8080/deliveries/${deliverId}`, { withCredentials: true });
+            const response = await getDeliveriesByDeliverer(deliverId);
             setDeliveries(response.data);
         } catch (error) {
             setError("Грешка при зареждане на текущите доставки!");
@@ -54,10 +60,8 @@ const DeliverPage = () => {
     const handleAcceptDelivery = async (orderId) => {
         if (!deliverId) return;
         try {
-            await axios.post(`http://localhost:8080/deliveries/accept/order/${orderId}/deliver/${deliverId}`, {}, { withCredentials: true });
-    
+            await acceptDelivery(orderId, deliverId);
             setAvailableOrders((prev) => prev.filter((order) => order.id !== orderId));
-    
             loadDeliveries(deliverId);
         } catch (error) {
             console.error("Грешка при приемане на доставка:", error);
@@ -67,10 +71,7 @@ const DeliverPage = () => {
 
     const handleStatusUpdate = async (deliveryId, newStatus) => {
         try {
-            await axios.put(`http://localhost:8080/deliveries/${deliveryId}/status`, null, {
-                params: { status: newStatus },
-                withCredentials: true,
-            });
+            await changeDeliveryStatus(deliveryId, newStatus);
             setDeliveries((prev) =>
                 prev.map((d) => (d.id === deliveryId ? { ...d, status: newStatus } : d))
             );
@@ -81,7 +82,7 @@ const DeliverPage = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.post("http://localhost:8080/auth/logout", {}, { withCredentials: true });
+            await logoutUser();
             Cookies.remove("jwt_token");
             navigate("/");
             window.location.reload();
