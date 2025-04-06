@@ -84,11 +84,19 @@ const AllRestaurants = () => {
     }
   };
 
+  const handleLogoClick = () => {
+        if (window.location.pathname === "/") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          navigate("/");
+        }
+      };
+
   return (
     <div className="restaurants-container">
       <header className="header">
         <div className="header-content">
-          <img src={logo} alt="ByteBites Logo" className="logo" />
+          <img src={logo} alt="ByteBites Logo" className="logo" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
 
           <div className="auth-buttons">
             {user ? (
