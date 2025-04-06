@@ -1,16 +1,11 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { FaUserCircle, FaGlobe, FaMapMarkerAlt, FaHamburger, FaTruck, FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+import Navbar from "../components/Navbar";
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
 import "../css/home.css";
-import {
-  getCurrentUser,
-  logoutUser
-} from '../api/api'
 
-// Import images
-import logo from "../images/ByteBitesLogoHorizontal.png";
+// Images & Icons
 import burgerDecor from "../images/burger-1.png";
 import sushiBoard from "../images/sushi-1.png";
 import pizzaIcon from "../images/pizza-1.png";
@@ -22,36 +17,21 @@ import sushiIcon from "../images/sushi-2.png";
 import handshake from "../images/handshake.jpg";
 import rider from "../images/rider.jpg";
 
+import {
+  FaMapMarkerAlt,
+  FaHamburger,
+  FaTruck,
+  FaFacebookF,
+  FaInstagram,
+  FaYoutube
+} from "react-icons/fa";
+
 function Home() {
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showDeliverRegister, setShowDeliverRegister] = useState(false);
   const [showOwnerRegister, setShowOwnerRegister] = useState(false);
-  const [user, setUser] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    getCurrentUser()
-      .then((res) => {
-        setUser(res.data);
-        if (res.data.role === "DELIVER") {
-          navigate("/deliver");
-        }
-      })
-      .catch(() => setUser(null));
-  }, [navigate]);
-
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-      setUser(null);
-      setMenuOpen(false);
-      window.location.reload();
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-  };
 
   const foodTypes = [
     { icon: pizzaIcon, label: "PIZZA" },
@@ -62,88 +42,23 @@ function Home() {
     { icon: sushiIcon, label: "SUSHI" }
   ];
 
-  const handleLogoClick = () => {
-      if (window.location.pathname === "/") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        navigate("/");
-      }
-    };
-
   return (
     <div className="home-container">
-      <header className="header">
-        <div className="header-content">
-          <img src={logo} alt="ByteBites Logo" className="logo" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
+      <Navbar
+        onLoginClick={() => setShowLogin(true)}
+        onRegisterClick={() => setShowRegister(true)}
+      />
 
-          <div className="header-btn-content">
-            {user ? (
-              <div className="relative">
-                <button
-                  className="text-5xl text-gray-700 hover:text-gray-900 transition"
-                  onClick={() => setMenuOpen(!menuOpen)}
-                > <FaUserCircle/>
-                </button>
-
-                {user.role === "OWNER" && (
-                  <button
-                    className="btn btn-create-account"
-                    onClick={() => navigate("/add-restaurant")}
-                  >
-                    Add Restaurant
-                  </button>
-                )}
-
-                {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded shadow-lg">
-                    <button
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                      onClick={() => navigate("/profile")}
-                    >
-                      View Profile
-                    </button>
-                    <button
-                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <>
-              <div className="header-btn">
-              <button className="white-btn" onClick={() => setShowLogin(true)}>
-                  Log in
-                </button>
-                <button className="white-btn" onClick={() => setShowRegister(true)}>
-                  Create Account
-                </button>
-                <button className="white-btn" onClick={() => document.getElementById('work-with-us').scrollIntoView({ behavior: 'smooth' })}>
-                  Work with us
-                </button>
-                <button className="globe-btn">
-                <svg className="globe-icon" viewBox="0 1 20 20" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" transform="translate(2 3)"><path d="m8 16c4.4380025 0 8-3.5262833 8-7.96428571 0-4.43800246-3.5619975-8.03571429-8-8.03571429-4.43800245 0-8 3.59771183-8 8.03571429 0 4.43800241 3.56199755 7.96428571 8 7.96428571z"/><path d="m1 5h14"/><path d="m1 11h14"/><path d="m8 16c2.2190012 0 4-3.5262833 4-7.96428571 0-4.43800246-1.7809988-8.03571429-4-8.03571429-2.21900123 0-4 3.59771183-4 8.03571429 0 4.43800241 1.78099877 7.96428571 4 7.96428571z"/></g></svg>
-                </button>
-              </div>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
       <img src={sushiBoard} alt="" className="background-img sushi-board" />
       <img src={burgerDecor} alt="" className="background-img burger" />
+
       <main className="page-container">
         <section className="hero-section">
           <h9 className="hero-title">Welcome to ByteBites</h9>
           <p className="hero-subtitle">
-            ByteBites is a delicious service offering a unique experience
-            that helps you satisfy your hunger.
+            ByteBites is a delicious service offering a unique experience that helps you satisfy your hunger.
           </p>
-          <button className="blue-btn"
-            onClick={() => navigate("/restaurants")}
-          >
+          <button className="blue-btn" onClick={() => navigate("/restaurants")}>
             SEARCH ALL RESTAURANTS
           </button>
         </section>
@@ -165,22 +80,16 @@ function Home() {
             <h2 className="section-title">HOW TO ORDER</h2>
             <div className="order-steps">
               <div className="order-step">
-                <div className="step-icon">
-                  <FaMapMarkerAlt />
-                </div>
+                <div className="step-icon"><FaMapMarkerAlt /></div>
                 <p1>Share your location</p1>
               </div>
               <div className="order-step">
-                <div className="step-icon">
-                  <FaHamburger />
-                </div>
+                <div className="step-icon"><FaHamburger /></div>
                 <p1>Choose your food</p1>
               </div>
               <div className="order-step">
-                <div className="step-icon">
-                  <FaTruck />
-                </div>
-                <p1>Order and track </p1>
+                <div className="step-icon"><FaTruck /></div>
+                <p1>Order and track</p1>
               </div>
             </div>
           </section>
@@ -236,9 +145,12 @@ function Home() {
 
           <div className="footer-btn">
             <ul>
-                <li><a href="#">About us</a> <a href="#">Terms & Conditions</a> <a href="#">Privacy policy</a></li>
-              </ul>
-            </div>
+              <li>
+                <a href="#">About us</a> <a href="#">Terms & Conditions</a> <a href="#">Privacy policy</a>
+              </li>
+            </ul>
+          </div>
+
           <div className="copyright">
             © 2025 ByteBites. All Rights Reserved
           </div>
@@ -259,37 +171,38 @@ function Home() {
         />
       )}
 
-        {showRegister && (
-          <RegisterModal
-            close={() => setShowRegister(false)}
-            openLogin={() => {
-              setShowRegister(false);
-              setShowLogin(true);
-            }}
-            role="USER"
-          />
-        )}
-        {showDeliverRegister && (
-  <RegisterModal
-    close={() => setShowDeliverRegister(false)}
-    openLogin={() => {
-      setShowDeliverRegister(false);
-      setShowLogin(true);
-    }}
-    role="DELIVER"
-  />
-)}
+      {showRegister && (
+        <RegisterModal
+          close={() => setShowRegister(false)}
+          openLogin={() => {
+            setShowRegister(false);
+            setShowLogin(true);
+          }}
+          role="USER"
+        />
+      )}
 
-{showOwnerRegister && (
-  <RegisterModal
-    close={() => setShowOwnerRegister(false)}
-    openLogin={() => {
-      setShowOwnerRegister(false);
-      setShowLogin(true);
-    }}
-    role="OWNER"
-  />
-)}
+      {showDeliverRegister && (
+        <RegisterModal
+          close={() => setShowDeliverRegister(false)}
+          openLogin={() => {
+            setShowDeliverRegister(false);
+            setShowLogin(true);
+          }}
+          role="DELIVER"
+        />
+      )}
+
+      {showOwnerRegister && (
+        <RegisterModal
+          close={() => setShowOwnerRegister(false)}
+          openLogin={() => {
+            setShowOwnerRegister(false);
+            setShowLogin(true);
+          }}
+          role="OWNER"
+        />
+      )}
     </div>
   );
 }

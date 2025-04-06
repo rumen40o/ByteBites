@@ -160,7 +160,7 @@
 .close-icon {
   width: 30px;
   height: 30px;
-  stroke: var(--secondery-color);
+  stroke: var(--bfont-color);
   stroke-width: 4;
   stroke-linecap: round;
 }
