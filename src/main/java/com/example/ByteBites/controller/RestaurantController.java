@@ -5,6 +5,7 @@ import com.example.ByteBites.models.DTO.RestaurantRequestDTO;
 import com.example.ByteBites.models.Restaurants;
 import com.example.ByteBites.service.RestaurantService;
 import com.example.ByteBites.service.inteface.RestaurantServiceInterface;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +34,6 @@ public class RestaurantController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('OWNER') or hasRole('USER')")
     public ResponseEntity<List<Restaurants>> getAllRestaurants() {
         return ResponseEntity.ok(restaurantService.getAllRestaurants());
     }
@@ -46,7 +46,6 @@ public class RestaurantController {
     }
 
     @PostMapping("/filter")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<Restaurants>> filterRestaurants(@RequestBody List<String> categories) {
         return ResponseEntity.ok(restaurantService.filterRestaurantsByCategories(categories));
     }

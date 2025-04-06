@@ -27,7 +27,7 @@ export const getCurrentUser = () => api.get("/auth/logged/user");
 
 // --- 📋 MENU ---
 export const getMenuByRestaurant = (restaurantId) =>
-    api_Not_login.get(`/menu/restaurant/${restaurantId}`);
+  api_Not_login.get(`/menu/restaurant/${restaurantId}`);
   export const addMenuItem = (restaurantId, data) =>
     api.post(`/menu/add/restaurant/${restaurantId}`, data);
   export const updateMenuItem = (itemId, data) =>
@@ -49,7 +49,7 @@ export const createOrder = (customerId, restaurantId, data) =>
 
   export const getAvailableDeliveries = () => api.get("/deliveries/available");
   export const getDeliveriesByDeliverer = (delivererId) => api.get(`/deliveries/${delivererId}`);
-  export const acceptDelivery = (orderId, delivererId) => api.post(`/deliveries/accept/order/${orderId}/deliver/${delivererId}`);
+  export const acceptDelivery = (orderId) => api.post(`/deliveries/accept/order/${orderId}`);
   export const changeDeliveryStatus = (deliveryId, status) =>
     api.put(`/deliveries/${deliveryId}/status`, null, {
       params: { status },

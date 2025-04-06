@@ -9,7 +9,8 @@ import {
   getRestaurantById,
   getMenuByRestaurant,
   createOrder,
-} from '../api/api'
+} from '../api/api';
+import LoginModal from "../components/LoginModal";
 
 const RestaurantPage = () => {
   const { id } = useParams();
@@ -20,6 +21,7 @@ const RestaurantPage = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -27,11 +29,18 @@ const RestaurantPage = () => {
   }, []);
 
   const loadInitialData = async () => {
-    try {
-      const userRes = await getCurrentUser()
-      const currentUser = userRes.data;
-      setUser(currentUser);
+    
+      let currentUser = null;
 
+    try {
+      const userRes = await getCurrentUser();
+      currentUser = userRes.data;
+      setUser(currentUser);
+    } catch (e) {
+      // Не е логнат
+      setUser(null);
+    }
+    try {
       const restaurantRes = await getRestaurantById(id)
       const restaurantData = restaurantRes.data;
       setRestaurant(restaurantData);
@@ -178,22 +187,37 @@ const RestaurantPage = () => {
       <div className="order-section">
         {orderItems.length > 0 && restaurant && (
           <OrderSummary 
-            cart={orderItems}
-            onUpdateQuantity={updateQuantity}
-            restaurantInfo={{
-              name: restaurant.name,
-              address: restaurant.address,
-              id: restaurant.id
-            }}
-          />
+          cart={orderItems}
+          onUpdateQuantity={updateQuantity}
+          restaurantInfo={{
+            name: restaurant.name,
+            address: restaurant.address,
+            id: restaurant.id
+          }}
+          user={user}
+          onLoginRequired={() => setShowLoginModal(true)}
+        />
         )}
       </div>
-
+      
       <DeliveryAddressModal
         isOpen={isAddressModalOpen}
         onClose={() => setIsAddressModalOpen(false)}
         onConfirm={handleConfirmOrder}
       />
+
+      {showLoginModal && (
+        <LoginModal
+          close={() => setShowLoginModal(false)}
+          openRegister={() => {
+            setShowLoginModal(false);
+          }}
+          onLoginSuccess={() => {
+            setShowLoginModal(false);
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 };

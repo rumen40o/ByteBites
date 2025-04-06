@@ -60,7 +60,7 @@ const DeliverPage = () => {
     const handleAcceptDelivery = async (orderId) => {
         if (!deliverId) return;
         try {
-            await acceptDelivery(orderId, deliverId);
+            await acceptDelivery(orderId);
             setAvailableOrders((prev) => prev.filter((order) => order.id !== orderId));
             loadDeliveries(deliverId);
         } catch (error) {
