@@ -62,11 +62,19 @@ function Home() {
     { icon: sushiIcon, label: "SUSHI" }
   ];
 
+  const handleLogoClick = () => {
+      if (window.location.pathname === "/") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        navigate("/");
+      }
+    };
+
   return (
     <div className="home-container">
       <header className="header">
         <div className="header-content">
-          <img src={logo} alt="ByteBites Logo" className="logo" />
+          <img src={logo} alt="ByteBites Logo" className="logo" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
 
           <div className="header-btn-content">
             {user ? (
@@ -230,7 +238,7 @@ function Home() {
             <ul>
                 <li><a href="#">About us</a> <a href="#">Terms & Conditions</a> <a href="#">Privacy policy</a></li>
               </ul>
-            </div>    
+            </div>
           <div className="copyright">
             © 2025 ByteBites. All Rights Reserved
           </div>
