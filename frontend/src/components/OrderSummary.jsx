@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../css/OrderSummary.css';
 
-const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo }) => {
+const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo, user, onLoginRequired }) => {
   const { restaurantId } = useParams();
   const navigate = useNavigate();
   
@@ -21,6 +21,11 @@ const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo }) => {
   };
 
   const handleCheckout = () => {
+    if (!user) {
+      onLoginRequired();
+      return;
+    }
+  
     navigate('/bucket', {
       state: {
         cart,
@@ -106,6 +111,8 @@ OrderSummary.propTypes = {
     name: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
   }).isRequired,
+  user: PropTypes.object,
+  onLoginRequired: PropTypes.func.isRequired,
 };
 
 export default OrderSummary; 

@@ -48,8 +48,8 @@ const AllRestaurants = () => {
     try {
       const res = await getCurrentUser();
       setUser(res.data);
-    } catch {
-      setUser(null);
+    } catch (err) {
+      setUser(null); // ако не е логнат, просто няма user
     }
   };
 

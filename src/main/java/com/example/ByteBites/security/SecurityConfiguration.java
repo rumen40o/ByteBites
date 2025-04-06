@@ -33,10 +33,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/**",
-                                "/restaurants/all",
-                                "/restaurants/filter",
-                                "/restaurants/{id}",         // ако искаш конкретно по ID, добави това също
-                                "/restaurants/**",           // трябва да е най-накрая от ресторантите!
+                                "/restaurants/**",
                                 "/menu/restaurant/**"
                         ).permitAll()
                         .anyRequest().authenticated()

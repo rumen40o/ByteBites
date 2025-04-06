@@ -4,6 +4,7 @@ import com.example.ByteBites.models.Accounts;
 import com.example.ByteBites.models.MenuItems;
 import com.example.ByteBites.service.MenuService;
 import com.example.ByteBites.service.inteface.MenuServiceInterface;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,7 +42,6 @@ public class MenuController {
 
 
     @GetMapping("/restaurant/{restaurantId}")
-    @PreAuthorize("hasRole('OWNER') or hasRole('USER')")
     public ResponseEntity<List<MenuItems>> getMenuItemsByRestaurant(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(menuService.getMenuItemsByRestaurant(restaurantId));
     }

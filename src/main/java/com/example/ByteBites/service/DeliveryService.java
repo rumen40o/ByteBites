@@ -30,17 +30,16 @@ public class DeliveryService implements DeliveryServiceInterface {
     }
 
     @Override
-    public String acceptDelivery(Long orderId, Long deliverId) {
+    public String acceptDelivery(Long orderId, Accounts deliver) {
         Optional<Orders> orderOpt = ordersRepository.findById(orderId);
-        Optional<Accounts> deliverOpt = accountsRepository.findById(deliverId);
 
-        if (orderOpt.isEmpty() || deliverOpt.isEmpty()) {
-            return "Поръчката или доставчикът не съществуват!";
+        if (orderOpt.isEmpty()) {
+            return "Поръчката не съществува!";
         }
 
         Orders order = orderOpt.get();
-        Accounts deliver = deliverOpt.get();
 
+        // Проверка дали вече има доставка за тази поръчка
         if (deliveriesRepository.findByOrder(order).isPresent()) {
             return "Поръчката вече има назначен доставчик!";
         }
@@ -56,6 +55,7 @@ public class DeliveryService implements DeliveryServiceInterface {
 
         return "Успешно приехте поръчката за доставка!";
     }
+
 
     @Override
     public String updateDeliveryStatus(Long deliveryId, DeliveryStatus status) {

@@ -6,6 +6,7 @@ import com.example.ByteBites.service.inteface.DeliveryServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,10 +28,12 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.getAvailableDeliveries());
     }
 
-    @PostMapping("/accept/order/{orderId}/deliver/{deliverId}")
+    @PostMapping("/accept/order/{orderId}")
     @PreAuthorize("hasRole('DELIVER')")
-    public ResponseEntity<String> acceptDelivery(@PathVariable Long orderId, @PathVariable Long deliverId) {
-        return ResponseEntity.ok(deliveryService.acceptDelivery(orderId, deliverId));
+    public ResponseEntity<String> acceptDelivery(
+            @PathVariable Long orderId,
+            @AuthenticationPrincipal Accounts currentDeliverer) {
+        return ResponseEntity.ok(deliveryService.acceptDelivery(orderId, currentDeliverer));
     }
 
     @PutMapping("/{deliveryId}/status")
