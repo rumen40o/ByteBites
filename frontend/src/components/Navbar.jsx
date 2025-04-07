@@ -6,6 +6,7 @@ import RegisterModal from "./RegisterModal";
 import logo from "../images/ByteBitesLogoHorizontal.png";
 import "../css/home.css";
 import { getCurrentUser, logoutUser } from "../api/api";
+import AddRestaurantModal from "./AddRestaurantModal";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     getCurrentUser()
@@ -39,6 +41,10 @@ const Navbar = () => {
     }
   };
 
+  const handleAddRestaurant = () => {
+    <AddRestaurantModal/>
+  }
+
   return (
     <>
       <header className="header">
@@ -64,11 +70,12 @@ const Navbar = () => {
                 {user.role === "OWNER" && (
                   <button
                     className="btn btn-create-account"
-                    onClick={() => navigate("/add-restaurant")}
+                    onClick={() => setShowAddModal(true)}
                   >
                     Add Restaurant
                   </button>
                 )}
+
 
                 {menuOpen && (
                   <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded shadow-lg">
@@ -147,6 +154,12 @@ const Navbar = () => {
           role="USER"
         />
       )}
+      <AddRestaurantModal
+        isOpen={showAddModal}
+        close={() => setShowAddModal(false)}
+        onAddSuccess={() => window.location.reload()}
+      />
+
     </>
   );
 };
