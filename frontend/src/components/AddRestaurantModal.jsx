@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "../css/Buttons.css"
 import {
   addRestaurant
 } from '../api/api'
@@ -35,7 +36,12 @@ const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="close-btn" onClick={close}>✖</button>
+      <button className="close-btn" onClick={close} aria-label="Close">
+              <svg className="close-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <line x1="6" y1="6" x2="18" y2="18" />
+                <line x1="18" y1="6" x2="6" y2="18" />
+              </svg>
+            </button>
         <h2>Добави нов ресторант</h2>
         <input
           type="text"

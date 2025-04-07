@@ -4,6 +4,7 @@ import { FaUserCircle } from "react-icons/fa";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 import logo from "../images/ByteBitesLogoHorizontal.png";
+import "../css/Navbar.css";
 import "../css/home.css";
 import { getCurrentUser, logoutUser } from "../api/api";
 
@@ -50,6 +51,13 @@ const Navbar = () => {
             onClick={handleLogoClick}
             style={{ cursor: "pointer" }}
           />
+
+            <div className="input-layout">
+              <input
+                className="form-input"
+              />
+              <div className="label">Search</div>
+            </div>
 
           <div className="header-btn-content">
             {user ? (
@@ -102,7 +110,6 @@ const Navbar = () => {
                   Create Account
                 </button>
 
-                {/* 🌐 Езиков бутон със стария SVG */}
                 <button className="globe-btn">
                   <svg className="globe-icon" viewBox="0 1 20 20" xmlns="http://www.w3.org/2000/svg">
                     <g

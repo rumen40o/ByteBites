@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/LoginPopUp.css";
 import "../css/Buttons.css"
+import "../css/Inputs.css";
 import "../css/RegistrationPopUp.css"
 import image from "../images/sushi-1.png";
 import {
@@ -117,7 +118,7 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
                       onChange={(e) => setIdentifier(e.target.value)}
                       className="form-input"
                     />
-                    <div className="label">EMAIL</div>
+                    <div className="label">USERNAME or EMAIL</div>
                   </div>
 
                   <div className="input-layout">
@@ -152,12 +153,12 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
 
               <img className="sushi-image" src={image} alt="Sushi" />
 
-              <button className="close-btn" aria-label="Close" onClick={close}>
-                <svg viewBox="0 0 24 24" className="close-icon" xmlns="http://www.w3.org/2000/svg">
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                </svg>
-              </button>
+              <button className="close-btn" onClick={close} aria-label="Close">
+              <svg className="close-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <line x1="6" y1="6" x2="18" y2="18" />
+                <line x1="18" y1="6" x2="6" y2="18" />
+              </svg>
+            </button>
             </div>
           </div>
         </div>
