@@ -44,7 +44,7 @@ public class RestaurantService implements RestaurantServiceInterface {
     }
     @Override
     public List<Restaurants> getAllRestaurants() {
-        return restaurantsRepository.findAll();
+        return restaurantsRepository.findAllActiveRestaurants();
     }
     @Override
     public Optional<Restaurants> getRestaurantById(Long id) {
@@ -74,19 +74,11 @@ public class RestaurantService implements RestaurantServiceInterface {
                 .orElseThrow(() -> new RuntimeException("Ресторантът не е намерен!"));
 
         if (!restaurant.getOwner().getId().equals(currentUser.getId())) {
-            throw new RuntimeException("Нямате права да изтриете този ресторант.");
+            throw new RuntimeException("Нямате право да изтриете този ресторант!");
         }
 
-        List<Orders> restaurantOrders = ordersRepository.findByRestaurantId(id);
-        for (Orders order : restaurantOrders) {
-            orderItemsRepository.deleteByOrderId(order.getId());
-        }
-
-        ordersRepository.deleteAll(restaurantOrders);
-
-        menuItemsRepository.deleteByRestaurantsId(id);
-
-        restaurantsRepository.deleteById(id);
+        restaurant.setDeleted(true);
+        restaurantsRepository.save(restaurant);
     }
 
 

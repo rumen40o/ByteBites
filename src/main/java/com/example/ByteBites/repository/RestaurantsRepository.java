@@ -11,5 +11,8 @@ public interface RestaurantsRepository extends JpaRepository<Restaurants, Long> 
     @Query("SELECT DISTINCT r FROM Restaurants r JOIN r.menuItems m WHERE m.category IN :categories")
     List<Restaurants> findDistinctByMenuItemsCategoryIn(@Param("categories") List<String> categories);
 
+    @Query("SELECT r FROM Restaurants r WHERE r.isDeleted = false")
+    List<Restaurants> findAllActiveRestaurants();
+
     List<Restaurants> findByOwnerId(Long id);
 }

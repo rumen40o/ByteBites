@@ -26,6 +26,9 @@ public class MenuItems {
     @JsonBackReference
     private Restaurants restaurants;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
     public MenuItems() {}
 
     public MenuItems(String name, double price, Category category, Restaurants restaurants) {
@@ -73,5 +76,13 @@ public class MenuItems {
 
     public void setRestaurants(Restaurants restaurants) {
         this.restaurants = restaurants;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }
