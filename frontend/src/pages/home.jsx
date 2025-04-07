@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
 import "../css/home.css";
+import "../css/Inputs.css";
 
 // Images & Icons
 import burgerDecor from "../images/burger-1.png";

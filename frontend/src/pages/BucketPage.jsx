@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../css/BucketPage.css';
+import "../css/Buttons.css"
 import{
   getCurrentUser,
   createOrder
@@ -383,7 +384,12 @@ const BucketPage = () => {
           <div className="address-modal">
             <div className="modal-header">
               <h3>{selectedAddress ? 'Променете адрес за доставка' : 'Добавете адрес за доставка'}</h3>
-              <button className="close-btn" onClick={() => setShowAddressModal(false)}>×</button>
+              <button className="close-btn" onClick={() => setShowAddressModal(false)} aria-label="Close">
+              <svg className="close-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <line x1="6" y1="6" x2="18" y2="18" />
+                <line x1="18" y1="6" x2="6" y2="18" />
+              </svg>
+            </button>
             </div>
             <div className="modal-content">
               <div className="address-input-group">
@@ -433,7 +439,12 @@ const BucketPage = () => {
           <div className="address-modal">
             <div className="modal-header">
               <h3>Въведете информация за картата</h3>
-              <button className="close-btn" onClick={() => setShowCardModal(false)}>×</button>
+              <button className="close-btn" onClick={() => setShowCardModal(false)} aria-label="Close">
+              <svg className="close-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <line x1="6" y1="6" x2="18" y2="18" />
+                <line x1="18" y1="6" x2="6" y2="18" />
+              </svg>
+            </button>
             </div>
             <div className="modal-content">
               <div className="card-form-section">

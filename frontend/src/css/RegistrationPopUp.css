@@ -24,9 +24,10 @@
 }
 
 .square {
+  position: relative;
   width: 1467px;
   height: 910px;
-  background-color: var(--secondery-color);
+  background-color: var(--secondary-color);
   border-radius: 80px;
   box-shadow: 0px 0px 20px #00000050;
   display: flex;
@@ -60,59 +61,8 @@
   width: 100%;
 }
 
-.input-layout {
-  width: 100%;
+.container .input-layout{
   padding-bottom: 20px;
-  position: relative;
-}
-
-.form-input {
-  font-family: "DM Sans", sans-serif;
-  outline: none;
-  width: 100%;
-  border-radius: 36px;
-  padding: 0 20px;
-  font-size: 1.5em;
-  line-height: 60px;
-  background: transparent;
-  border: 3px solid #808080;
-  transition: 0.1s ease;
-  z-index: 1111;
-}
-
-.form-input:hover {
-  border: 3px solid var(--accent-color);
-}
-
-.label {
-  text-align: left;
-  top: 11px;
-  left: 20px;
-  font-family: "DM Sans", sans-serif;
-  position: absolute;
-  font-size: 2em;
-  background-color: var(--bg-color);
-  padding: 0 2px;
-  color: #808080;
-  transition: 0.2s ease-in-out;
-  pointer-events: none;
-  border-radius: 20px;
-}
-
-.form-input:focus,
-.form-input:valid {
-  color: var(--accent-color);
-  border: 3px solid var(--accent-color);
-}
-
-.form-input:focus + .label,
-.form-input:valid + .label {
-  font-weight: 600;
-  color: var(--accent-color);
-  top: -10px;
-  left: 30px;
-  font-size: 1em;
-  z-index: 1111;
 }
 
 .entry-btn{
@@ -137,40 +87,6 @@
   flex-direction: column;
   align-items: center;
   bottom: 85px;
-}
-
-.close-btn {
-  position: absolute;
-  top: 40px;
-  right: 40px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: var(--bg-color);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.2s ease-in-out;
-  z-index: 10;
-  padding: 0;
-}
-
-.close-icon {
-  width: 30px;
-  height: 30px;
-  stroke: var(--bfont-color);
-  stroke-width: 4;
-  stroke-linecap: round;
-}
-
-.close-btn:hover {
-  box-shadow: 0px 0px 20px #00000020;
-}
-
-.close-btn:active {
-  background-color: var(--secondery-color);
 }
 
 .modal-overlay {
