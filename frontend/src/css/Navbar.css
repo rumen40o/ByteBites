@@ -14,13 +14,49 @@
 
 .header-content {
   backdrop-filter: blur(10px);
-  justify-content: space-between;
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 1rem;
   border-radius: 5rem;
   box-shadow: var(--light-shadow);
-  max-width: 1400px;
+  width: 75rem;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  color: var(--accent-color);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.header-content .input-layout{
+  max-width: 20rem;
+}
+
+.header-content .form-input{
+  padding-left: 3rem;
+  max-height: 3.5rem;
+  border: transparent;
+  background-color: var(--bg-color);
+  transition: 0.2s ease-in-out;
+}
+
+.header-content .form-input:focus,
+.header-content .form-input:hover,
+.header-content .form-input:valid{
+  border: 3px solid var(--accent-color);
+}
+
+.header-content .label{
+  font-weight: 600;
+  left: 3rem;
+  font-size: 1.7rem;
+  color: var(--accent-color);
 }
 
 .logo {
@@ -34,13 +70,14 @@
   display: flex;
   gap: clamp(1rem, 2vw, 1rem);
   flex-wrap: nowrap;
-  justify-content: flex-end;
+  right: 0;
   align-items: center;
   min-width: 0;
   overflow: hidden;
 }
 
 .header-btn-content {
+  margin-left: auto;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
