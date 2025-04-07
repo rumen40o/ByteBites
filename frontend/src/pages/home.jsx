@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
+import "../css/Main.css";
 import "../css/home.css";
 import "../css/Inputs.css";
 
