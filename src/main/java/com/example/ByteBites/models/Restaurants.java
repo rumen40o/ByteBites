@@ -33,6 +33,9 @@ public class Restaurants {
     @JsonManagedReference
     private List<MenuItems> menuItems;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
     public Restaurants() {}
 
     public Restaurants(String name, String description, String address) {
@@ -95,5 +98,13 @@ public class Restaurants {
 
     public void setMenuItems(List<MenuItems> menuItems) {
         this.menuItems = menuItems;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

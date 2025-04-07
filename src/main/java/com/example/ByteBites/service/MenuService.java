@@ -38,9 +38,12 @@ public class MenuService implements MenuServiceInterface {
     @Override
     public List<MenuItems> getMenuItemsByRestaurant(Long restaurantId) {
         Optional<Restaurants> restaurantOpt = restaurantsRepository.findById(restaurantId);
-        return restaurantOpt.map(menuItemsRepository::findByRestaurants).orElseThrow(
-                () -> new RuntimeException("Ресторантът не е намерен!")
-        );
+
+        if (restaurantOpt.isEmpty()) {
+            throw new RuntimeException("Ресторантът не е намерен!");
+        }
+
+        return menuItemsRepository.findByRestaurantIdAndNotDeleted(restaurantId);
     }
 
     @Override
@@ -76,13 +79,14 @@ public class MenuService implements MenuServiceInterface {
     @Override
     public void deleteMenuItem(Long id, Accounts currentUser) {
         MenuItems item = menuItemsRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Артикулът не е намерен"));
+                .orElseThrow(() -> new RuntimeException("Продуктът не е намерен!"));
 
         if (!item.getRestaurants().getOwner().getId().equals(currentUser.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нямате право да изтривате това ястие.");
+            throw new RuntimeException("Нямате право да изтриете този продукт!");
         }
 
-        menuItemsRepository.deleteById(id);
+        item.setDeleted(true);
+        menuItemsRepository.save(item);
     }
 }
 
