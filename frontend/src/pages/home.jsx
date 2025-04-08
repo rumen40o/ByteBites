@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer"; // 👈 Нов компонент
+import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
 import "../css/Main.css";
@@ -26,12 +26,15 @@ import {
   FaTruck
 } from "react-icons/fa";
 
+import { getCurrentUser } from "../api/api";
+
 function Home() {
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showDeliverRegister, setShowDeliverRegister] = useState(false);
   const [showOwnerRegister, setShowOwnerRegister] = useState(false);
+  const [user, setUser] = useState(null);
 
   const foodTypes = [
     { icon: pizzaIcon, label: "PIZZA" },
@@ -41,6 +44,17 @@ function Home() {
     { icon: ramenIcon, label: "RAMEN" },
     { icon: sushiIcon, label: "SUSHI" }
   ];
+
+  useEffect(() => {
+    getCurrentUser()
+      .then((res) => setUser(res.data))
+      .catch(() => setUser(null));
+  }, []);
+
+  const handleLoginSuccess = (loggedUser) => {
+    setUser(loggedUser);
+    setShowLogin(false);
+  };
 
   return (
     <div className="home-container">
@@ -54,9 +68,13 @@ function Home() {
 
       <main className="page-container">
         <section className="hero-section">
-          <h9 className="hero-title">Welcome to ByteBites</h9>
+          <h1 className="hero-title">
+            {user ? `Welcome back, ${user.username}` : "Welcome to ByteBites"}
+          </h1>
           <p className="hero-subtitle">
-            ByteBites is a delicious service offering a unique experience that helps you satisfy your hunger.
+            {user
+              ? "ByteBites wishes you a pleasant experience and bon appétit."
+              : "ByteBites is a delicious service offering a unique experience that helps you satisfy your hunger."}
           </p>
           <button className="blue-btn" onClick={() => navigate("/restaurants")}>
             SEARCH ALL RESTAURANTS
@@ -102,7 +120,7 @@ function Home() {
                   <img src={handshake} alt="Restaurant interior" />
                 </div>
                 <p className="opportunity-text">
-                  ByteBytes provides an opportunity for any restaurant-related business to expand its operations in the online space.
+                  ByteBites provides an opportunity for any restaurant-related business to expand its operations in the online space.
                 </p>
                 <button className="white-btn" onClick={() => setShowOwnerRegister(true)}>
                   GROW YOUR BUSINESS
@@ -125,7 +143,7 @@ function Home() {
         </div>
       </main>
 
-      <Footer /> {}
+      <Footer />
 
       {showLogin && (
         <LoginModal
@@ -134,10 +152,7 @@ function Home() {
             setShowLogin(false);
             setShowRegister(true);
           }}
-          onLoginSuccess={() => {
-            setShowLogin(false);
-            window.location.reload();
-          }}
+          onLoginSuccess={handleLoginSuccess}
         />
       )}
 
