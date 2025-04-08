@@ -5,11 +5,7 @@ import "../css/Buttons.css";
 import "../css/Inputs.css";
 import "../css/RegistrationPopUp.css";
 import image from "../images/sushi-1.png";
-
-import {
-  loginUser,
-  getCurrentUser,
-} from "../api/api";
+import { loginUser, getCurrentUser } from "../api/api";
 
 const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
   const [identifier, setIdentifier] = useState("");
@@ -20,16 +16,13 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!identifier.trim()) {
       newErrors.identifier = "Моля, въведете имейл или потребителско име!";
     }
     if (!password.trim()) {
       newErrors.password = "Моля, въведете парола!";
     }
-
     setError(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
@@ -57,29 +50,26 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
     e.preventDefault();
     setServerError(null);
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
-      // Първо логваме
       await loginUser({ identifier, password });
 
-      // След това взимаме текущия потребител
-      const res = await getCurrentUser();
-      const loggedUser = res.data;
+      // 💡 Вземи текущия потребител след login
+      const response = await getCurrentUser();
 
-      if (loggedUser.role === "DELIVER") {
+      // 👉 Изпрати към родителския компонент
+      onLoginSuccess(response.data);
+
+      if (response.data.role === "DELIVER") {
         navigate("/deliver");
       } else {
         navigate("/");
       }
 
-      onLoginSuccess();
       close();
     } catch (err) {
       console.error("Axios Error:", err);
-
       if (err.response) {
         if (typeof err.response.data === "string") {
           setServerError(err.response.data);
@@ -152,7 +142,11 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
               <img className="sushi-image" src={image} alt="Sushi" />
 
               <button className="close-btn" onClick={close} aria-label="Close">
-                <svg className="close-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg
+                  className="close-icon"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <line x1="6" y1="6" x2="18" y2="18" />
                   <line x1="18" y1="6" x2="6" y2="18" />
                 </svg>
