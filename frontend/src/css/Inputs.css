@@ -1,6 +1,6 @@
 .input-layout {
-  width: 100%;
   position: relative;
+  flex-shrink: 0;
 }
 
 .form-input {

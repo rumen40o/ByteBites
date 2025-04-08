@@ -98,3 +98,44 @@
 .close-btn:active .close-icon {
   stroke: var(--accent-color);
 }
+
+.circle-btn {
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  background-color: var(--bg-color);
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s ease-in-out;
+  z-index: 10;
+  padding: 0;
+}
+
+.circle-icon {
+  width: 60px;
+  height: 60px;
+  color: var(--accent-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s ease-in-out;
+}
+
+.circle-icon:hover {
+  color: var(--bg-color);
+}
+
+.circle-btn:hover {
+  background-color: var(--accent-color);
+}
+
+.circle-btn:hover .globe-icon {
+  fill: var(--wfont-color);
+}
+
+.circle-btn:active {
+  box-shadow: 0px 0px 10px #00000020;
+}
