@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer"; // 👈 Нов компонент
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
 import "../css/Main.css";
@@ -22,10 +23,7 @@ import rider from "../images/rider.jpg";
 import {
   FaMapMarkerAlt,
   FaHamburger,
-  FaTruck,
-  FaFacebookF,
-  FaInstagram,
-  FaYoutube
+  FaTruck
 } from "react-icons/fa";
 
 function Home() {
@@ -127,37 +125,7 @@ function Home() {
         </div>
       </main>
 
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-section">
-            <h3>USEFUL INFORMATION</h3>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <div className="contact-number">
-            <a href="tel:+359 87 969 6969">📞 +359 87 969 6969</a>
-          </div>
-
-          <div className="social-links">
-            <a href="#" className="social-link"><FaFacebookF /></a>
-            <a href="#" className="social-link"><FaInstagram /></a>
-            <a href="#" className="social-link"><FaYoutube /></a>
-          </div>
-
-          <div className="footer-btn">
-            <ul>
-              <li>
-                <a href="#">About us</a> <a href="#">Terms & Conditions</a> <a href="#">Privacy policy</a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="copyright">
-            © 2025 ByteBites. All Rights Reserved
-          </div>
-        </div>
-      </footer>
+      <Footer /> {}
 
       {showLogin && (
         <LoginModal
