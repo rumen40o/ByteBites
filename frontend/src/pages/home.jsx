@@ -26,7 +26,7 @@ import {
   FaTruck
 } from "react-icons/fa";
 
-import { getCurrentUser } from "../api/api";
+import { getCurrentUser, getAllRestaurants } from "../api/api";
 
 function Home() {
   const navigate = useNavigate();
@@ -34,7 +34,9 @@ function Home() {
   const [showRegister, setShowRegister] = useState(false);
   const [showDeliverRegister, setShowDeliverRegister] = useState(false);
   const [showOwnerRegister, setShowOwnerRegister] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [user, setUser] = useState(null);
+  const [allRestaurants, setAllRestaurants] = useState([]);
 
   const foodTypes = [
     { icon: pizzaIcon, label: "PIZZA" },
@@ -49,6 +51,10 @@ function Home() {
     getCurrentUser()
       .then((res) => setUser(res.data))
       .catch(() => setUser(null));
+
+    getAllRestaurants()
+      .then((res) => setAllRestaurants(res.data))
+      .catch((err) => console.error("Error loading restaurants", err));
   }, []);
 
   const handleLoginSuccess = (loggedUser) => {
@@ -61,6 +67,9 @@ function Home() {
       <Navbar
         onLoginClick={() => setShowLogin(true)}
         onRegisterClick={() => setShowRegister(true)}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        allRestaurants={allRestaurants} 
       />
 
       <img src={sushiBoard} alt="" className="background-img sushi-board" />

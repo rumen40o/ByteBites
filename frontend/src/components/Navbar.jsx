@@ -9,8 +9,10 @@ import "../css/home.css";
 import "../css/Inputs.css";
 import { getCurrentUser, logoutUser } from "../api/api";
 import AddRestaurantModal from "./AddRestaurantModal";
+import { useLocation } from "react-router-dom";
 
-const Navbar = () => {
+
+const Navbar = ({searchQuery, setSearchQuery, allRestaurants }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
@@ -23,6 +25,12 @@ const Navbar = () => {
   const toggleBtnRef = useRef(null);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 1000);
   const [isClosing, setIsClosing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+const [searchResults, setSearchResults] = useState([]);
+
+const location = useLocation();
+const isHomePage = location.pathname === "/";
+const isAllRestaurantsPage = location.pathname === "/restaurants";
 
   useEffect(() => {
     getCurrentUser()
@@ -83,6 +91,33 @@ const Navbar = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    if (!allRestaurants) return;
+  
+    const value = e.target.value;
+    setSearchTerm(value);
+  
+    if (value.trim() === "") {
+      setSearchResults([]);
+  
+      if (isAllRestaurantsPage) {
+        setSearchQuery("");
+      }
+  
+      return;
+    }
+  
+    const filtered = allRestaurants.filter((r) =>
+      r.name.toLowerCase().includes(value.toLowerCase())
+    );
+  
+    if (isHomePage) {
+      setSearchResults(filtered);
+    } else if (isAllRestaurantsPage) {
+      setSearchQuery(value);
+    }
+  };
+
   return (
     <>
       <header className="header">
@@ -110,9 +145,31 @@ const Navbar = () => {
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
 
-            <input type="text" required onChange={() => {}} className="form-input" />
-            <div className="label">Search</div>
+            <input
+              type="text"
+              required
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="form-input"
+            />
           </div>
+          {isHomePage && searchResults.length > 0 && (
+  <ul className="dropdown-menu">
+    {searchResults.map((restaurant) => (
+      <li
+        key={restaurant.id}
+        onClick={() => {
+          navigate(`/restaurant/${restaurant.id}`);
+          setSearchResults([]);
+          setSearchTerm("");
+        }}
+        className="search-result"
+      >
+        {restaurant.name}
+      </li>
+    ))}
+  </ul>
+)}
 
           <div className="dropdown-menu-container">
           {(showDropDownMenu || isClosing) && (
