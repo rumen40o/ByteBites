@@ -24,6 +24,9 @@ const AllRestaurants = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [error, setError] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+const [allRestaurants, setAllRestaurants] = useState([]);
+
 
   const categories = ["PIZZA", "PASTA", "BURGER", "SUSHI", "RAMEN", "SANDWICH"];
 
@@ -53,8 +56,8 @@ const AllRestaurants = () => {
     try {
       const res = await getAllRestaurants();
       setRestaurants(res.data);
+      setAllRestaurants(res.data);
     } catch (err) {
-      console.error("Грешка при зареждане на ресторанти:", err);
       setError("Неуспешно зареждане на ресторантите.");
     }
   };
@@ -69,6 +72,10 @@ const AllRestaurants = () => {
     }
   };
 
+  const filteredRestaurants = restaurants.filter((r) =>
+    r.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="restaurants-container">
       <Navbar
@@ -79,6 +86,9 @@ const AllRestaurants = () => {
         setMenuOpen={setMenuOpen}
         menuOpen={menuOpen}
         onAddRestaurant={() => setShowAddModal(true)}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery} 
+        allRestaurants={restaurants}
       />
 
       <h2 className="restaurants-title">Всички ресторанти</h2>
@@ -108,7 +118,7 @@ const AllRestaurants = () => {
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="restaurants-grid">
-        {restaurants.map((r) => (
+        {filteredRestaurants.map((r) => (
           <div
             key={r.id}
             className="restaurant-card cursor-pointer hover:shadow-lg transition"
