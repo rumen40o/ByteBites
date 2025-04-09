@@ -13,7 +13,7 @@
   line-height: 60px;
   background: transparent;
   border: 3px solid #808080;
-  transition: 0.1s ease;
+  transition: 0.2s ease;
   z-index: 1111;
 }
 
@@ -31,7 +31,7 @@
   background-color: var(--bg-color);
   padding: 0 2px;
   color: #808080;
-  transition: 0.2s ease-in-out;
+  transition: 0.3s ease-in-out;
   pointer-events: none;
   border-radius: 20px;
 }

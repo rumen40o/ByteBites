@@ -13,24 +13,46 @@ import { useLocation } from "react-router-dom";
 
 
 const Navbar = ({searchQuery, setSearchQuery, allRestaurants }) => {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showDropDownMenu, setDropDownMenu] = useState(false);
-  const menu = document.querySelector(".dropdown-menu");
-  const button = document.querySelector(".circle-btn");
-  const dropdownRef = useRef(null);
-  const toggleBtnRef = useRef(null);
-  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 1000);
-  const [isClosing, setIsClosing] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+const navigate = useNavigate();
+const [user, setUser] = useState(null);
+const [showLogin, setShowLogin] = useState(false);
+const [showRegister, setShowRegister] = useState(false);
+const [showAddModal, setShowAddModal] = useState(false);
+const [showDropDownMenu, setDropDownMenu] = useState(false);
+const [isSearchClosing, setIsSearchClosing] = useState(false);
+const mobileToggleRef = useRef(null);
+const searchContainerRef = useRef(null);
+const dropdownRef = useRef(null);
+const toggleBtnRef = useRef(null);
+const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 1000);
+const [isClosing, setIsClosing] = useState(false);
+const [searchTerm, setSearchTerm] = useState("");
 const [searchResults, setSearchResults] = useState([]);
-
+const searchDropdownRef = useRef(null);
 const location = useLocation();
 const isHomePage = location.pathname === "/";
 const isAllRestaurantsPage = location.pathname === "/restaurants";
+const handleClickOutside = (e) => {
+  if (
+    dropdownRef.current &&
+    !dropdownRef.current.contains(e.target) &&
+    toggleBtnRef.current &&
+    !toggleBtnRef.current.contains(e.target)
+  ) {
+    setIsClosing(true);
+    setTimeout(() => {
+      setDropDownMenu(false);
+      setIsClosing(false);
+    }, 300);
+  }
+
+  if (
+    searchDropdownRef.current &&
+    !searchDropdownRef.current.contains(e.target)
+  ) {
+    setSearchResults([]);
+  }
+};
 
   useEffect(() => {
     getCurrentUser()
@@ -51,26 +73,50 @@ const isAllRestaurantsPage = location.pathname === "/restaurants";
     const handleClickOutside = (e) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(e.target) &&
-        toggleBtnRef.current &&
-        !toggleBtnRef.current.contains(e.target)
+        !dropdownRef.current.contains(e.target)
       ) {
-        setIsClosing(true);
+
+        if (isMobileView) {
+          if (mobileToggleRef.current && !mobileToggleRef.current.contains(e.target)) {
+            setIsClosing(true);
+            setTimeout(() => {
+              setDropDownMenu(false);
+              setIsClosing(false);
+            }, 300);
+          }
+        } else {
+          if (toggleBtnRef.current && !toggleBtnRef.current.contains(e.target)) {
+            setIsClosing(true);
+            setTimeout(() => {
+              setDropDownMenu(false);
+              setIsClosing(false);
+            }, 300);
+          }
+        }
+      }
+
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(e.target) &&
+        searchResults.length > 0
+      ) {
+        setIsSearchClosing(true);
         setTimeout(() => {
-          setDropDownMenu(false);
-          setIsClosing(false);
-        }, 300);
+          setSearchResults([]);
+          setIsSearchClosing(false);
+        }, 200);
       }
     };
   
-    window.addEventListener("resize", handleResize);
     window.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("resize", handleResize);
   
     return () => {
+      window.removeEventListener("mousedown", handleClickOutside);
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("click", handleClickOutside);
     };
-  }, []);
+  }, [searchResults, isMobileView]);
+  
 
   const handleLogout = async () => {
     try {
@@ -98,12 +144,15 @@ const isAllRestaurantsPage = location.pathname === "/restaurants";
     setSearchTerm(value);
   
     if (value.trim() === "") {
-      setSearchResults([]);
-  
+      setIsSearchClosing(true);
+      setTimeout(() => {
+        setSearchResults([]);
+        setIsSearchClosing(false);
+      }, 200);
+      
       if (isAllRestaurantsPage) {
         setSearchQuery("");
       }
-  
       return;
     }
   
@@ -130,46 +179,61 @@ const isAllRestaurantsPage = location.pathname === "/restaurants";
             style={{ cursor: "pointer" }}
           />
 
-          <div className="input-layout">
-            <svg
-              className="input-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+          <div className="search-container" ref={searchContainerRef}>
+            <div className="input-layout">
+              <svg
+                className="input-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
 
-            <input
-              type="text"
-              required
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="form-input"
-            />
+              <input
+                type="text"
+                required
+                value={searchTerm}
+                onChange={handleSearchChange}
+                onFocus={() => {
+                  if (isHomePage && searchTerm.trim() !== "") {
+                    const filtered = allRestaurants.filter((r) =>
+                      r.name.toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                    setSearchResults(filtered);
+                  }
+                }}
+                className="form-input"
+              />
+              <div className="label">Search</div>
+            </div>
+
+            {isHomePage && (searchResults.length > 0 || isSearchClosing) && (
+              <div className={`search-dropdown ${isSearchClosing ? "closing" : ""}`} ref={searchDropdownRef}>
+                <ul className="dropdown-menu">
+                  {searchResults.map((restaurant) => (
+                    <li
+                      key={restaurant.id}
+                      onClick={() => {
+                        navigate(`/restaurant/${restaurant.id}`);
+                        setSearchResults([]);
+                        setSearchTerm("");
+                      }}
+                      className="search-result"
+                    >
+                      {restaurant.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-          {isHomePage && searchResults.length > 0 && (
-  <ul className="dropdown-menu">
-    {searchResults.map((restaurant) => (
-      <li
-        key={restaurant.id}
-        onClick={() => {
-          navigate(`/restaurant/${restaurant.id}`);
-          setSearchResults([]);
-          setSearchTerm("");
-        }}
-        className="search-result"
-      >
-        {restaurant.name}
-      </li>
-    ))}
-  </ul>
-)}
+
 
           <div className="dropdown-menu-container">
           {(showDropDownMenu || isClosing) && (
@@ -206,6 +270,7 @@ const isAllRestaurantsPage = location.pathname === "/restaurants";
 
           <button
             className="circle-btn mobile-only"
+            ref={mobileToggleRef}
             onClick={() => {
               if (showDropDownMenu) {
                 setIsClosing(true);
