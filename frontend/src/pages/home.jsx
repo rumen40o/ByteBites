@@ -8,7 +8,6 @@ import "../css/Main.css";
 import "../css/home.css";
 import "../css/Inputs.css";
 
-// Images & Icons
 import burgerDecor from "../images/burger-1.png";
 import sushiBoard from "../images/sushi-1.png";
 import pizzaIcon from "../images/pizza-1.png";
@@ -56,6 +55,13 @@ function Home() {
       .then((res) => setAllRestaurants(res.data))
       .catch((err) => console.error("Error loading restaurants", err));
   }, []);
+
+
+  useEffect(() => {
+    if (user?.role === "DELIVER") {
+      navigate("/deliver");
+    }
+  }, [user, navigate]);
 
   const handleLoginSuccess = (loggedUser) => {
     setUser(loggedUser);

@@ -55,17 +55,9 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
     try {
       await loginUser({ identifier, password });
 
-      // 💡 Вземи текущия потребител след login
       const response = await getCurrentUser();
 
-      // 👉 Изпрати към родителския компонент
       onLoginSuccess(response.data);
-
-      if (response.data.role === "DELIVER") {
-        navigate("/deliver");
-      } else {
-        navigate("/");
-      }
 
       close();
     } catch (err) {
