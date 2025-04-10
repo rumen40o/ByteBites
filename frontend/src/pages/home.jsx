@@ -8,7 +8,6 @@ import "../css/Main.css";
 import "../css/home.css";
 import "../css/Inputs.css";
 
-// Images & Icons
 import burgerDecor from "../images/burger-1.png";
 import sushiBoard from "../images/sushi-1.png";
 import pizzaIcon from "../images/pizza-1.png";
@@ -50,6 +49,13 @@ function Home() {
       .then((res) => setUser(res.data))
       .catch(() => setUser(null));
   }, []);
+
+
+  useEffect(() => {
+    if (user?.role === "DELIVER") {
+      navigate("/deliver");
+    }
+  }, [user, navigate]);
 
   const handleLoginSuccess = (loggedUser) => {
     setUser(loggedUser);
