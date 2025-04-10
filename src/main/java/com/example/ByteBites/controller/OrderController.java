@@ -19,7 +19,7 @@ public class OrderController {
 
     private final OrderServiceInterface orderService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderServiceInterface orderService) {
         this.orderService = orderService;
     }
 

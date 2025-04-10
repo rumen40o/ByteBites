@@ -42,7 +42,7 @@ function Home() {
     { icon: burgerIcon, label: "BURGER" },
     { icon: sandwichIcon, label: "SANDWICH" },
     { icon: pastaIcon, label: "PASTA" },
-    { icon: ramenIcon, label: "RAMEN" },
+    { icon: ramenIcon, label: "DONER" },
     { icon: sushiIcon, label: "SUSHI" }
   ];
 

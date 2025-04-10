@@ -9,7 +9,6 @@ const OrderStatusIndicator = ({ status }) => {
     { key: 'DELIVERED', label: 'Завършено' }
   ];
 
-  // Map delivery statuses to order statuses
   const statusMapping = {
     'ASSIGNED': 'CONFIRMED',
     'IN_PROGRESS': 'ON_THE_WAY',
@@ -17,7 +16,6 @@ const OrderStatusIndicator = ({ status }) => {
   };
 
   const getStatusIndex = (currentStatus) => {
-    // If it's a delivery status, map it to the corresponding order status
     const mappedStatus = statusMapping[currentStatus] || currentStatus;
     return statuses.findIndex(s => s.key === mappedStatus);
   };

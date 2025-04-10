@@ -18,7 +18,7 @@ public class DeliveryController {
 
     private final DeliveryServiceInterface deliveryService;
 
-    public DeliveryController(DeliveryService deliveryService) {
+    public DeliveryController(DeliveryServiceInterface deliveryService) {
         this.deliveryService = deliveryService;
     }
 

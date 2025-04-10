@@ -16,7 +16,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
     });
     const [editingItemId, setEditingItemId] = useState(null);
 
-    const categories = ["PIZZA", "PASTA", "SANDWICH", "SUSHI", "RAMEN", "BURGER"];
+    const categories = ["PIZZA", "PASTA", "SANDWICH", "SUSHI", "DONER", "BURGER"];
 
     useEffect(() => {
         if (isOpen) {

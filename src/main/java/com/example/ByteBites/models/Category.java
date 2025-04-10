@@ -5,6 +5,6 @@ public enum Category {
     PASTA,
     SANDWICH,
     SUSHI,
-    RAMEN,
+    DONER,
     BURGER
 }
