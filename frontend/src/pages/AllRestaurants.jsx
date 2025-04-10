@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "../css/AllRestaurants.css";
 
 import {
@@ -16,6 +16,7 @@ import Navbar from "../components/Navbar";
 
 const AllRestaurants = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -25,10 +26,17 @@ const AllRestaurants = () => {
   const [error, setError] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-const [allRestaurants, setAllRestaurants] = useState([]);
-
+  const [allRestaurants, setAllRestaurants] = useState([]);
 
   const categories = ["PIZZA", "PASTA", "BURGER", "SUSHI", "RAMEN", "SANDWICH"];
+
+
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    if (categoryParam && categories.includes(categoryParam)) {
+      setSelectedCategories([categoryParam]);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     fetchUser();
@@ -87,13 +95,12 @@ const [allRestaurants, setAllRestaurants] = useState([]);
         menuOpen={menuOpen}
         onAddRestaurant={() => setShowAddModal(true)}
         searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery} 
+        setSearchQuery={setSearchQuery}
         allRestaurants={restaurants}
       />
 
       <h2 className="restaurants-title">Всички ресторанти</h2>
 
-      {/* 🔍 Филтри */}
       <div className="category-filters">
         {categories.map((cat) => (
           <label key={cat} className="filter-label">

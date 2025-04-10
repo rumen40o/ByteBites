@@ -56,7 +56,6 @@ function Home() {
       .catch((err) => console.error("Error loading restaurants", err));
   }, []);
 
-
   useEffect(() => {
     if (user?.role === "DELIVER") {
       navigate("/deliver");
@@ -68,6 +67,10 @@ function Home() {
     setShowLogin(false);
   };
 
+  const handleFoodTypeClick = (category) => {
+    navigate(`/restaurants?category=${category}`);
+  };
+
   return (
     <div className="home-container">
       <Navbar
@@ -75,7 +78,7 @@ function Home() {
         onRegisterClick={() => setShowRegister(true)}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        allRestaurants={allRestaurants} 
+        allRestaurants={allRestaurants}
       />
 
       <img src={sushiBoard} alt="" className="background-img sushi-board" />
@@ -101,7 +104,12 @@ function Home() {
             <h1 className="section-title">TYPES OF FOOD</h1>
             <div className="food-grid">
               {foodTypes.map((food, index) => (
-                <div key={index} className="food-item">
+                <div
+                  key={index}
+                  className="food-item"
+                  onClick={() => handleFoodTypeClick(food.label)}
+                  style={{ cursor: "pointer" }}
+                >
                   <img src={food.icon} alt={food.label} className="food-icon" />
                   <span className="food-label">{food.label}</span>
                 </div>
