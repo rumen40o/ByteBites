@@ -37,7 +37,6 @@ const RestaurantPage = () => {
       currentUser = userRes.data;
       setUser(currentUser);
     } catch (e) {
-      // Не е логнат
       setUser(null);
     }
     try {

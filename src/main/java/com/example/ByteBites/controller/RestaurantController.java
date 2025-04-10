@@ -23,7 +23,7 @@ public class RestaurantController {
 
     private final RestaurantServiceInterface restaurantService;
 
-    public RestaurantController(RestaurantService restaurantService) {
+    public RestaurantController(RestaurantServiceInterface restaurantService) {
         this.restaurantService = restaurantService;
     }
 

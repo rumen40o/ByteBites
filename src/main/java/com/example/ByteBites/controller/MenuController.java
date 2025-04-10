@@ -21,7 +21,7 @@ public class MenuController {
 
     private final MenuServiceInterface menuService;
 
-    public MenuController(MenuService menuService) {
+    public MenuController(MenuServiceInterface menuService) {
         this.menuService = menuService;
     }
 

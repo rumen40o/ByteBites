@@ -9,7 +9,7 @@ const api = axios.create({
     baseURL: "http://localhost:8080",
   });
 
-// --- 🍔 RESTAURANTS ---
+// --- RESTAURANTS ---
 export const getAllRestaurants = () => api_Not_login.get("/restaurants/all");
 export const getRestaurantById = (id) => api_Not_login.get(`/restaurants/${id}`);
 export const addRestaurant = (data) => api.post("/restaurants/add", data);
@@ -19,13 +19,13 @@ export const getRestaurantsByOwner = (ownerId) => api.get(`/restaurants/owner/${
 export const filterRestaurantsByCategories = (categories) =>
   api_Not_login.post("/restaurants/filter", categories);
 
-// --- 📦 AUTH ---
+// --- AUTH ---
 export const registerUser = (data) => api.post("/auth/register", data);
 export const loginUser = (data) => api.post("/auth/login", data);
 export const logoutUser = () => api.post("/auth/logout");
 export const getCurrentUser = () => api.get("/auth/logged/user");
 
-// --- 📋 MENU ---
+// --- MENU ---
 export const getMenuByRestaurant = (restaurantId) =>
   api_Not_login.get(`/menu/restaurant/${restaurantId}`);
   export const addMenuItem = (restaurantId, data) =>
@@ -34,7 +34,7 @@ export const getMenuByRestaurant = (restaurantId) =>
     api.put(`/menu/item/${itemId}`, data);
   export const deleteMenuItem = (itemId) => api.delete(`/menu/item/${itemId}`);
 
-  // --- 🚚 ORDERS ---
+  // --- ORDERS ---
 export const createOrder = (customerId, restaurantId, data) =>
     api.post(`/orders/create/customer/${customerId}/restaurant/${restaurantId}`, data);
   export const getOrderStatus = (orderId) => api.get(`/orders/status/${orderId}`);
@@ -46,7 +46,6 @@ export const createOrder = (customerId, restaurantId, data) =>
     api.get(`/orders/customer/${customerId}`);
 
   // --- Deliveries ---
-
   export const getAvailableDeliveries = () => api.get("/deliveries/available");
   export const getDeliveriesByDeliverer = (delivererId) => api.get(`/deliveries/${delivererId}`);
   export const acceptDelivery = (orderId) => api.post(`/deliveries/accept/order/${orderId}`);

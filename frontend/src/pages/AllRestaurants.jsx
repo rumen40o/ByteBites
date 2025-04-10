@@ -28,7 +28,7 @@ const AllRestaurants = () => {
 const [allRestaurants, setAllRestaurants] = useState([]);
 
 
-  const categories = ["PIZZA", "PASTA", "BURGER", "SUSHI", "RAMEN", "SANDWICH"];
+  const categories = ["PIZZA", "PASTA", "BURGER", "SUSHI", "DONER", "SANDWICH"];
 
   useEffect(() => {
     fetchUser();
