@@ -4,6 +4,8 @@ import AddItemModal from "../components/AddItemModal";
 import DeliveryAddressModal from "../components/DeliveryAddressModal";
 import OrderSummary from "../components/OrderSummary";
 import "../css/RestaurantPage.css";
+import Navbar from "../components/Navbar";
+import RegisterModal from "../components/RegisterModal";
 import {
   getCurrentUser,
   getRestaurantById,
@@ -11,10 +13,15 @@ import {
   createOrder,
 } from '../api/api';
 import LoginModal from "../components/LoginModal";
+import Footer from "../components/Footer";
+import "../css/Buttons.css";
+import image from'../images/pizza-1.png';
 
 const RestaurantPage = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   const [restaurant, setRestaurant] = useState(null);
@@ -27,6 +34,11 @@ const RestaurantPage = () => {
   useEffect(() => {
     loadInitialData();
   }, []);
+
+  const handleLoginSuccess = (loggedUser) => {
+    setUser(loggedUser);
+    setShowLogin(false);
+  };
 
   const loadInitialData = async () => {
     
@@ -140,85 +152,89 @@ const RestaurantPage = () => {
       });
   };
 
+  const groupedMenu = menuItems.reduce((acc, item) => {
+    if (!acc[item.category]) acc[item.category] = [];
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+
   return (
+    
     <div className="restaurant-container">
-      <div className="content-section">
-        {restaurant && (
-          <div className="restaurant-info">
-            <img src={restaurant.imageUrl} alt={restaurant.name} className="restaurant-banner" />
-            <h1 className="restaurant-name">{restaurant.name}</h1>
-            <p className="restaurant-description">{restaurant.description}</p>
-            <p className="restaurant-address">📍 {restaurant.address}</p>
-          </div>
-        )}
-
-        <h2>Меню на ресторанта</h2>
-
-        {error && <p className="error-message">{error}</p>}
-
-        {isOwner && (
-          <>
-            <button onClick={() => setIsModalOpen(true)} className="add-item-button">
-              ➕ Edit menu
-            </button>
-
-            <AddItemModal
-              isOpen={isModalOpen}
-              close={() => setIsModalOpen(false)}
-              restaurantId={id}
-              reloadMenu={loadMenuItems}
-            />
-          </>
-        )}
-
-        <div className="menu-grid">
-          {menuItems.map((item) => (
-            <div key={item.id} className="menu-item">
-              <h3>{item.name}</h3>
-              <p>Категория: {item.category}</p>
-              <p>Цена: {item.price.toFixed(2)} лв</p>
-              <button onClick={() => addToOrder(item)}>Добави</button>
-            </div>
-          ))}
-        </div>
+    <Navbar onLoginClick={() => setShowLogin(true)} onRegisterClick={() => setShowRegister(true)} />
+  
+    <div className="restaurant-banner-section">
+      <img src={restaurant?.imageUrl} alt={restaurant?.name} className="restaurant-banner" />
+      <div className="restaurant-banner-overlay">
+        <h1 className="restaurant-title">{restaurant?.name}</h1>
+        <p className="restaurant-subtitle">{restaurant?.description}</p>
+        <p className="restaurant-address-tag">📍 {restaurant?.address}</p>
       </div>
-
-      <div className="order-section">
-        {orderItems.length > 0 && restaurant && (
-          <OrderSummary 
+    </div>
+  
+    <div className="restaurant-content-wrapper">
+      {/* Menu */}
+      <div className="restaurant-menu-section">
+        {Object.keys(groupedMenu).map((category) => (
+          <div key={category} className="menu-category-section">
+            <h2 className="menu-category-title">{category}</h2>
+            <div className="menu-grid">
+              {groupedMenu[category].map((item) => (
+                <div key={item.id} className="menu-item">
+                  <div className="image-container">
+                      <img src="https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg" alt={item.name} className="menu-item-image" />
+                  </div>
+                  <div className="menu-item-text">
+                    <h3 className="menu-item-name">{item.name}</h3>
+                    <p className="menu-item-description">
+                      {item.description || "No description."}
+                    </p>
+                    
+                  </div>
+                  <div className="add-item-container">
+                  <p className="menu-item-price">{item.price.toFixed(2)} лв.</p>
+                      <button className="circle-add-item-btn" onClick={() => addToOrder(item)}>
+                        <span className="circle-icon-add-item">+</span>
+                      </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+  
+      {/* Cart */}
+      <div className="restaurant-cart-section">
+        <OrderSummary
           cart={orderItems}
           onUpdateQuantity={updateQuantity}
           restaurantInfo={{
-            name: restaurant.name,
-            address: restaurant.address,
-            id: restaurant.id
+            name: restaurant?.name,
+            address: restaurant?.address,
+            id: restaurant?.id,
           }}
           user={user}
           onLoginRequired={() => setShowLoginModal(true)}
         />
-        )}
       </div>
-      
-      <DeliveryAddressModal
-        isOpen={isAddressModalOpen}
-        onClose={() => setIsAddressModalOpen(false)}
-        onConfirm={handleConfirmOrder}
-      />
-
-      {showLoginModal && (
-        <LoginModal
-          close={() => setShowLoginModal(false)}
-          openRegister={() => {
-            setShowLoginModal(false);
-          }}
-          onLoginSuccess={() => {
-            setShowLoginModal(false);
-            window.location.reload();
-          }}
-        />
-      )}
     </div>
+  
+    {/* Footer + Modals + Scroll Up */}
+    <button className="scroll-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>⬆</button>
+    <Footer />
+  
+    {showLogin && <LoginModal close={() => setShowLogin(false)} onLoginSuccess={handleLoginSuccess} openRegister={() => { setShowLogin(false); setShowRegister(true); }} />}
+    {showRegister && <RegisterModal close={() => setShowRegister(false)} openLogin={() => { setShowRegister(false); setShowLogin(true); }} role="USER" />}
+    {isOwner && <AddItemModal isOpen={isModalOpen} close={() => setIsModalOpen(false)} restaurantId={id} reloadMenu={loadMenuItems} />}
+    <DeliveryAddressModal isOpen={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)} onConfirm={handleConfirmOrder} />
+    {showLoginModal && <LoginModal close={() => setShowLoginModal(false)} onLoginSuccess={() => window.location.reload()} />}
+  </div>
+  
   );
+  
 };
 
 export default RestaurantPage;
+
+
