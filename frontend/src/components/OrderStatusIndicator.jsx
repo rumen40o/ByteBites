@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/OrderStatusIndicator.css';
+import { FaUserCheck } from "react-icons/fa";
 
 const OrderStatusIndicator = ({ status }) => {
   const statuses = [
@@ -16,24 +17,32 @@ const OrderStatusIndicator = ({ status }) => {
   };
 
   const getStatusIndex = (currentStatus) => {
-    const mappedStatus = statusMapping[currentStatus] || currentStatus;
-    return statuses.findIndex(s => s.key === mappedStatus);
+    const mapped = statusMapping[currentStatus] || currentStatus;
+    return statuses.findIndex(s => s.key === mapped);
   };
 
-  const currentIndex = getStatusIndex(status);
+  const currentStep = getStatusIndex(status);
 
   return (
-    <div className="order-status-indicator">
-      <div className="status-circle">
+    <div className="order-status-wrapper">
+      <div className="status-avatar">
+        <FaUserCheck className="status-avatar-icon" />
+      </div>
+
+      <div className="status-steps">
         {statuses.map((s, index) => (
-          <div
-            key={s.key}
-            className={`status-segment ${index <= currentIndex ? 'active' : ''} status-${s.key.toLowerCase()}`}
-          />
+          <div className={`step ${index <= currentStep ? 'active' : ''}`} key={s.key}>
+            <div className="step-circle">{index + 1}</div>
+            <div className="step-label">{s.label}</div>
+          </div>
         ))}
-        <div className="status-center">
-          <span className="status-label">{statuses[currentIndex]?.label || 'Неизвестен'}</span>
-        </div>
+      </div>
+
+      <div className="status-progress-bar">
+        <div
+          className="progress-fill"
+          style={{ width: `${((currentStep + 1) / statuses.length) * 100}%` }}
+        ></div>
       </div>
     </div>
   );
