@@ -36,63 +36,61 @@ const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo, user, onLoginReq
 
   return (
     <div className="order-summary">
-      <h2>Обобщение на поръчката</h2>
-      <div className="order-items">
-        {cart.map((item) => (
-          <div key={item.id} className="order-item">
-            <div className="quantity-controls">
-              <button 
-                onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                className="quantity-btn"
-                type="button"
-                aria-label="Decrease quantity"
-              >
-                -
-              </button>
-              <span>{item.quantity}</span>
-              <button 
-                onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                className="quantity-btn"
-                type="button"
-                aria-label="Increase quantity"
-              >
-                +
-              </button>
+      <h3 className="order-title">Your cart</h3>
+
+      <div className="order-items-restaurant">
+  {cart.map((item) => (
+          <div key={item.id} className="cart-item">
+            <img
+              src='https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg'
+              alt={item.name}
+              className="cart-item-img"
+            />
+            <div className="cart-item-details">
+              <span className="cart-item-name">{item.name}</span>
+              <span className="cart-item-quantity-price">
+                {item.quantity} x {item.price.toFixed(2)} лв. {(item.price * item.quantity).toFixed(2)} лв.
+              </span>
+              
             </div>
-            <div className="item-details">
-              <span className="item-name">{item.name}</span>
-              <span className="item-price">{(item.price * item.quantity).toFixed(2)} лв.</span>
+            <hr/>
+            <div className="cart-quantity-buttons">
+              <button className="circle-btn small" onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</button>
+              <button className="circle-btn small" onClick={() => handleQuantityChange(item.id, item.quantity - 1)}>−</button>
             </div>
+            
           </div>
         ))}
+        
       </div>
-      
-      <div className="order-summary-details">
+
+
+      <div className="order-summary-breakdown">
         <div className="summary-row">
-          <span>Продукти</span>
+          <span>Products</span>
           <span>{subtotal.toFixed(2)} лв.</span>
         </div>
         <div className="summary-row">
-          <span>Доставка</span>
+          <span>Delivery</span>
           <span>{deliveryFee.toFixed(2)} лв.</span>
+          
         </div>
         <div className="summary-row">
-          <span>Такса за услуга</span>
+          <span>Service Fee</span>
           <span>{serviceFee.toFixed(2)} лв.</span>
+          
         </div>
         <div className="summary-row total">
-          <span>ОБЩО</span>
-          <span>{total.toFixed(2)} лв.</span>
+          <strong>Summary:</strong>
+          <strong>{total.toFixed(2)} лв.</strong>
         </div>
       </div>
-
-      <button 
-        className="checkout-button"
-        type="button"
-        onClick={handleCheckout}
-      >
-        Платете, за да поръчате
-      </button>
+      <div className='chechout-btn-container'>
+        <button className="blue-btn checkout-btn" onClick={handleCheckout}>
+          Check out
+        </button>
+      </div>
+      
     </div>
   );
 };
