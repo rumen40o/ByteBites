@@ -34,7 +34,8 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/auth/**",
                                 "/restaurants/**",
-                                "/menu/restaurant/**"
+                                "/menu/restaurant/**",
+                                "/reports/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
