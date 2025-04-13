@@ -1,4 +1,5 @@
 package com.example.ByteBites.service;
+import com.example.ByteBites.models.DTO.RestaurantRevenueDTO;
 import org.springframework.stereotype.Service;
 import com.example.ByteBites.service.inteface.ReportServiceInterface;
 import com.example.ByteBites.repository.OrdersRepository;
@@ -25,5 +26,9 @@ public class ReportService implements ReportServiceInterface {
                 .average()
                 .orElse(0);
         return new OrderStatsDTO(totalOrders, averageValue);
+    }
+    @Override
+    public List<RestaurantRevenueDTO> getRevenuePerRestaurant() {
+        return orderRepository.getRevenuePerRestaurant();
     }
 }
