@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../css/LoginPopUp.css";
+import "../css/LoginModal.css";
 import "../css/Buttons.css";
 import "../css/Inputs.css";
-import "../css/RegistrationPopUp.css";
+import "../css/RegistrationModal.css";
 import image from "../images/sushi-1.png";
 import { loginUser, getCurrentUser } from "../api/api";
 
@@ -12,15 +12,17 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState({});
   const [serverError, setServerError] = useState(null);
+  const [isClosing, setIsClosing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
     if (!identifier.trim()) {
-      newErrors.identifier = "Моля, въведете имейл или потребителско име!";
+      newErrors.identifier = "Please enter an email or username.";
     }
     if (!password.trim()) {
-      newErrors.password = "Моля, въведете парола!";
+      newErrors.password = "Please enter a password.";
     }
     setError(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -46,6 +48,11 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
     return () => window.removeEventListener("resize", resizePopup);
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setIsOpen(true), 10);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setServerError(null);
@@ -54,12 +61,9 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
 
     try {
       await loginUser({ identifier, password });
-
       const response = await getCurrentUser();
-
       onLoginSuccess(response.data);
-
-      close();
+      handleClose();
     } catch (err) {
       console.error("Axios Error:", err);
       if (err.response) {
@@ -68,19 +72,33 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
         } else if (err.response.data?.message) {
           setServerError(err.response.data.message);
         } else {
-          setServerError("Грешка при вход!");
+          setServerError("Login error!");
         }
       } else if (err.request) {
-        setServerError("Сървърът не отговаря!");
+        setServerError("The server is not responding!");
       } else {
-        setServerError("Непозната грешка: " + err.message);
+        setServerError("Unknown error: " + err.message);
       }
     }
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+    setIsClosing(true);
+    setTimeout(() => {
+      close();
+    }, 300);
+  };
+
   return (
-    <div className="modal-overlay" onClick={close}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div
+      className={`modal-overlay ${isOpen && !isClosing ? "open" : ""} ${isClosing ? "closing" : ""}`}
+      onClick={handleClose}
+    >
+      <div
+        className={`modal-content ${isOpen && !isClosing ? "open" : ""} ${isClosing ? "closing" : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="pop-up">
           <div className="responsive-wrapper">
             <div className="square">
@@ -133,12 +151,8 @@ const LoginModal = ({ close, openRegister, onLoginSuccess }) => {
 
               <img className="sushi-image" src={image} alt="Sushi" />
 
-              <button className="close-btn" onClick={close} aria-label="Close">
-                <svg
-                  className="close-icon"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+              <button className="close-btn" onClick={handleClose} aria-label="Close">
+                <svg className="close-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <line x1="6" y1="6" x2="18" y2="18" />
                   <line x1="18" y1="6" x2="6" y2="18" />
                 </svg>

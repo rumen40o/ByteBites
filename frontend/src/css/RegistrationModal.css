@@ -101,3 +101,43 @@
   background: transparent;
   border-radius: 10px;
 }
+
+.modal-overlay {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #00000050;
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+}
+
+.modal-overlay.closing {
+  opacity: 0;
+}
+
+.modal-content {
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 300ms ease-in-out, opacity 500ms ease-in-out;
+}
+
+.modal-content.open {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal-content.closing {
+  transform: scale(0.9);
+  opacity: 0;
+}

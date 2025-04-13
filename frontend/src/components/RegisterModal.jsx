@@ -1,75 +1,91 @@
 import { useState, useEffect } from "react";
-import "../css/RegisterPopUp.css";
-import "../css/Buttons.css"
-import "../css/RegistrationPopUp.css"
+import "../css/RegisterModal.css";
+import "../css/Buttons.css";
+import "../css/RegistrationModal.css";
 import image from "../images/burger-1.png";
-import {
-  registerUser
-} from '../api/api';
+import { registerUser } from "../api/api";
 
 const RegisterModal = ({ close, openLogin, role }) => {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [error, setError] = useState(null);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [error, setError] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
-    const validatePhoneNumber = (number) => {
-        const phoneRegex = /^(\+359|0)[8-9][0-9]{8}$/;
-        return phoneRegex.test(number);
-    };
+  const validatePhoneNumber = (number) => {
+    const phoneRegex = /^(\+359|0)[8-9][0-9]{8}$/;
+    return phoneRegex.test(number);
+  };
 
-    useEffect(() => {
-        function resizePopup() {
-          const wrapper = document.querySelector(".responsive-wrapper");
-          if (!wrapper) return;
-    
-          const availableWidth = window.innerWidth * 0.9;
-          const availableHeight = window.innerHeight * 0.9;
-    
-          const scaleX = availableWidth / 1467;
-          const scaleY = availableHeight / 910;
-          const scale = Math.min(scaleX, scaleY, 1);
-    
-          wrapper.style.transform = `scale(${scale})`;
-        }
-    
-        resizePopup();
-        window.addEventListener("resize", resizePopup);
-        return () => window.removeEventListener("resize", resizePopup);
-      }, []);
+  useEffect(() => {
+    function resizePopup() {
+      const wrapper = document.querySelector(".responsive-wrapper");
+      if (!wrapper) return;
 
+      const availableWidth = window.innerWidth * 0.9;
+      const availableHeight = window.innerHeight * 0.9;
 
+      const scaleX = availableWidth / 1467;
+      const scaleY = availableHeight / 910;
+      const scale = Math.min(scaleX, scaleY, 1);
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        setError(null);
+      wrapper.style.transform = `scale(${scale})`;
+    }
 
-        if (!validatePhoneNumber(phoneNumber)) {
-            setError("Невалиден телефонен номер! Използвайте формат: +359XXXXXXXXX или 0XXXXXXXXX");
-            return;
-        }
+    resizePopup();
+    window.addEventListener("resize", resizePopup);
+    return () => window.removeEventListener("resize", resizePopup);
+  }, []);
 
-        try {
-            const response = await registerUser({
-              username,
-              email,
-              password,
-              phone_number: phoneNumber,
-              role
-          });
+  useEffect(() => {
+    const timer = setTimeout(() => setIsOpen(true), 10);
+    return () => clearTimeout(timer);
+  }, []);
 
-            console.log("Registration successful:", response.data);
-            console.log(role)
-            close();
-        } catch (err) {
-            setError(err.response?.data || "Грешка при регистрация!");
-        }
-    };
+  const handleClose = () => {
+    setIsOpen(false);
+    setIsClosing(true);
+    setTimeout(() => {
+      close();
+    }, 300);
+  };
 
-    return (
-        <div className="modal-overlay" onClick={close}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!validatePhoneNumber(phoneNumber)) {
+      setError("Invalid phone number! Use format: +359XXXXXXXXX or 0XXXXXXXXX");
+      return;
+    }
+
+    try {
+      const response = await registerUser({
+        username,
+        email,
+        password,
+        phone_number: phoneNumber,
+        role,
+      });
+      console.log("Registration successful: ", response.data);
+      console.log(role);
+      handleClose();
+    } catch (err) {
+      setError(err.response?.data || "Registration error!");
+    }
+  };
+
+  return (
+    <div
+      className={`modal-overlay ${isOpen && !isClosing ? "open" : ""} ${isClosing ? "closing" : ""}`}
+      onClick={handleClose}
+    >
+      <div
+        className={`modal-content ${isOpen && !isClosing ? "open" : ""} ${isClosing ? "closing" : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="pop-up">
           <div className="responsive-wrapper">
             <div className="square">
@@ -77,12 +93,13 @@ const RegisterModal = ({ close, openLogin, role }) => {
                 <div className="container">
                   <div className="title-register">
                     <h className="title-text">
-                    {role === "DELIVER" ? "Become a Rider"
-                                : role === "OWNER"
-                                ? "Owner register"
-                                : "Register"}
+                      {role === "DELIVER"
+                        ? "Become a Rider"
+                        : role === "OWNER"
+                        ? "Owner register"
+                        : "Register"}
                     </h>
-                    </div>
+                  </div>
                   <div className="input-layout">
                     <input
                       type="text"
@@ -133,7 +150,7 @@ const RegisterModal = ({ close, openLogin, role }) => {
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="switch-btn">
                     <p className="switch-text">Already have an account?</p>
                     <button className="white-btn" onClick={openLogin}>
@@ -145,7 +162,7 @@ const RegisterModal = ({ close, openLogin, role }) => {
 
               <img className="image" src={image} alt="Burger" />
 
-              <button className="close-btn" aria-label="Close" onClick={close}>
+              <button className="close-btn" aria-label="Close" onClick={handleClose}>
                 <svg viewBox="0 0 24 24" className="close-icon" xmlns="http://www.w3.org/2000/svg">
                   <line x1="6" y1="6" x2="18" y2="18" />
                   <line x1="18" y1="6" x2="6" y2="18" />
@@ -156,7 +173,7 @@ const RegisterModal = ({ close, openLogin, role }) => {
         </div>
       </div>
     </div>
-    );
+  );
 };
 
 export default RegisterModal;
