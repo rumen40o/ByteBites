@@ -11,48 +11,24 @@ import { getCurrentUser, logoutUser } from "../api/api";
 import AddRestaurantModal from "./AddRestaurantModal";
 import { useLocation } from "react-router-dom";
 
-
-const Navbar = ({searchQuery, setSearchQuery, allRestaurants }) => {
-const navigate = useNavigate();
-const [user, setUser] = useState(null);
-const [showLogin, setShowLogin] = useState(false);
-const [showRegister, setShowRegister] = useState(false);
-const [showAddModal, setShowAddModal] = useState(false);
-const [showDropDownMenu, setDropDownMenu] = useState(false);
-const [isSearchClosing, setIsSearchClosing] = useState(false);
-const mobileToggleRef = useRef(null);
-const searchContainerRef = useRef(null);
-const dropdownRef = useRef(null);
-const toggleBtnRef = useRef(null);
-const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 1000);
-const [isClosing, setIsClosing] = useState(false);
-const [searchTerm, setSearchTerm] = useState("");
-const [searchResults, setSearchResults] = useState([]);
-const searchDropdownRef = useRef(null);
-const location = useLocation();
-const isHomePage = location.pathname === "/";
-const isAllRestaurantsPage = location.pathname === "/restaurants";
-const handleClickOutside = (e) => {
-  if (
-    dropdownRef.current &&
-    !dropdownRef.current.contains(e.target) &&
-    toggleBtnRef.current &&
-    !toggleBtnRef.current.contains(e.target)
-  ) {
-    setIsClosing(true);
-    setTimeout(() => {
-      setDropDownMenu(false);
-      setIsClosing(false);
-    }, 300);
-  }
-
-  if (
-    searchDropdownRef.current &&
-    !searchDropdownRef.current.contains(e.target)
-  ) {
-    setSearchResults([]);
-  }
-};
+const Navbar = ({ searchQuery, setSearchQuery, allRestaurants }) => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showDropDownMenu, setDropDownMenu] = useState(false);
+  const [isSearchClosing, setIsSearchClosing] = useState(false);
+  const searchContainerRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const toggleBtnRef = useRef(null);
+  const searchDropdownRef = useRef(null);
+  const [isClosing, setIsClosing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+  const isAllRestaurantsPage = location.pathname === "/restaurants";
 
   useEffect(() => {
     getCurrentUser()
@@ -61,38 +37,18 @@ const handleClickOutside = (e) => {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => {
-      const isMobile = window.innerWidth <= 1000;
-      setIsMobileView(isMobile);
-      if (!isMobile) {
-        setDropDownMenu(false);
-        setIsClosing(false);
-      }
-    };
-  
     const handleClickOutside = (e) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(e.target)
+        !dropdownRef.current.contains(e.target) &&
+        toggleBtnRef.current &&
+        !toggleBtnRef.current.contains(e.target)
       ) {
-
-        if (isMobileView) {
-          if (mobileToggleRef.current && !mobileToggleRef.current.contains(e.target)) {
-            setIsClosing(true);
-            setTimeout(() => {
-              setDropDownMenu(false);
-              setIsClosing(false);
-            }, 300);
-          }
-        } else {
-          if (toggleBtnRef.current && !toggleBtnRef.current.contains(e.target)) {
-            setIsClosing(true);
-            setTimeout(() => {
-              setDropDownMenu(false);
-              setIsClosing(false);
-            }, 300);
-          }
-        }
+        setIsClosing(true);
+        setTimeout(() => {
+          setDropDownMenu(false);
+          setIsClosing(false);
+        }, 300);
       }
 
       if (
@@ -107,16 +63,12 @@ const handleClickOutside = (e) => {
         }, 200);
       }
     };
-  
+
     window.addEventListener("mousedown", handleClickOutside);
-    window.addEventListener("resize", handleResize);
-  
     return () => {
       window.removeEventListener("mousedown", handleClickOutside);
-      window.removeEventListener("resize", handleResize);
     };
-  }, [searchResults, isMobileView]);
-  
+  }, [searchResults]);
 
   const handleLogout = async () => {
     try {
@@ -139,27 +91,27 @@ const handleClickOutside = (e) => {
 
   const handleSearchChange = (e) => {
     if (!allRestaurants) return;
-  
+
     const value = e.target.value;
     setSearchTerm(value);
-  
+
     if (value.trim() === "") {
       setIsSearchClosing(true);
       setTimeout(() => {
         setSearchResults([]);
         setIsSearchClosing(false);
       }, 200);
-      
+
       if (isAllRestaurantsPage) {
         setSearchQuery("");
       }
       return;
     }
-  
+
     const filtered = allRestaurants.filter((r) =>
       r.name.toLowerCase().includes(value.toLowerCase())
     );
-  
+
     if (isHomePage) {
       setSearchResults(filtered);
     } else if (isAllRestaurantsPage) {
@@ -214,7 +166,12 @@ const handleClickOutside = (e) => {
             </div>
 
             {isHomePage && (searchResults.length > 0 || isSearchClosing) && (
-              <div className={`search-dropdown ${isSearchClosing ? "closing" : ""}`} ref={searchDropdownRef}>
+              <div
+                className={`search-dropdown ${
+                  isSearchClosing ? "closing" : ""
+                }`}
+                ref={searchDropdownRef}
+              >
                 <ul className="dropdown-menu">
                   {searchResults.map((restaurant) => (
                     <li
@@ -234,59 +191,88 @@ const handleClickOutside = (e) => {
             )}
           </div>
 
-
           <div className="dropdown-menu-container">
-          {(showDropDownMenu || isClosing) && (
-            <div className={`dropdown-menu ${isClosing ? "closing" : ""}`} ref={dropdownRef}>
-              {user ? (
-                <>
-                  <button onClick={() => { setDropDownMenu(false); navigate("/profile"); }}>
-                    View Profile
-                  </button>
-                  <button onClick={() => { setDropDownMenu(false); navigate("/order-tracking"); }}>
-                    Order Status
-                  </button>
-                  {user.role === "OWNER" && (
-                    <button onClick={() => { setDropDownMenu(false); setShowAddModal(true); }}>
-                      Add Restaurant
+            {(showDropDownMenu || isClosing) && (
+              <div
+                className={`dropdown-menu ${isClosing ? "closing" : ""}`}
+                ref={dropdownRef}
+              >
+                {user ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        setDropDownMenu(false);
+                        navigate("/profile");
+                      }}
+                    >
+                      View Profile
                     </button>
-                  )}
-                  {isMobileView && (
+                    <button
+                      onClick={() => {
+                        setDropDownMenu(false);
+                        navigate("/order-tracking");
+                      }}
+                    >
+                      Order Status
+                    </button>
+                    {user.role === "OWNER" && (
+                      <button
+                        onClick={() => {
+                          setDropDownMenu(false);
+                          setShowAddModal(true);
+                        }}
+                      >
+                        Add Restaurant
+                      </button>
+                    )}
                     <button onClick={handleLogout}>Log out</button>
-                  )}
-                </>
-              ) : (
-                <>
-                  <button onClick={() => { setShowLogin(true); setDropDownMenu(false); }}>
-                    Log in
-                  </button>
-                  <button onClick={() => { setShowRegister(true); setDropDownMenu(false); }}>
-                    Create Account
-                  </button>
-                </>
-              )}
-            </div>
-          )}
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        setShowLogin(true);
+                        setDropDownMenu(false);
+                      }}
+                    >
+                      Log in
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowRegister(true);
+                        setDropDownMenu(false);
+                      }}
+                    >
+                      Create Account
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
 
-          <button
-            className="circle-btn mobile-only"
-            ref={mobileToggleRef}
-            onClick={() => {
-              if (showDropDownMenu) {
-                setIsClosing(true);
-                setTimeout(() => {
-                  setDropDownMenu(false);
-                  setIsClosing(false);
-                }, 300);
-              } else {
-                setDropDownMenu(true);
-              }
-            }}
-          >
+            <button
+              className="circle-btn"
+              onClick={() => {
+                if (showDropDownMenu) {
+                  setIsClosing(true);
+                  setTimeout(() => {
+                    setDropDownMenu(false);
+                    setIsClosing(false);
+                  }, 300);
+                } else {
+                  setDropDownMenu(true);
+                }
+              }}
+              ref={toggleBtnRef}
+            >
               {user ? (
                 <FaUserCircle className="circle-icon account-icon" size={18} />
               ) : (
-                <svg className="circle-icon" viewBox="0 0 100 100" fill="currentColor">
+                <svg
+                  className="circle-icon"
+                  viewBox="0 0 100 100"
+                  fill="currentColor"
+                >
                   <rect x="20" y="25" width="60" height="10" rx="5"></rect>
                   <rect x="20" y="45" width="60" height="10" rx="5"></rect>
                   <rect x="20" y="65" width="60" height="10" rx="5"></rect>
@@ -294,48 +280,12 @@ const handleClickOutside = (e) => {
               )}
             </button>
 
-            <div className="header-btn-content desktop-only">
-              {user ? (
-                
-                <div className="user-controls relative">
-                  {user && !isMobileView && (
-                    <button className="white-btn" onClick={handleLogout}>
-                      Log out
-                    </button>
-                  )}
-
-                  <button
-                    className="circle-btn"
-                    onClick={() => {
-                      if (showDropDownMenu) {
-                        setIsClosing(true);
-                        setTimeout(() => {
-                          setDropDownMenu(false);
-                          setIsClosing(false);
-                        }, 300);
-                      } else {
-                        setDropDownMenu(true);
-                      }
-                    }}
-                    ref={toggleBtnRef}
-                  >
-                    <FaUserCircle className="circle-icon account-icon" size={12} />
-                  </button>
-                </div>          
-              ) : (
-                <div className="header-btn">
-                  <button className="white-btn" onClick={() => setShowLogin(true)}>
-                    Log in
-                  </button>
-                  <button className="white-btn" onClick={() => setShowRegister(true)}>
-                    Create Account
-                  </button>
-                </div>
-              )}
-            </div>
-
             <button className="circle-btn">
-              <svg className="circle-icon" viewBox="0 1 20 20" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                className="circle-icon"
+                viewBox="0 1 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <g
                   fill="none"
                   fillRule="evenodd"

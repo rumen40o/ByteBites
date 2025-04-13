@@ -6,19 +6,16 @@ import {
 } from "react-icons/fa";
 
 import "../css/Main.css";
-import "../css/home.css";
+import "../css/Footer.css";
 import "../css/Inputs.css";
 
 const Footer = () => {
   return (
     <footer className="footer">
-      <div className="footer-content">
+      <div className="footer-container">
         <div className="footer-section">
           <h3>USEFUL INFORMATION</h3>
         </div>
-      </div>
-
-      <div className="footer-bottom">
         <div className="contact-number">
           <a href="tel:+359 87 969 6969">📞 +359 87 969 6969</a>
         </div>
@@ -32,7 +29,9 @@ const Footer = () => {
         <div className="footer-btn">
           <ul>
             <li>
-              <a href="#">About us</a> <a href="#">Terms & Conditions</a> <a href="#">Privacy policy</a>
+              <a href="#">About us</a>|
+              <a href="#">Terms & Conditions</a>|
+              <a href="#">Privacy policy</a>
             </li>
           </ul>
         </div>
