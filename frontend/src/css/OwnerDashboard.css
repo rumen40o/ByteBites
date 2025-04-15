@@ -1,0 +1,209 @@
+.owner-texts-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.owner-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .owner-name{
+    color: var(--secondary-color)
+  }
+
+  
+  .owner-greeting {
+    font-size: 2.5rem;
+    font-weight: 600;
+    font-family: "DM Sans", sans-serif;
+    color: var(--accent-color);
+  }
+  
+  .highlighted-name {
+    color: var(--secondary-color); /* оранжево */
+  }
+  
+  .owner-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #444;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-family: "DM Sans", sans-serif;
+  }
+  
+  .add-restaurant-btn {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    font-weight: 600;
+    font-family: "DM Sans", sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .add-restaurant-btn:hover {
+    background-color: #d97706;
+  }
+  
+  .add-icon-owner {
+    border: 2px solid white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+/* === КАРТА НА РЕСТОРАНТ === */
+
+.restaurant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .restaurant-card {
+    border-radius: 20px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .restaurant-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .restaurant-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    position: relative;
+  }
+  
+  .restaurant-overlay {
+    position: relative;
+    padding-bottom: 1rem;
+    background-color: #fff;
+  }
+  
+  .logo-circle {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 2px solid #e5e7eb;
+    z-index: 2;
+  }
+  
+  .restaurant-info {
+    margin-top: 60px;
+    text-align: center;
+    padding: 0 1rem;
+  }
+  
+  .restaurant-info .location {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 0.2rem;
+  }
+  
+  .restaurant-info h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #111827;
+    margin-top: 0.2rem;
+  }
+  
+  /* === БУТОНИ === */
+  
+  .restaurant-actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 0.8rem 1rem 0.5rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .restaurant-actions button {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 1.5rem;
+    border: none;
+    font-weight: 600;
+    font-family: "DM Sans", sans-serif;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: white;
+    min-width: 80px;
+  }
+  
+  /* Синият бутон */
+  .btn-blue {
+    background-color: var(--accent-color)
+  }
+  
+  .btn-blue:hover {
+    background-color: white;
+    color: var(--accent-color);
+    border: 1.5px solid var(--accent-color);
+  }
+  
+  /* Зеленият бутон */
+  .btn-green {
+    background-color: #10b981;
+  }
+  
+  .btn-green:hover {
+    background-color: white;
+    color: #10b981;
+    border: 1.5px solid #10b981;
+  }
+  
+
+  .btn-orange {
+    background-color: var(--secondary-color)
+  }
+  
+  .btn-orange:hover {
+    background-color: white;
+    color: var(--secondary-color);
+    border: 1.5px solid var(--secondary-color);
+  }
+  
+  /* Червеният бутон */
+  .btn-red {
+    background-color: #ef4444;
+  }
+  
+  .btn-red:hover {
+    background-color: white;
+    color: #ef4444;
+    border: 1.5px solid #ef4444;
+  }
+  

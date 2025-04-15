@@ -32,6 +32,7 @@ public class RestaurantService implements RestaurantServiceInterface {
         this.orderItemsRepository = orderItemsRepository;
         this.menuItemsRepository = menuItemsRepository;
     }
+    
     @Override
     public Restaurants createRestaurant(RestaurantRequestDTO dto, Accounts currentUser) {
         Restaurants restaurant = new Restaurants();
@@ -50,6 +51,7 @@ public class RestaurantService implements RestaurantServiceInterface {
     public Optional<Restaurants> getRestaurantById(Long id) {
         return restaurantsRepository.findById(id);
     }
+
     @Override
     public Restaurants updateRestaurant(Long id, RestaurantRequestDTO dto,Accounts currentUser) {
         Restaurants restaurant = restaurantsRepository.findById(id)
