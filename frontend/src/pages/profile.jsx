@@ -88,62 +88,8 @@ const ProfilePage = () => {
                     <p><strong>Телефон:</strong> {user.phoneNumber}</p>
                 </div>
 
-                {user.role === "OWNER" && (
-                    <>
-                        <h2 className="text-2xl font-semibold mb-4">Вашите ресторанти</h2>
-                        {restaurants.length === 0 ? (
-                            <p>Нямате добавени ресторанти.</p>
-                        ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                                {restaurants.map((restaurant) => (
-                                    <div
-                                    key={restaurant.id}
-                                    className="restaurant-card hover:shadow-xl transition cursor-pointer"
-                                    onClick={() => navigate(`/restaurant/${restaurant.id}`)}
-                                    >
-                                    <img
-                                        src={restaurant.imageUrl}
-                                        alt={restaurant.name}
-                                        className="restaurant-image"
-                                    />
-                                    <h3 className="restaurant-name">{restaurant.name}</h3>
-                                    <p className="restaurant-description">{restaurant.description}</p>
-                                    <p className="restaurant-address">📍 {restaurant.address}</p>
-
-                                    <div className="restaurant-buttons">
-                                        <button
-                                        className="edit-button"
-                                        onClick={(e) => {
-                                            e.stopPropagation(); 
-                                            handleEdit(restaurant);
-                                        }}
-                                        >
-                                        ✏️ Редактирай
-                                        </button>
-                                        <button
-                                        className="delete-button"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDelete(restaurant.id);
-                                        }}
-                                        >
-                                        🗑️ Изтрий
-                                        </button>
-                                    </div>
-                                    </div>
-                                ))}
-                                </div>
-                        )}
-                    </>
-                )}
-            </div>
-            <EditRestaurantModal
-                isOpen={editModalOpen}
-                onClose={() => setEditModalOpen(false)}
-                restaurant={selectedRestaurant}
-                onUpdate={handleUpdate}
-                />
-        </div>
+                </div>
+         </div>    
     );
 };
 

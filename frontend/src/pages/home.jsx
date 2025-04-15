@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
+import OwnerDashboard from "../components/OwnerDashboard";
 import "../css/Main.css";
 import "../css/home.css";
 import "../css/Inputs.css";
@@ -81,11 +82,18 @@ function Home() {
         allRestaurants={allRestaurants}
       />
 
-      <img src={sushiBoard} alt="" className="background-img sushi-board" />
-      <img src={burgerDecor} alt="" className="background-img burger" />
-
+        {user?.role !== "OWNER" && (
+          <>
+            <img src={sushiBoard} alt="" className="background-img sushi-board" />
+            <img src={burgerDecor} alt="" className="background-img burger" />
+          </>
+        )}
       <main className="page-container">
-        <section className="hero-section">
+              {user?.role === "OWNER" ? (
+          <OwnerDashboard />
+        ) : (
+          <>
+            <section className="hero-section">
           <h1 className="hero-title">
             {user ? `Welcome back, ${user.username}` : "Welcome to ByteBites"}
           </h1>
@@ -164,6 +172,9 @@ function Home() {
             </div>
           </section>
         </div>
+          </>
+        )}
+        
       </main>
 
       <Footer />

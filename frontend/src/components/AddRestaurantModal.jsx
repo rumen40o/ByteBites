@@ -2,7 +2,8 @@ import { useState } from "react";
 import "../css/Buttons.css"
 import {
   addRestaurant
-} from '../api/api'
+} from '../api/api';
+import "../css/Addrestaurant.css";
 
 const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
   const [restaurant, setRestaurant] = useState({
@@ -34,14 +35,14 @@ const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-      <button className="close-btn" onClick={close} aria-label="Close">
-              <svg className="close-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <line x1="6" y1="6" x2="18" y2="18" />
-                <line x1="18" y1="6" x2="6" y2="18" />
-              </svg>
-            </button>
+    <div className="add-restaurant-overlay">
+      <div className="add-restaurant-modal">
+        <button className="add-restaurant-close-btn" onClick={close} aria-label="Close">
+          <svg className="add-restaurant-close-icon" viewBox="0 0 24 24">
+            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+          </svg>
+        </button>
         <h2>Добави нов ресторант</h2>
         <input
           type="text"
@@ -49,6 +50,7 @@ const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
           placeholder="Име"
           value={restaurant.name}
           onChange={handleChange}
+          className="add-restaurant-input"
         />
         <input
           type="text"
@@ -56,6 +58,7 @@ const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
           placeholder="Описание"
           value={restaurant.description}
           onChange={handleChange}
+          className="add-restaurant-input"
         />
         <input
           type="text"
@@ -63,6 +66,7 @@ const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
           placeholder="Адрес"
           value={restaurant.address}
           onChange={handleChange}
+          className="add-restaurant-input"
         />
         <input
           type="text"
@@ -70,8 +74,9 @@ const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
           placeholder="Image URL"
           value={restaurant.imageUrl}
           onChange={handleChange}
+          className="add-restaurant-input"
         />
-        <button className="submit-btn" onClick={handleSubmit}>Добави</button>
+        <button className="add-restaurant-submit-btn" onClick={handleSubmit}>Добави</button>
       </div>
     </div>
   );
