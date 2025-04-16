@@ -67,5 +67,12 @@ public class OrderController {
     public ResponseEntity<List<OrderItems>> getOrderItems(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.getOrderItemsByOrder(orderId));
     }
+
+    @GetMapping("/restaurant/{restaurantId}/orders")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<List<Orders>> getOrdersByRestaurant(@PathVariable Long restaurantId) {
+        List<Orders> orders = orderService.getOrdersByRestaurant(restaurantId);
+        return ResponseEntity.ok(orders);
+    }
 }
 

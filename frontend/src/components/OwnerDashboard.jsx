@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import EditRestaurantModal from "./EditRestaurantModal";
 import "../css/OwnerDashboard.css";
 import AddRestaurantModal from "./AddRestaurantModal";
+import OrderPopup from "../components/OrderPopup";
 
 const OwnerDashboard = () => {
   const [user, setUser] = useState(null);
@@ -19,6 +20,7 @@ const OwnerDashboard = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [orderPopupOpen, setOrderPopupOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,8 +72,17 @@ const OwnerDashboard = () => {
     }
   };
 
+  const handleOrdersClick = (restaurant, e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setOrderPopupOpen(true);
+    setSelectedRestaurant(restaurant);
+  };
+
   if (loading) return <div className="text-center mt-10">Зареждане...</div>;
   if (error) return <div className="text-center text-red-500 mt-10">{error}</div>;
+
+  
 
   return (
     <div className="owner-dashboard">
@@ -109,7 +120,7 @@ const OwnerDashboard = () => {
                 <div className="restaurant-actions">
                   <button className="btn-blue" onClick={(e) => { e.stopPropagation(); /* add logic */ }}>Report</button>
                   <button className="btn-green" onClick={(e) => { e.stopPropagation(); handleEdit(restaurant); }}>Edit</button>
-                  <button className="btn-orange" onClick={(e) => { e.stopPropagation(); /* orders logic */ }}>Orders</button>
+                  <button className="btn-orange" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
                   <button className="btn-red" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>
                 </div>
               </div>
@@ -133,6 +144,11 @@ const OwnerDashboard = () => {
             getRestaurantsByOwner(user.id).then(res => setRestaurants(res.data));
           }}
       />
+      
+
+      {orderPopupOpen && selectedRestaurant && (
+  <OrderPopup id={selectedRestaurant.id} onClose={() => setOrderPopupOpen(false)} />
+)}
     </div>
   );
 };
