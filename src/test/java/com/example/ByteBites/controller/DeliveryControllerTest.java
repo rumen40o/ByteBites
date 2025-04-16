@@ -27,18 +27,25 @@ public class DeliveryControllerTest {
     }
 
     @Test
-    void testGetAvailableDeliveries() {
+    void testGetReadyForPickupOrders() {
+        // Създаване на mock Accounts обект (доставчик)
+        Accounts deliverer = new Accounts();
+        deliverer.setId(1L);  // Присвояваме ID на доставчика
+
+        // Създаване на поръчки
         Orders order1 = new Orders();
         Orders order2 = new Orders();
         List<Orders> mockOrders = Arrays.asList(order1, order2);
 
-        when(deliveryService.getAvailableDeliveries()).thenReturn(mockOrders);
+        // Мока на услугата за връщане на поръчки, които са READY_FOR_PICKUP за този доставчик
+        when(deliveryService.getReadyForPickupOrders(deliverer.getId())).thenReturn(mockOrders);
 
-        ResponseEntity<List<Orders>> response = deliveryController.getAvailableDeliveries();
+        // Извикваме метода с доставчика (текущия доставчик - чрез Accounts)
+        ResponseEntity<List<Orders>> response = deliveryController.getReadyForPickupOrders(deliverer);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(2, response.getBody().size());
-        verify(deliveryService, times(1)).getAvailableDeliveries();
+        verify(deliveryService, times(1)).getReadyForPickupOrders(deliverer.getId());
     }
 
     @Test
@@ -87,5 +94,34 @@ public class DeliveryControllerTest {
         assertEquals(2, response.getBody().size());
         verify(deliveryService, times(1)).getDeliveriesByDeliver(deliverId);
     }
-}
 
+    // New test for OWNER accepting an order and changing status to CONFIRMED
+    @Test
+    void testAcceptOrderByOwner() {
+        Long orderId = 1L;
+
+        when(deliveryService.acceptOrderByOwner(orderId))
+                .thenReturn("Поръчката е успешно приета и е в процес на приготвяне!");
+
+        ResponseEntity<String> response = deliveryController.acceptOrderByOwner(orderId);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals("Поръчката е успешно приета и е в процес на приготвяне!", response.getBody());
+        verify(deliveryService, times(1)).acceptOrderByOwner(orderId);
+    }
+
+    // New test for OWNER marking the order as ready for pickup
+    @Test
+    void testMarkOrderAsReady() {
+        Long orderId = 1L;
+
+        when(deliveryService.markOrderAsReady(orderId))
+                .thenReturn("Поръчката е маркирана като готова за взимане!");
+
+        ResponseEntity<String> response = deliveryController.markOrderAsReady(orderId);
+
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals("Поръчката е маркирана като готова за взимане!", response.getBody());
+        verify(deliveryService, times(1)).markOrderAsReady(orderId);
+    }
+}

@@ -44,6 +44,10 @@ export const createOrder = (customerId, restaurantId, data) =>
     api.put(`/orders/status/${orderId}`, { status });
   export const getOrdersByCustomer = (customerId) =>
     api.get(`/orders/customer/${customerId}`);
+  
+  export const getOrdersByRestaurant = (restaurantId) => api.get(`/orders/restaurant/${restaurantId}/orders`);
+
+  
 
   // --- Deliveries ---
   export const getAvailableDeliveries = () => api.get("/deliveries/available");
@@ -53,7 +57,12 @@ export const createOrder = (customerId, restaurantId, data) =>
     api.put(`/deliveries/${deliveryId}/status`, null, {
       params: { status },
     });
-
+  export const acceptOrderByOwner = (orderId) =>
+      api.post(`/deliveries/owner/accept/order/${orderId}`);
+  export const markOrderAsReady = (orderId) =>
+    api.post(`/deliveries/owner/mark-ready/${orderId}`);
+  export const getReadyForPickupOrders = () =>
+    api.get("/deliveries/ready-for-pickup");
 
 
 

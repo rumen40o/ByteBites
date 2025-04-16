@@ -112,5 +112,10 @@ public class OrderService implements OrderServiceInterface {
 
         return orderItemsRepository.findByOrder(order);
     }
+
+    @Override
+    public List<Orders> getOrdersByRestaurant(Long restaurantId) {
+        return ordersRepository.findByRestaurantId(restaurantId);
+    }
 }
 

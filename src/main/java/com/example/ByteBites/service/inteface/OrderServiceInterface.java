@@ -21,4 +21,6 @@ public interface OrderServiceInterface {
     void deleteOrder(Long orderId);
 
     List<OrderItems> getOrderItemsByOrder(Long orderId);
+
+    List<Orders> getOrdersByRestaurant(Long restaurantId);
 }
