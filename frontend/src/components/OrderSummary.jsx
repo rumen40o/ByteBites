@@ -42,10 +42,10 @@ const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo, user, onLoginReq
   {cart.map((item) => (
           <div key={item.id} className="cart-item">
             <img
-              src='https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg'
-              alt={item.name}
-              className="cart-item-img"
-            />
+                src={item.foodImage}
+                alt={item.name}
+                className="cart-item-img"
+              />
             <div className="cart-item-details">
               <span className="cart-item-name">{item.name}</span>
               <span className="cart-item-quantity-price">

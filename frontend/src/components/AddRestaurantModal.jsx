@@ -76,7 +76,7 @@ const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
           onChange={handleChange}
           className="add-restaurant-input"
         />
-        <button className="add-restaurant-submit-btn" onClick={handleSubmit}>Добави</button>
+        <button className="add-restaurant-submit-btn blue-btn" onClick={handleSubmit}>Добави</button>
       </div>
     </div>
   );
