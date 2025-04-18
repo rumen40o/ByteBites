@@ -72,6 +72,7 @@ public class MenuService implements MenuServiceInterface {
         existingItem.setName(updatedItem.getName());
         existingItem.setPrice(updatedItem.getPrice());
         existingItem.setCategory(updatedItem.getCategory());
+        existingItem.setFoodImage(updatedItem.getFoodImage());
 
         return menuItemsRepository.save(existingItem);
     }

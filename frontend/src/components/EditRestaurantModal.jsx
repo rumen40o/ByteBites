@@ -1,22 +1,25 @@
+
 import { useState, useEffect } from "react";
 import "../css/EditRestaurantModal.css";
-import "../css/Buttons.css"
+import "../css/Buttons.css";
 
 const EditRestaurantModal = ({ isOpen, onClose, restaurant, onUpdate }) => {
   const [form, setForm] = useState({
     name: "",
     description: "",
     address: "",
+    logoImage: "",
     imageUrl: ""
   });
 
   useEffect(() => {
     if (restaurant) {
       setForm({
-        name: restaurant.name || "",
+        name:        restaurant.name        || "",
         description: restaurant.description || "",
-        address: restaurant.address || "",
-        imageUrl: restaurant.imageUrl || ""
+        address:     restaurant.address     || "",
+        imageUrl:   restaurant.imageUrl   || ""
+        
       });
     }
   }, [restaurant]);
@@ -30,7 +33,6 @@ const EditRestaurantModal = ({ isOpen, onClose, restaurant, onUpdate }) => {
       alert("Моля, попълнете всички полета.");
       return;
     }
-
     try {
       await onUpdate(restaurant.id, form);
       onClose();
@@ -45,42 +47,43 @@ const EditRestaurantModal = ({ isOpen, onClose, restaurant, onUpdate }) => {
     <div className="edit-modal-overlay">
       <div className="edit-modal">
         <button className="close-btn" onClick={onClose} aria-label="Close">
-              <svg className="close-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <line x1="6" y1="6" x2="18" y2="18" />
-                <line x1="18" y1="6" x2="6" y2="18" />
-              </svg>
-            </button>
-        <h2>Редактирай ресторант</h2>
+          <svg className="close-icon-edit" viewBox="0 0 24 24">
+            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+          </svg>
+        </button>
+        <h2>Edit restaurant</h2>
         <input
           type="text"
           name="name"
           value={form.name}
           onChange={handleChange}
-          placeholder="Име"
+          placeholder="Restaurant Name"
         />
         <input
           type="text"
           name="description"
           value={form.description}
           onChange={handleChange}
-          placeholder="Описание"
+          placeholder="Restaurant Description"
         />
         <input
           type="text"
           name="address"
           value={form.address}
           onChange={handleChange}
-          placeholder="Адрес"
+          placeholder="Restaurant Location"
         />
         <input
           type="text"
-          name="imageUrl"
+          name="logoImage"
           value={form.imageUrl}
           onChange={handleChange}
-          placeholder="Image URL"
+          placeholder="Logo Image URL"
         />
-        <button className="edit-submit-btn" onClick={handleSubmit}>
-          Запази
+        
+        <button className="edit-submit-btn blue-btn" onClick={handleSubmit}>
+          Save
         </button>
       </div>
     </div>

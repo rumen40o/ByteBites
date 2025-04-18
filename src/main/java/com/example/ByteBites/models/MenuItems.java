@@ -21,6 +21,9 @@ public class MenuItems {
     @Column(nullable = false)
     private Category category;
 
+    @Column(name = "food_image")
+    private String foodImage;
+
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonBackReference
@@ -31,11 +34,12 @@ public class MenuItems {
 
     public MenuItems() {}
 
-    public MenuItems(String name, double price, Category category, Restaurants restaurants) {
+    public MenuItems(String name, double price, Category category, Restaurants restaurants, String foodImage) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.restaurants = restaurants;
+        this.foodImage = foodImage;
     }
 
     public Long getId() {
@@ -84,5 +88,13 @@ public class MenuItems {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public String getFoodImage() {
+        return foodImage;
+    }
+
+    public void setFoodImage(String foodImage) {
+        this.foodImage = foodImage;
     }
 }

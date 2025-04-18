@@ -10,12 +10,14 @@ import {
   getCurrentUser,
   getRestaurantById,
   getMenuByRestaurant,
+  deleteRestaurant,
   createOrder,
 } from '../api/api';
 import LoginModal from "../components/LoginModal";
 import Footer from "../components/Footer";
 import "../css/Buttons.css";
 import image from'../images/pizza-1.png';
+import OrderPopup from "../components/OrderPopup";
 
 const RestaurantPage = () => {
   const { id } = useParams();
@@ -28,7 +30,10 @@ const RestaurantPage = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+   const [restaurants, setRestaurants] = useState([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [orderPopupOpen, setOrderPopupOpen] = useState(false);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -109,6 +114,7 @@ const RestaurantPage = () => {
         id: item.id,
         name: item.name,
         price: item.price,
+        foodImage: item.foodImage,
         quantity: 1
       }]);
     }
@@ -158,6 +164,26 @@ const RestaurantPage = () => {
     return acc;
   }, {});
 
+  const handleDelete = async (restaurantId) => {
+      if (!window.confirm("Сигурни ли сте, че искате да изтриете този ресторант?")) return;
+  
+      try {
+        await deleteRestaurant(restaurantId);
+        setRestaurants(prev => prev.filter(r => r.id !== restaurantId));
+        alert("Ресторантът беше успешно изтрит!");
+      } catch (err) {
+        console.error("Грешка при изтриване:", err);
+        alert("Възникна грешка при изтриването на ресторанта.");
+      }
+    };
+
+    const handleOrdersClick = (restaurant, e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      setOrderPopupOpen(true);
+      setSelectedRestaurant(restaurant);
+    };
+
   return (
     
     <div className="restaurant-container">
@@ -171,6 +197,24 @@ const RestaurantPage = () => {
         <p className="restaurant-address-tag">📍 {restaurant?.address}</p>
       </div>
     </div>
+    {isOwner && (
+         <div className="restaurant-actions">
+            <button onClick={() => setIsModalOpen(true)} className="btn-green">
+              Edit
+            </button>
+
+            <AddItemModal
+              isOpen={isModalOpen}
+              close={() => setIsModalOpen(false)}
+              restaurantId={id}
+              reloadMenu={loadMenuItems}
+            />
+          <button className="btn-blue" onClick={(e) => { e.stopPropagation(); /* add logic */ }}>Report</button>
+          <button className="btn-orange" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
+          <button className="btn-red" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>
+        </div>
+          
+        )}
   
     <div className="restaurant-content-wrapper">
       {/* Menu */}
@@ -182,7 +226,12 @@ const RestaurantPage = () => {
               {groupedMenu[category].map((item) => (
                 <div key={item.id} className="menu-item">
                   <div className="image-container">
-                      <img src="https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg" alt={item.name} className="menu-item-image" />
+                      <img
+                      src={item.foodImage || image}
+                      alt={item.name}
+                      className="menu-item-image"
+                      onError={e => { e.currentTarget.src = image }}
+                    />
                   </div>
                   <div className="menu-item-text">
                     <h3 className="menu-item-name">{item.name}</h3>
@@ -229,6 +278,9 @@ const RestaurantPage = () => {
     {isOwner && <AddItemModal isOpen={isModalOpen} close={() => setIsModalOpen(false)} restaurantId={id} reloadMenu={loadMenuItems} />}
     <DeliveryAddressModal isOpen={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)} onConfirm={handleConfirmOrder} />
     {showLoginModal && <LoginModal close={() => setShowLoginModal(false)} onLoginSuccess={() => window.location.reload()} />}
+    {orderPopupOpen && selectedRestaurant && (
+  <OrderPopup id={selectedRestaurant.id} onClose={() => setOrderPopupOpen(false)} />
+)}
   </div>
   
   );
