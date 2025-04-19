@@ -12,7 +12,6 @@ const OrderPopup = ({ id, onClose }) => {
       return;
     }
 
-    // Fetch orders for the specific restaurant
     getOrdersByRestaurant(id)
       .then(response => {
         setOrders(response.data);
@@ -41,7 +40,6 @@ const OrderPopup = ({ id, onClose }) => {
     acceptOrderByOwner(orderId)
       .then(response => {
         alert(response.data);
-        // Update the order status to READY_FOR_PICKUP
         setOrders(orders.map(order => 
           order.id === orderId ? { ...order, status: "READY_FOR_PICKUP" } : order
         ));

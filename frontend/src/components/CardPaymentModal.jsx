@@ -1,4 +1,4 @@
-// src/components/CardPaymentModal.jsx
+
 import React, { useState } from 'react';
 
 const CardPaymentModal = ({ onClose, onPay }) => {
@@ -10,20 +10,20 @@ const CardPaymentModal = ({ onClose, onPay }) => {
     let value = raw;
 
     if (name === 'number') {
-      // махаме всичко, което не е цифра
+
       let digits = raw.replace(/\D/g, '');
-      // ограничаваме до 16 цифри
+
       if (digits.length > 16) digits = digits.slice(0, 16);
-      // групираме на блокове от 4, разделени с интервал
+
       value = digits.replace(/(.{4})/g, '$1 ').trim();
     }
 
     if (name === 'expiry') {
-      // махаме всичко, освен цифри
+
       let clean = raw.replace(/\D/g, '');
-      // ограничаваме до 4 цифри (MMYY)
+
       if (clean.length > 4) clean = clean.slice(0, 4);
-      // форматираме MM/YY
+
       if (clean.length >= 3) {
         clean = clean.slice(0, 2) + '/' + clean.slice(2);
       }
@@ -31,7 +31,7 @@ const CardPaymentModal = ({ onClose, onPay }) => {
     }
 
     if (name === 'cvv') {
-      // само цифри, до 4 символа
+      
       let clean = raw.replace(/\D/g, '');
       if (clean.length > 4) clean = clean.slice(0, 4);
       value = clean;

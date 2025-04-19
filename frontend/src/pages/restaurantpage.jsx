@@ -282,7 +282,6 @@ const RestaurantPage = () => {
             ))}
           </div>
       
-          {/* Cart */}
           <div className="restaurant-cart-section">
             <OrderSummary
               cart={orderItems}
@@ -298,7 +297,6 @@ const RestaurantPage = () => {
           </div>
         </div>
       
-        {/* Footer + Modals + Scroll Up */}
         <button className="scroll-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>⬆</button>
         <Footer />
       

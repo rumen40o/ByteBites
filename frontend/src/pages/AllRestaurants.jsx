@@ -149,7 +149,6 @@ const AllRestaurants = () => {
     </section>
   </div>
 
-  {/* Модали */}
   {showLogin && (
     <LoginModal
       close={() => setShowLogin(false)}

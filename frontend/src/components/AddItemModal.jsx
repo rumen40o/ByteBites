@@ -84,7 +84,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
       <div className="custom-modal add-item-modal">
         <button className="custom-close" onClick={close}>✖</button>
         <div className="custom-content">
-          {/* ——— Left: Add / Edit Form ——— */}
+
           <div className="add-form">
             <h2>Add a product</h2>
             <label>
@@ -127,7 +127,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
             </button>
           </div>
 
-          {/* ——— Right: Edit Menu List ——— */}
+
           <div className="edit-menu">
             <h2>Edit menu</h2>
             <select

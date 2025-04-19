@@ -112,7 +112,7 @@ const OwnerDashboard = () => {
                 className="restaurant-image"
               />
               <div className="restaurant-overlay">
-                {/* <div className="logo-circle">Logo</div> */}
+
                 <div className="restaurant-info">
                   <p className="location">📍 {restaurant.address}</p>
                   <h3>{restaurant.name}</h3>

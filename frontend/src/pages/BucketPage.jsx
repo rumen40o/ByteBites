@@ -126,7 +126,6 @@ const BucketPage = () => {
         </div>
       </div>
 
-      {/* ========== MODALS ========== */}
       {showCardModal && (
         <CardPaymentModal
           onClose={() => setShowCardModal(false)}
