@@ -1,14 +1,15 @@
 package com.example.ByteBites.controller;
 
+import com.example.ByteBites.models.DTO.RestaurantPeriodRevenueDTO;
 import com.example.ByteBites.models.DTO.RestaurantRevenueDTO;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 import com.example.ByteBites.service.inteface.ReportServiceInterface;
 import com.example.ByteBites.models.DTO.OrderStatsDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -28,7 +29,26 @@ public class ReportController {
         return ResponseEntity.ok(stats);
     }
     @GetMapping("/restaurant-revenue")
-    public ResponseEntity<List<RestaurantRevenueDTO>> getRevenuePerRestaurant() {
-        return ResponseEntity.ok(reportService.getRevenuePerRestaurant());
+    public ResponseEntity<?> getRestaurantRevenue(
+            @RequestParam Long restaurantId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestHeader(name = "Authorization", required = false) String token
+    ) {
+        // If no time range, return all-time revenue for all restaurants
+        if (start == null || end == null || token == null) {
+            List<RestaurantRevenueDTO> allRevenue = reportService.getRevenuePerRestaurant();
+            return ResponseEntity.ok(allRevenue);
+        }
+
+        // If time range is present, return for specific restaurant & owner
+        String jwt = token.startsWith("Bearer ") ? token.substring(7) : token;
+
+        RestaurantPeriodRevenueDTO periodRevenue =
+                reportService.getRestaurantRevenueForPeriod(restaurantId, start, end, jwt);
+
+        return ResponseEntity.ok(periodRevenue);
     }
+
+
 }

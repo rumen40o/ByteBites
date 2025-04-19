@@ -6,7 +6,9 @@ import com.example.ByteBites.models.OrderStatus;
 import com.example.ByteBites.models.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrdersRepository extends JpaRepository<Orders, Long> {
@@ -26,4 +28,12 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     GROUP BY r.name
 """)
     List<RestaurantRevenueDTO> getRevenuePerRestaurant();
+
+    @Query("SELECT o FROM Orders o WHERE o.restaurant.id = :restaurantId AND o.createdAt BETWEEN :start AND :end")
+    List<Orders> findOrdersByRestaurantIdAndCreatedAtBetween(
+            @Param("restaurantId") Long restaurantId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
 }
