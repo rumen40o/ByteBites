@@ -187,104 +187,131 @@ const RestaurantPage = () => {
   return (
     
     <div className="restaurant-container">
-    <Navbar onLoginClick={() => setShowLogin(true)} onRegisterClick={() => setShowRegister(true)} />
-  
-    <div className="restaurant-banner-section">
-      <img src={restaurant?.imageUrl} alt={restaurant?.name} className="restaurant-banner" />
-      <div className="restaurant-banner-overlay">
-        <h1 className="restaurant-title">{restaurant?.name}</h1>
-        <p className="restaurant-subtitle">{restaurant?.description}</p>
-        <p className="restaurant-address-tag">📍 {restaurant?.address}</p>
-      </div>
-    </div>
-    {isOwner && (
-         <div className="restaurant-actions">
-            <button onClick={() => setIsModalOpen(true)} className="btn-green">
-              Edit
-            </button>
-
-            <AddItemModal
-              isOpen={isModalOpen}
-              close={() => setIsModalOpen(false)}
-              restaurantId={id}
-              reloadMenu={loadMenuItems}
-            />
-          <button className="btn-blue" onClick={(e) => { e.stopPropagation(); /* add logic */ }}>Report</button>
-          <button className="btn-orange" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
-          <button className="btn-red" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>
+      <Navbar onLoginClick={() => setShowLogin(true)} onRegisterClick={() => setShowRegister(true)} />
+      
+      <div className="restaurant-banner-section">
+        <img src={restaurant?.imageUrl} alt={restaurant?.name} className="restaurant-banner" />
+        <div className="restaurant-banner-overlay">
+          <h1 className="restaurant-title">{restaurant?.name}</h1>
+          <p className="restaurant-subtitle">{restaurant?.description}</p>
+          <p className="restaurant-address-tag">
+            <svg
+              width="24px"
+              height="18px"
+              viewBox="3 0 24 24"
+              fill="none"
+              stroke="var(--wfont-color)"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 1 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            {restaurant?.address}</p>
         </div>
-          
-        )}
+      </div>
+      {isOwner && (
+        <div className="restaurant-actions">
+          <button onClick={() => setIsModalOpen(true)} className="blue-btn">
+            Edit
+          </button>
+
+          <AddItemModal
+            isOpen={isModalOpen}
+            close={() => setIsModalOpen(false)}
+            restaurantId={id}
+            reloadMenu={loadMenuItems}
+          />
+          <button className="blue-btn" onClick={(e) => { e.stopPropagation();}}>Report</button>
+          <button className="blue-btn" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
+          <button className="blue-btn" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>
+        </div>  
+      )}
   
-    <div className="restaurant-content-wrapper">
-      {/* Menu */}
-      <div className="restaurant-menu-section">
-        {Object.keys(groupedMenu).map((category) => (
-          <div key={category} className="menu-category-section">
-            <h2 className="menu-category-title">{category}</h2>
-            <div className="menu-grid">
-              {groupedMenu[category].map((item) => (
-                <div key={item.id} className="menu-item">
-                  <div className="image-container">
-                      <img
-                      src={item.foodImage || image}
-                      alt={item.name}
-                      className="menu-item-image"
-                      onError={e => { e.currentTarget.src = image }}
-                    />
-                  </div>
-                  <div className="menu-item-text">
-                    <h3 className="menu-item-name">{item.name}</h3>
-                    <p className="menu-item-description">
-                      {item.description || "No description."}
-                    </p>
+        <div className="restaurant-content-wrapper">
+          <div className="restaurant-menu-section">
+            {Object.keys(groupedMenu).map((category) => (
+              <div key={category} className="menu-category-section">
+                <h2 className="menu-category-title">{category}</h2>
+                <div className="menu-grid">
+                  {groupedMenu[category].map((item) => (
+                    <div key={item.id} className="menu-item" onClick={() => addToOrder(item)}>
+                      <div className="image-container">
+                        <img
+                        src={item.foodImage || image}
+                        alt={item.name}
+                        className="menu-item-image"
+                        onError={e => { e.currentTarget.src = image }}
+                      />
+                      
+                      </div>
+                      <div className="menu-item-text">
+                      <h3 className="menu-item-name">
+                        {item.name}
+                        <button
+                          className="add-item-btn"
+                        >
+                          <svg className="add-item-icon"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5"  y1="12" x2="19" y2="12" />
+                          </svg>
+                        </button>
+                      </h3>
+                        <p className="menu-item-description">
+                          {item.description || "No description."}
+                        </p>
+                        <p className="menu-item-price">{item.price.toFixed(2)} лв.</p>
+                      </div>
+                      <div className="add-item-container">
+                      </div>
+                      
+                    </div>
                     
-                  </div>
-                  <div className="add-item-container">
-                  <p className="menu-item-price">{item.price.toFixed(2)} лв.</p>
-                      <button className="circle-add-item-btn" onClick={() => addToOrder(item)}>
-                        <span className="circle-icon-add-item">+</span>
-                      </button>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-  
-      {/* Cart */}
-      <div className="restaurant-cart-section">
-        <OrderSummary
-          cart={orderItems}
-          onUpdateQuantity={updateQuantity}
-          restaurantInfo={{
-            name: restaurant?.name,
-            address: restaurant?.address,
-            id: restaurant?.id,
-          }}
-          user={user}
-          onLoginRequired={() => setShowLoginModal(true)}
-        />
-      </div>
-    </div>
-  
-    {/* Footer + Modals + Scroll Up */}
-    <button className="scroll-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>⬆</button>
-    <Footer />
-  
-    {showLogin && <LoginModal close={() => setShowLogin(false)} onLoginSuccess={handleLoginSuccess} openRegister={() => { setShowLogin(false); setShowRegister(true); }} />}
-    {showRegister && <RegisterModal close={() => setShowRegister(false)} openLogin={() => { setShowRegister(false); setShowLogin(true); }} role="USER" />}
-    {isOwner && <AddItemModal isOpen={isModalOpen} close={() => setIsModalOpen(false)} restaurantId={id} reloadMenu={loadMenuItems} />}
-    <DeliveryAddressModal isOpen={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)} onConfirm={handleConfirmOrder} />
-    {showLoginModal && <LoginModal close={() => setShowLoginModal(false)} onLoginSuccess={() => window.location.reload()} />}
-    {orderPopupOpen && selectedRestaurant && (
-  <OrderPopup id={selectedRestaurant.id} onClose={() => setOrderPopupOpen(false)} />
-)}
+      
+          {/* Cart */}
+          <div className="restaurant-cart-section">
+            <OrderSummary
+              cart={orderItems}
+              onUpdateQuantity={updateQuantity}
+              restaurantInfo={{
+                name: restaurant?.name,
+                address: restaurant?.address,
+                id: restaurant?.id,
+              }}
+              user={user}
+              onLoginRequired={() => setShowLoginModal(true)}
+            />
+          </div>
+        </div>
+      
+        {/* Footer + Modals + Scroll Up */}
+        <button className="scroll-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>⬆</button>
+        <Footer />
+      
+        {showLogin && <LoginModal close={() => setShowLogin(false)} onLoginSuccess={handleLoginSuccess} openRegister={() => { setShowLogin(false); setShowRegister(true); }} />}
+        {showRegister && <RegisterModal close={() => setShowRegister(false)} openLogin={() => { setShowRegister(false); setShowLogin(true); }} role="USER" />}
+        {isOwner && <AddItemModal isOpen={isModalOpen} close={() => setIsModalOpen(false)} restaurantId={id} reloadMenu={loadMenuItems} />}
+        <DeliveryAddressModal isOpen={isAddressModalOpen} onClose={() => setIsAddressModalOpen(false)} onConfirm={handleConfirmOrder} />
+        {showLoginModal && <LoginModal close={() => setShowLoginModal(false)} onLoginSuccess={() => window.location.reload()} />}
+        {orderPopupOpen && selectedRestaurant && (
+      <OrderPopup id={selectedRestaurant.id} onClose={() => setOrderPopupOpen(false)} />
+    )}
   </div>
-  
   );
-  
 };
 
 export default RestaurantPage;

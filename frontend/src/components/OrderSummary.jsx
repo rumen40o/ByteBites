@@ -86,7 +86,7 @@ const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo, user, onLoginReq
         </div>
       </div>
       <div className='chechout-btn-container'>
-        <button className="blue-btn checkout-btn" onClick={handleCheckout}>
+        <button className="blue-btn" onClick={handleCheckout}>
           Check out
         </button>
       </div>
