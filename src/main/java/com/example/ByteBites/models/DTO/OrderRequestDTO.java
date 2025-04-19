@@ -9,6 +9,13 @@ public class OrderRequestDTO {
     private String deliveryAddress;
     private List<OrderItemDTO> items;
 
+    public OrderRequestDTO() { }
+
+    public OrderRequestDTO(String deliveryAddress, List<OrderItemDTO> items) {
+        this.deliveryAddress = deliveryAddress;
+        this.items = items;
+    }
+
     public String getDeliveryAddress() {
         return deliveryAddress;
     }

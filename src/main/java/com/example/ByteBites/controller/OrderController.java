@@ -33,8 +33,6 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrder(customerId, restaurantId, request));
     }
 
-
-
     @GetMapping
     public ResponseEntity<List<Orders>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());

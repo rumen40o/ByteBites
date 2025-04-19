@@ -1,13 +1,10 @@
-// src/components/InlineMap.jsx
 import React from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 
-// Вътрешен компонент, който улавя кликове и вика onSelectAddress
 function LocationPicker({ onSelectAddress }) {
   useMapEvents({
     click(e) {
       const { lat, lng } = e.latlng;
-      // Обратна геокодирация чрез Nominatim (безплатно)
       fetch(
         `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
       )
@@ -25,7 +22,7 @@ function LocationPicker({ onSelectAddress }) {
 
 const InlineMap = ({ onSelectAddress }) => (
   <MapContainer
-    center={[42.6977, 23.3219]}        /* София по подразбиране */
+    center={[42.6977, 23.3219]}
     zoom={13}
     className="inline-map"
   >

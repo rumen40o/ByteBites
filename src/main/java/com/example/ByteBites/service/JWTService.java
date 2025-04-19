@@ -2,6 +2,7 @@ package com.example.ByteBites.service;
 
 import com.example.ByteBites.service.inteface.JWTServiceInterface;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -36,7 +37,7 @@ public class JWTService implements JWTServiceInterface {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails.getUsername().contains("@")) {
-            claims.put("email", userDetails.getUsername()); // Ако е email, го добавяме като claim
+            claims.put("email", userDetails.getUsername());
         }
         return generateToken(claims, userDetails);
     }
@@ -44,7 +45,7 @@ public class JWTService implements JWTServiceInterface {
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername()) // Това ще е username или email
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TIME_TO_EXPIRE))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -52,8 +53,13 @@ public class JWTService implements JWTServiceInterface {
     }
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String extractedIdentifier = extractUsername(token);
-        return (extractedIdentifier.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        try {
+            final String extractedIdentifier = extractUsername(token);
+            return extractedIdentifier.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        } catch (JwtException e) {
+
+            return false;
+        }
     }
 
     private boolean isTokenExpired(String token) {
