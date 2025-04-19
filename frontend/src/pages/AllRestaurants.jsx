@@ -85,85 +85,96 @@ const AllRestaurants = () => {
   );
 
   return (
-    <div className="restaurants-container">
-      <Navbar
-        user={user}
-        setUser={setUser}
-        onLoginClick={() => setShowLogin(true)}
-        onRegisterClick={() => setShowRegister(true)}
-        setMenuOpen={setMenuOpen}
-        menuOpen={menuOpen}
-        onAddRestaurant={() => setShowAddModal(true)}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        allRestaurants={restaurants}
-      />
+    <div className="all-restaurants-page">
+  <Navbar
+    user={user}
+    setUser={setUser}
+    onLoginClick={() => setShowLogin(true)}
+    onRegisterClick={() => setShowRegister(true)}
+    setMenuOpen={setMenuOpen}
+    menuOpen={menuOpen}
+    onAddRestaurant={() => setShowAddModal(true)}
+    searchQuery={searchQuery}
+    setSearchQuery={setSearchQuery}
+    allRestaurants={restaurants}
+  />
 
-      <h2 className="restaurants-title">Всички ресторанти</h2>
-
-      <div className="category-filters">
+  <div className="main-content-all-rest">
+    <aside className="filter-sidebar">
+      <h2>Filters</h2>
+      <ul>
         {categories.map((cat) => (
-          <label key={cat} className="filter-label">
-            <input
-              type="checkbox"
-              value={cat}
-              checked={selectedCategories.includes(cat)}
-              onChange={(e) => {
-                const value = e.target.value;
-                setSelectedCategories((prev) =>
-                  prev.includes(value)
-                    ? prev.filter((c) => c !== value)
-                    : [...prev, value]
-                );
-              }}
-            />
-            {cat}
-          </label>
+          <li key={cat}>
+            <label className="filter-option">
+              <input
+                type="checkbox"
+                value={cat}
+                checked={selectedCategories.includes(cat)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSelectedCategories((prev) =>
+                    prev.includes(value)
+                      ? prev.filter((c) => c !== value)
+                      : [...prev, value]
+                  );
+                }}
+              />
+              {cat.charAt(0) + cat.slice(1).toLowerCase()}
+            </label>
+          </li>
         ))}
-      </div>
+      </ul>
+    </aside>
+
+    <section className="restaurants-section-all-rest">
+      <h2 className="restaurants-title-all-rest">All restaurants</h2>
 
       {error && <p className="text-red-500">{error}</p>}
 
-      <div className="restaurants-grid">
+      <div className="restaurants-grid-all-rest">
         {filteredRestaurants.map((r) => (
           <div
             key={r.id}
-            className="restaurant-card cursor-pointer hover:shadow-lg transition"
+            className="restaurant-card-all-rest"
             onClick={() => navigate(`/restaurant/${r.id}`)}
           >
-            <img src={r.imageUrl} alt={r.name} className="restaurant-image" />
-            <h3 className="restaurant-name">{r.name}</h3>
-            <p className="restaurant-description">{r.description}</p>
-            <p className="restaurant-address">{r.address}</p>
+            <img src={r.imageUrl} alt={r.name} className="restaurant-banner-all-rest" />
+            <div className="card-overlay-all-rest">
+              <div className="emoji-badge">🍽️ {r.menuItems?.length || 12}</div>
+            </div>
+            <h3 className="restaurant-name-all-rest">{r.name}</h3>
           </div>
         ))}
       </div>
+    </section>
+  </div>
 
-      {/* 🔐 Модали */}
-      {showLogin && (
-        <LoginModal
-          close={() => setShowLogin(false)}
-          openRegister={() => {
-            setShowLogin(false);
-            setShowRegister(true);
-          }}
-          onLoginSuccess={() => window.location.reload()}
-        />
-      )}
-      {showRegister && (
-        <RegisterModal
-          close={() => setShowRegister(false)}
-          role="USER"
-        />
-      )}
-      {user?.role === "OWNER" && (
-        <AddRestaurantModal
-          isOpen={showAddModal}
-          close={() => setShowAddModal(false)}
-          onAddSuccess={() => window.location.reload()}
-        />
-      )}
-    </div>
+  {/* Модали */}
+  {showLogin && (
+    <LoginModal
+      close={() => setShowLogin(false)}
+      openRegister={() => {
+        setShowLogin(false);
+        setShowRegister(true);
+      }}
+      onLoginSuccess={() => window.location.reload()}
+    />
+  )}
+  {showRegister && (
+    <RegisterModal
+      close={() => setShowRegister(false)}
+      role="USER"
+    />
+  )}
+  {user?.role === "OWNER" && (
+    <AddRestaurantModal
+      isOpen={showAddModal}
+      close={() => setShowAddModal(false)}
+      onAddSuccess={() => window.location.reload()}
+    />
+  )}
+</div>
+
   );
 };
 
