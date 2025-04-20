@@ -36,4 +36,18 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
             @Param("end") LocalDateTime end
     );
 
+    @Query("""
+    SELECT o FROM Orders o
+    JOIN Deliveries d ON o.id = d.order.id
+    WHERE d.deliver.id = :delivererId
+    AND o.createdAt BETWEEN :start AND :end
+""")
+    List<Orders> findOrdersDeliveredByDelivererBetween(
+            @Param("delivererId") Long delivererId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+
+
 }

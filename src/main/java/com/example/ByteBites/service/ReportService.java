@@ -1,5 +1,6 @@
 package com.example.ByteBites.service;
 import com.example.ByteBites.models.Accounts;
+import com.example.ByteBites.models.DTO.DelivererRevenueDTO;
 import com.example.ByteBites.models.DTO.RestaurantPeriodRevenueDTO;
 import com.example.ByteBites.models.DTO.RestaurantRevenueDTO;
 import com.example.ByteBites.models.Restaurants;
@@ -61,15 +62,15 @@ public class ReportService implements ReportServiceInterface {
     }
 
     public RestaurantPeriodRevenueDTO getRestaurantRevenueForPeriod(Long restaurantId, LocalDateTime start, LocalDateTime end, String jwtToken) {
-        // 1. Get the username/email from the JWT
+
         String username = jwtService.extractUsername(jwtToken);
 
-        // 2. Find the authenticated account
+
         Accounts account = accountRepository.findByUsername(username)
                 .or(() -> accountRepository.findByEmail(username))
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
-        // 3. Get the restaurant and check ownership
+
         Restaurants restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
@@ -77,16 +78,43 @@ public class ReportService implements ReportServiceInterface {
             throw new AccessDeniedException("You do not own this restaurant.");
         }
 
-        // 4. Fetch orders in the time range
+
         List<Orders> orders = orderRepository.findOrdersByRestaurantIdAndCreatedAtBetween(restaurantId, start, end);
 
-        // 5. Sum up the total revenue
+
         BigDecimal total = orders.stream()
                 .map(order -> BigDecimal.valueOf(order.getTotalPrice()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // 6. Return the DTO
+
         return new RestaurantPeriodRevenueDTO(restaurant.getId(), restaurant.getName(), total);
+    }
+
+    @Override
+    public DelivererRevenueDTO getDelivererIncomeForPeriod(Long delivererId, LocalDateTime start, LocalDateTime end, String jwtToken) {
+        // 1. Extract username/email from token
+        String username = jwtService.extractUsername(jwtToken);
+
+        // 2. Find the authenticated account
+        Accounts account = accountRepository.findByUsernameIgnoreCase(username)
+                .or(() -> accountRepository.findByEmail(username))
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+
+        if (!account.getId().equals(delivererId)) {
+            throw new AccessDeniedException("You are not allowed to view this deliverer’s income.");
+        }
+
+
+        List<Orders> orders = orderRepository. findOrdersDeliveredByDelivererBetween(delivererId, start, end);
+
+
+        BigDecimal total = orders.stream()
+                .map(order -> BigDecimal.valueOf(order.getTotalPrice()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        return new DelivererRevenueDTO(delivererId, account.getUsername(), total);
     }
 
 }

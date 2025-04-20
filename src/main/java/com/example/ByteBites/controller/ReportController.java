@@ -1,5 +1,6 @@
 package com.example.ByteBites.controller;
 
+import com.example.ByteBites.models.DTO.DelivererRevenueDTO;
 import com.example.ByteBites.models.DTO.RestaurantPeriodRevenueDTO;
 import com.example.ByteBites.models.DTO.RestaurantRevenueDTO;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -50,5 +51,16 @@ public class ReportController {
         return ResponseEntity.ok(periodRevenue);
     }
 
+    @GetMapping("/deliverer-revenue")
+    public ResponseEntity<DelivererRevenueDTO> getDelivererIncome(
+            @RequestParam Long delivererId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestHeader(name = "Authorization") String token
+    ) {
+        String jwt = token.startsWith("Bearer ") ? token.substring(7) : token;
+        DelivererRevenueDTO income = reportService.getDelivererIncomeForPeriod(delivererId, start, end, jwt);
+        return ResponseEntity.ok(income);
+    }
 
 }
