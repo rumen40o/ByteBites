@@ -30,6 +30,72 @@
   box-shadow: 0px 0px 10px #00000020;
 }
 
+.green-btn {
+  font-size: var(--btn-font-size);
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  border-radius: var(--btn-radius);
+  background-color: var(--green-color);
+  border: 4px solid var(--green-color);
+  color: var(--bg-color);
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.1s;
+  cursor: pointer;
+}
+
+.green-btn:hover {
+  color: var(--green-color);
+  background-color: var(--bg-color);
+}
+
+.green-btn:active {
+  box-shadow: 0px 0px 10px #00000020;
+}
+
+.orange-btn {
+  font-size: var(--btn-font-size);
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  border-radius: var(--btn-radius);
+  background-color: var(--secondary-color);
+  border: 4px solid var(--secondary-color);
+  color: var(--bg-color);
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.1s;
+  cursor: pointer;
+}
+
+.orange-btn:hover {
+  color: var(--secondary-color);
+  background-color: var(--bg-color);
+}
+
+.orenge-btn:active {
+  box-shadow: 0px 0px 10px #00000020;
+}
+
+.red-btn {
+  font-size: var(--btn-font-size);
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  border-radius: var(--btn-radius);
+  background-color: var(--red-color);
+  border: 4px solid var(--red-color);
+  color: var(--bg-color);
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.1s;
+  cursor: pointer;
+}
+
+.red-btn:hover {
+  color: var(--red-color);
+  background-color: var(--bg-color);
+}
+
+.red-btn:active {
+  box-shadow: 0px 0px 10px #00000020;
+}
+
 .white-btn {
   font-size: var(--btn-font-size);
   padding: var(--btn-padding-y) var(--btn-padding-x);
@@ -97,6 +163,44 @@
 
 .close-btn:active .close-icon {
   stroke: var(--accent-color);
+}
+
+.close-small-btn{position: absolute;
+  top: 40px;
+  right: 40px;
+  height: 30px;
+  width: 30px;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: 0.2s ease-in-out;
+}
+
+.close-small-icon{
+  width: 30px;
+  height: 30px;
+  stroke: var(--wfont-color);
+  stroke-width: 3;
+  stroke-linecap: round;
+  fill: none;
+  transition: 0.2s ease-in-out;
+}
+
+.close-small-btn:hover{
+  background-color: var(--wfont-color);
+}
+
+.close-small-btn:hover .close-small-icon{
+  stroke: var(--accent-color);
+}
+
+.close-small-btn:active .close-small-icon {
+  stroke: var(--secondary-color);
 }
 
 .circle-btn {

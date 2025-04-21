@@ -112,16 +112,15 @@ const OwnerDashboard = () => {
                 className="restaurant-image"
               />
               <div className="restaurant-overlay">
-                {/* <div className="logo-circle">Logo</div> */}
                 <div className="restaurant-info">
                   <p className="location">📍 {restaurant.address}</p>
                   <h3>{restaurant.name}</h3>
                 </div>
                 <div className="restaurant-actions">
-                  <button className="btn-blue" onClick={(e) => { e.stopPropagation(); /* add logic */ }}>Report</button>
-                  <button className="btn-green" onClick={(e) => { e.stopPropagation(); handleEdit(restaurant); }}>Edit</button>
-                  <button className="btn-orange" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
-                  <button className="btn-red" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>
+                  <button className="blue-btn" onClick={(e) => { e.stopPropagation();}}>Report</button>
+                  <button className="green-btn" onClick={(e) => { e.stopPropagation(); handleEdit(restaurant); }}>Edit</button>
+                  <button className="orange-btn" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
+                  <button className="red-btn" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>
                 </div>
               </div>
             </div>

@@ -82,38 +82,52 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
   return (
     <div className="custom-overlay">
       <div className="custom-modal add-item-modal">
-        <button className="custom-close" onClick={close}>✖</button>
+      <button className="close-small-btn" onClick={close} aria-label="Close">
+          <svg className="close-small-icon" viewBox="-3 -3 30 30">
+            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+          </svg>
+        </button>
+        
         <div className="custom-content">
           {/* ——— Left: Add / Edit Form ——— */}
           <div className="add-form">
             <h2>Add a product</h2>
-            <label>
-              PRODUCT NAME
-              <input
+            <div className="input-layout">
+            <input
+                className="form-input"
+                required
                 type="text"
                 value={newItem.name}
                 onChange={e => setNewItem({...newItem, name: e.target.value})}
               />
-            </label>
-            <label>
-              PRODUCT PRICE
+              <div className="label">Product name</div>
+            </div>
+              
+            <div className="input-layout">
               <input
+                className="form-input"
+                required
                 type="number"
                 value={newItem.price}
                 onChange={e => setNewItem({...newItem, price: parseFloat(e.target.value)})}
               />
-            </label>
-            <label>
-              PRODUCT IMAGE
+              <div className="label">Product price</div>
+            </div>
+            
+            <div className="input-layout">
               <input
+                className="form-input"
+                required
                 type="text"
                 value={newItem.foodImage}
                 onChange={e => setNewItem({...newItem, foodImage: e.target.value})}
               />
-            </label>
-            <label>
-              PRODUCT TYPE
+              <div className="label">Product image</div>
+            </div>
+            <div className="input-layout">
               <select
+                className="select-input"
                 value={newItem.category}
                 onChange={e => setNewItem({...newItem, category: e.target.value})}
               >
@@ -121,7 +135,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
-            </label>
+            </div>
             <button className="blue-btn" onClick={handleAddOrUpdate}>
               {editingItemId ? "Save changes" : "Add product"}
             </button>
