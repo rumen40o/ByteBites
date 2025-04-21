@@ -108,6 +108,7 @@ const AllRestaurants = () => {
             <label className="filter-option">
               <input
                 type="checkbox"
+                
                 value={cat}
                 checked={selectedCategories.includes(cat)}
                 onChange={(e) => {
@@ -119,6 +120,7 @@ const AllRestaurants = () => {
                   );
                 }}
               />
+              <span className="checkmark"></span>
               {cat.charAt(0) + cat.slice(1).toLowerCase()}
             </label>
           </li>
@@ -139,9 +141,7 @@ const AllRestaurants = () => {
             onClick={() => navigate(`/restaurant/${r.id}`)}
           >
             <img src={r.imageUrl} alt={r.name} className="restaurant-banner-all-rest" />
-            <div className="card-overlay-all-rest">
-              <div className="emoji-badge">🍽️ {r.menuItems?.length || 12}</div>
-            </div>
+            
             <h3 className="restaurant-name-all-rest">{r.name}</h3>
           </div>
         ))}
