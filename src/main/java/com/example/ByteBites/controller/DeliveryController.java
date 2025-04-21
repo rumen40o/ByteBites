@@ -43,14 +43,12 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryService.updateDeliveryStatus(deliveryId, status));
     }
 
-    // 4. OWNER вижда поръчките по доставчик (ако е необходимо)
     @GetMapping("/{deliverId}")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<Deliveries>> getDeliveriesByDeliver(@PathVariable Long deliverId) {
         return ResponseEntity.ok(deliveryService.getDeliveriesByDeliver(deliverId));
     }
 
-    // 5. OWNER приема поръчка (Променя статуса от PENDING на CONFIRMED)
     @PostMapping("/owner/accept/order/{orderId}")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<String> acceptOrderByOwner(@PathVariable Long orderId) {
@@ -58,7 +56,6 @@ public class DeliveryController {
         return ResponseEntity.ok(result);
     }
 
-    // 6. OWNER маркира поръчката като готова за взимане (READY_FOR_PICKUP)
     @PostMapping("/owner/mark-ready/{orderId}")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<String> markOrderAsReady(@PathVariable Long orderId) {

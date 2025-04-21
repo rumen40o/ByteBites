@@ -1,170 +1,175 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser, getReadyForPickupOrders, getDeliveriesByDeliverer, acceptDelivery, changeDeliveryStatus, logoutUser } from '../api/api';
+import {
+  getCurrentUser,
+  getReadyForPickupOrders,
+  getDeliveriesByDeliverer,
+  acceptDelivery,
+  changeDeliveryStatus,
+  logoutUser,
+} from "../api/api";
 import Cookies from "js-cookie";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import "../css/deliverPage.css";
 
 const DeliverPage = () => {
-    const navigate = useNavigate();
-    const [availableOrders, setAvailableOrders] = useState([]); 
-    const [deliveries, setDeliveries] = useState([]); 
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [deliverId, setDeliverId] = useState(null);
+  const navigate = useNavigate();
+  const [available, setAvailable] = useState([]);
+  const [assigned, setAssigned] = useState([]);
+  const [delivererId, setDelivererId] = useState(null);
+  const [userName, setUserName] = useState("");
+  const [expandedOrder, setExpandedOrder] = useState(null);
 
-    useEffect(() => {
-        getUser();
-    }, []);
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data: user } = await getCurrentUser();
+        setDelivererId(user.id);
+        setUserName(user.username.toUpperCase());
+        await loadAvailable();
+        await loadAssigned(user.id);
+      } catch {
+        navigate("/login");
+      }
+    })();
+  }, [navigate]);
 
-    const getUser = async () => {
-        try {
-            const response = await getCurrentUser();
-            setDeliverId(response.data.id);
-            loadAvailableOrders();
-            loadDeliveries(response.data.id);
-        } catch (error) {
-            setError("Неуспешно зареждане на потребител!");
-        }
-    };
+  const loadAvailable = async () => {
+    const { data } = await getReadyForPickupOrders();
+    setAvailable(data);
+  };
 
-    const loadAvailableOrders = async () => {
-        try {
-            const response = await getReadyForPickupOrders();
-            setAvailableOrders(response.data);
-        } catch (error) {
-            setError("Грешка при зареждане на налични поръчки!");
-        }
-    };
+  const loadAssigned = async (id) => {
+    const { data } = await getDeliveriesByDeliverer(id);
+    setAssigned(data);
+  };
 
-    const loadDeliveries = async (deliverId) => {
-        try {
-            setLoading(true);
-            const response = await getDeliveriesByDeliverer(deliverId);
-            setDeliveries(response.data);
-        } catch (error) {
-            setError("Грешка при зареждане на текущите доставки!");
-        } finally {
-            setLoading(false);
-        }
-    };
+  const handleAccept = async (orderId) => {
+    await acceptDelivery(orderId);
+    await loadAvailable();
+    await loadAssigned(delivererId);
+  };
 
-    const handleAcceptDelivery = async (orderId) => {
-        if (!deliverId) return;
-        try {
-            await acceptDelivery(orderId);
-            setAvailableOrders((prev) => prev.filter((order) => order.id !== orderId));
-            loadDeliveries(deliverId);
-        } catch (error) {
-            setError("Неуспешно приемане на поръчка!");
-        }
-    };
+  const handleDelivered = async (deliveryId) => {
+    await changeDeliveryStatus(deliveryId, "COMPLETED");
+    setAssigned((prev) => prev.filter((d) => d.id !== deliveryId));
+  };
 
-    const handleStatusUpdate = async (deliveryId, newStatus) => {
-        try {
-            await changeDeliveryStatus(deliveryId, newStatus);
-            setDeliveries((prev) => prev.map((d) => (d.id === deliveryId ? { ...d, status: newStatus } : d)));
-        } catch (error) {
-            setError("Грешка при актуализиране на статус на доставка!");
-        }
-    };
+  const handleCall = (phone) => {
+    window.open(`tel:${phone}`);
+  };
 
-    const handleLogout = async () => {
-        try {
-            await logoutUser();
-            Cookies.remove("jwt_token");
-            navigate("/");
-            window.location.reload();
-        } catch (err) {
-            console.error("Logout failed:", err);
-        }
-    };
+  const handleLogout = async () => {
+    await logoutUser();
+    Cookies.remove("jwt_token");
+    navigate("/");
+    window.location.reload();
+  };
 
-    return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-4">Страница на доставчика</h1>
+  const toggleExpand = (id) => {
+    setExpandedOrder(prev => (prev === id ? null : id));
+  };
 
-            <h2 className="text-xl font-semibold mt-4">Налични поръчки</h2>
-            {availableOrders.length === 0 ? (
-                <p>Няма налични поръчки за доставка.</p>
-            ) : (
-                <table className="min-w-full bg-white border border-gray-300">
-                    <thead>
-                        <tr className="bg-gray-200">
-                            <th className="py-2 px-4 border">Поръчка №</th>
-                            <th className="py-2 px-4 border">Ресторант</th>
-                            <th className="py-2 px-4 border">Адрес на ресторанта</th>
-                            <th className="py-2 px-4 border">Адрес за доставка</th>
-                            <th className="py-2 px-4 border">Действие</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {availableOrders.map((order) => (
-                            <tr key={order.id} className="border">
-                                <td className="py-2 px-4">{order.id}</td>
-                                <td className="py-2 px-4">{order.restaurant?.name || "Без име"}</td>
-                                <td className="py-2 px-4">{order.restaurant?.address || "Няма адрес"}</td>
-                                <td className="py-2 px-4">{order.deliveryAddress || "Няма адрес"}</td>
-                                <td className="py-2 px-4">
-                                    <button
-                                        onClick={() => handleAcceptDelivery(order.id)}
-                                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    >
-                                        Приеми доставка
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-            <h2 className="text-xl font-semibold mt-8">Моите доставки</h2>
-            {deliveries.length === 0 ? (
-                <p>Нямате доставки в момента.</p>
-            ) : (
-                <table className="min-w-full bg-white border border-gray-300">
-                    <thead>
-                        <tr className="bg-gray-200">
-                            <th className="py-2 px-4 border">Номер</th>
-                            <th className="py-2 px-4 border">Поръчка</th>
-                            <th className="py-2 px-4 border">Ресторант</th>
-                            <th className="py-2 px-4 border">Адрес на ресторанта</th>
-                            <th className="py-2 px-4 border">Адрес за доставка</th>
-                            <th className="py-2 px-4 border">Статус</th>
-                            <th className="py-2 px-4 border">Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {deliveries.map((delivery) => (
-                            <tr key={delivery.id} className="border">
-                                <td className="py-2 px-4">{delivery.id}</td>
-                                <td className="py-2 px-4">Поръчка №{delivery.order.id}</td>
-                                <td className="py-2 px-4">{delivery.order.restaurant?.name || "Без име"}</td>
-                                <td className="py-2 px-4">{delivery.order.restaurant?.address || "Няма адрес"}</td>
-                                <td className="py-2 px-4">{delivery.order?.deliveryAddress || "Няма адрес"}</td>
-                                <td className="py-2 px-4">{delivery.status}</td>
-                                <td className="py-2 px-4">
-                                    {delivery.status === "ASSIGNED" && (
-                                            <button
-                                            onClick={() => handleStatusUpdate(delivery.id, "COMPLETED")}
-                                            className="px-4 py-2 bg-green-500 text-white rounded"
-                                        >
-                                            Завърши
-                                        </button>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-
-            <button
-                className="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                onClick={handleLogout}
-            >
-                Logout
-            </button>
+  return (
+    <div className="deliver-page">
+      {/* Header */}
+      <header className="deliver-header">
+        <Navbar />
+        <div className="greeting">
+          Hello <span className="name">{userName}</span>
+          <div className="subtitle">This is your delivery management home page!</div>
         </div>
-    );
+      </header>
+
+      {/* Waiting for you */}
+      <section className="section assigned-section">
+        <h2>WAITING FOR YOU</h2>
+        {assigned.length === 0 ? (
+          <p className="empty-message">No deliveries assigned yet.</p>
+        ) : (
+          assigned
+          .filter(d => d.status === "ASSIGNED")
+          .map(delivery => (
+            <div key={delivery.id} className="delivery-card waiting">
+              <img src={delivery.order.restaurant.imageUrl} alt={delivery.order.restaurant.name} />
+              <div className="info">
+                <h3>{delivery.order.restaurant.name}</h3>
+                <span className="order-number">№{delivery.order.id}</span>
+                <p>FROM: {delivery.order.restaurant.address}</p>
+                <p>TO: {delivery.order.deliveryAddress}</p>
+              </div>
+              <div className="actions">
+                <button
+                  className="btn delivered"
+                  onClick={() => handleDelivered(delivery.id)}
+                >
+                  Delivered
+                </button>
+                <button
+                  className="btn call"
+                  onClick={() => handleCall(delivery.order.customer.phoneNumber)}
+                >
+                  Call
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </section>
+
+      {/* Available for you */}
+      <section className="section available-section">
+        <h2>AVAILABLE FOR YOU</h2>
+        {available.length === 0 ? (
+          <p className="empty-message">No orders ready for pickup.</p>
+        ) : (
+          available.map(order => {
+            const isExpanded = expandedOrder === order.id;
+            return (
+              <div
+                key={order.id}
+                className={`delivery-card available ${isExpanded ? "expanded" : ""}`}
+              >
+                <img src={order.restaurant.imageUrl} alt={order.restaurant.name} />
+                <div className="info">
+                  <h3>{order.restaurant.name}</h3>
+                  <span className="order-number">№{order.id}</span>
+                  <p>FROM: {order.restaurant.address}</p>
+                  <p>TO: {order.deliveryAddress}</p>
+                </div>
+                <div className="actions">
+                  <button
+                    className="btn accept"
+                    onClick={() => handleAccept(order.id)}
+                  >
+                     ✅
+                  </button>
+                  <button
+                    className="btn more-info"
+                    onClick={() => toggleExpand(order.id)}
+                  >
+                    {isExpanded ? "Less Info" : "ℹ️"}
+                  </button>
+                </div>
+                {isExpanded && (
+                  <div className="details-panel">
+                    <div><strong>DELIVERY NUMBER:</strong> {order.id}</div>
+                    <div><strong>RESTAURANT NAME:</strong> {order.restaurant.name}</div>
+                    <div><strong>RESTAURANT ADDRESS:</strong> {order.restaurant.address}</div>
+                    <div><strong>DELIVERY ADDRESS:</strong> {order.deliveryAddress}</div>
+                    <div><strong>PHONE NUMBER:</strong> {order.customer.phoneNumber}</div>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </section>
+
+    <Footer/>
+    </div>
+  );
 };
 
 export default DeliverPage;

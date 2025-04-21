@@ -90,7 +90,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
         </button>
         
         <div className="custom-content">
-          {/* ——— Left: Add / Edit Form ——— */}
+
           <div className="add-form">
             <h2>Add a product</h2>
             <div className="input-layout">
@@ -141,7 +141,7 @@ const AddItemModal = ({ isOpen, close, restaurantId, reloadMenu }) => {
             </button>
           </div>
 
-          {/* ——— Right: Edit Menu List ——— */}
+
           <div className="edit-menu">
             <h2>Edit menu</h2>
             <select

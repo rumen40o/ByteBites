@@ -23,4 +23,12 @@ public class OrderItemDTO {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    public OrderItemDTO() {}
+
+    // Всички аргументи
+    public OrderItemDTO(Long menuItemId, Integer quantity) {
+        this.menuItemId = menuItemId;
+        this.quantity   = quantity;
+    }
 }

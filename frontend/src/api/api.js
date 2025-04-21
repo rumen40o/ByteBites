@@ -48,7 +48,6 @@ export const createOrder = (customerId, restaurantId, data) =>
   export const getOrdersByRestaurant = (restaurantId) => api.get(`/orders/restaurant/${restaurantId}/orders`);
 
   
-
   // --- Deliveries ---
   export const getAvailableDeliveries = () => api.get("/deliveries/available");
   export const getDeliveriesByDeliverer = (delivererId) => api.get(`/deliveries/${delivererId}`);

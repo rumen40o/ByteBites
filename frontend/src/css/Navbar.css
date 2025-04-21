@@ -18,6 +18,8 @@
   padding: 0.8rem 1rem;
   border-radius: 5rem;
   box-shadow: var(--light-shadow);
+  display: flex;
+  flex-direction: row;
   width: 75rem;
   box-sizing: border-box;
   overflow: visible;

@@ -361,6 +361,7 @@ useEffect(() => {
               </div>
             </div>
           ))}
+
         </div>
     
         {/* Cart */}

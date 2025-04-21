@@ -32,7 +32,6 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody AuthRequest request, HttpServletResponse response) {
         ResponseEntity<String> responseEntity = authenticationService.login(request);
 
-        // Ако логинът е успешен, добавяме JWT в `HttpOnly` cookie
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             String jwtToken = responseEntity.getBody();
 
