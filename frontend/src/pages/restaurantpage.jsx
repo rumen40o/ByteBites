@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+
+import { useParams, useNavigate } from "react-router-dom";
 import AddItemModal from "../components/AddItemModal";
 import DeliveryAddressModal from "../components/DeliveryAddressModal";
 import OrderSummary from "../components/OrderSummary";
 import "../css/RestaurantPage.css";
 import Navbar from "../components/Navbar";
 import RegisterModal from "../components/RegisterModal";
+import EditRestaurantModal from "../components/EditRestaurantModal";
 import {
   getCurrentUser,
   getRestaurantById,
   getMenuByRestaurant,
   deleteRestaurant,
   createOrder,
+  updateRestaurant,
 } from '../api/api';
 import LoginModal from "../components/LoginModal";
 import Footer from "../components/Footer";
@@ -24,6 +27,11 @@ const RestaurantPage = () => {
   const [user, setUser] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showEditDropdown, setShowEditDropdown] = useState(false);
+  const [isClosingEdit, setIsClosingEdit] = useState(false);
+  const editDropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const editToggleBtnRef = useRef(null);
   const [menuItems, setMenuItems] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
   const [restaurant, setRestaurant] = useState(null);
@@ -35,10 +43,70 @@ const RestaurantPage = () => {
   const [orderPopupOpen, setOrderPopupOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [error, setError] = useState(null);
+  const [editRestaurantModalOpen, setEditRestaurantModalOpen] = useState(false);
+  const [restaurantToEdit, setRestaurantToEdit] = useState(null);
+
 
   useEffect(() => {
     loadInitialData();
   }, []);
+
+const handleEditToggle = () => {
+  if (showEditDropdown) {
+    setIsClosingEdit(true);
+    setTimeout(() => {
+      setShowEditDropdown(false);
+      setIsClosingEdit(false);
+    }, 300);
+  } else {
+    setShowEditDropdown(true);
+  }
+};
+
+const handleEditMenu = () => {
+  setIsModalOpen(true);
+  setShowEditDropdown(false);
+};
+
+const handleEditRestaurant = () => {
+  setRestaurantToEdit(restaurant);
+  setEditRestaurantModalOpen(true);
+  setShowEditDropdown(false);
+};
+
+const handleUpdateRestaurant = async (id, updatedData) => {
+  try {
+    const res = await updateRestaurant(id, updatedData);
+    setRestaurant(res.data);          // обнови текущото състояние
+    setEditRestaurantModalOpen(false);
+    loadInitialData();                // презареди данните от сървъра
+  } catch (err) {
+    console.error("Грешка при редакция:", err);
+    alert("Неуспешна редакция на ресторанта.");
+  }
+};
+
+
+useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (
+      showEditDropdown &&
+      editDropdownRef.current &&
+      !editDropdownRef.current.contains(e.target) &&
+      editToggleBtnRef.current &&
+      !editToggleBtnRef.current.contains(e.target)
+    ) {
+      setIsClosingEdit(true);
+      setTimeout(() => {
+        setShowEditDropdown(false);
+        setIsClosingEdit(false);
+      }, 300);
+    }
+  };
+  window.addEventListener("mousedown", handleClickOutside);
+  return () => window.removeEventListener("mousedown", handleClickOutside);
+}, [showEditDropdown]);
+
 
   const handleLoginSuccess = (loggedUser) => {
     setUser(loggedUser);
@@ -211,93 +279,117 @@ const RestaurantPage = () => {
             {restaurant?.address}</p>
         </div>
       </div>
-      {isOwner && (
-        <div className="restaurant-actions">
-          <button onClick={() => setIsModalOpen(true)} className="blue-btn">
-            Edit
-          </button>
+      <div className="restaurant-content-wrapper">
+        <div className="restaurant-menu-section">
+        {isOwner && (
+  <div className="restaurant-actions" style={{ position: "relative" }}>
+    <button
+      ref={editToggleBtnRef}
+      onClick={handleEditToggle}
+      className="green-btn"
+    >
+      Edit
+      {(showEditDropdown || isClosingEdit) && (
+      <div
+        ref={editDropdownRef}
+        className={`dropdown-menu ${isClosingEdit ? "closing" : ""}`}
+        style={{
+          position: "absolute",
+          top: "calc(100% + 0.5rem)",
+          zIndex: 10
+        }}
+        
+      >
+        <button onClick={handleEditMenu}>Menu</button>
+        <button onClick={handleEditRestaurant}>Restaurant</button>
+      </div>
+    )}
+    </button>
 
-          <AddItemModal
-            isOpen={isModalOpen}
-            close={() => setIsModalOpen(false)}
-            restaurantId={id}
-            reloadMenu={loadMenuItems}
-          />
+    
           <button className="blue-btn" onClick={(e) => { e.stopPropagation();}}>Report</button>
-          <button className="blue-btn" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
-          <button className="blue-btn" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>
+          <button className="orange-btn" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
+          <button className="red-btn" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>
         </div>  
       )}
-  
-        <div className="restaurant-content-wrapper">
-          <div className="restaurant-menu-section">
-            {Object.keys(groupedMenu).map((category) => (
-              <div key={category} className="menu-category-section">
-                <h2 className="menu-category-title">{category}</h2>
-                <div className="menu-grid">
-                  {groupedMenu[category].map((item) => (
-                    <div key={item.id} className="menu-item" onClick={() => addToOrder(item)}>
-                      <div className="image-container">
-                        <img
-                        src={item.foodImage || image}
-                        alt={item.name}
-                        className="menu-item-image"
-                        onError={e => { e.currentTarget.src = image }}
-                      />
-                      
-                      </div>
-                      <div className="menu-item-text">
-                      <h3 className="menu-item-name">
-                        {item.name}
-                        <button
-                          className="add-item-btn"
+          {Object.keys(groupedMenu).map((category) => (
+            <div key={category} className="menu-category-section">
+              <h2 className="menu-category-title">{category}</h2>
+              <div className="menu-grid">
+                {groupedMenu[category].map((item) => (
+                  <div key={item.id} className="menu-item" onClick={() => addToOrder(item)}>
+                    <div className="image-container">
+                      <img
+                      src={item.foodImage || image}
+                      alt={item.name}
+                      className="menu-item-image"
+                      onError={e => { e.currentTarget.src = image }}
+                    />
+                    
+                    </div>
+                    <div className="menu-item-text">
+                    <h3 className="menu-item-name">
+                      {item.name}
+                      <button
+                        className="add-item-btn"
+                      >
+                        <svg className="add-item-icon"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
-                          <svg className="add-item-icon"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <line x1="12" y1="5" x2="12" y2="19" />
-                            <line x1="5"  y1="12" x2="19" y2="12" />
-                          </svg>
-                        </button>
-                      </h3>
-                        <p className="menu-item-description">
-                          {item.description || "No description."}
-                        </p>
-                        <p className="menu-item-price">{item.price.toFixed(2)} лв.</p>
-                      </div>
-                      <div className="add-item-container">
-                      </div>
-                      
+                          <line x1="12" y1="5" x2="12" y2="19" />
+                          <line x1="5"  y1="12" x2="19" y2="12" />
+                        </svg>
+                      </button>
+                    </h3>
+                      <p className="menu-item-description">
+                        {item.description || "No description."}
+                      </p>
+                      <p className="menu-item-price">{item.price.toFixed(2)} лв.</p>
+                    </div>
+                    <div className="add-item-container">
                     </div>
                     
-                  ))}
-                </div>
+                  </div>
+                  
+                ))}
               </div>
-            ))}
-          </div>
-      
-          <div className="restaurant-cart-section">
-            <OrderSummary
-              cart={orderItems}
-              onUpdateQuantity={updateQuantity}
-              restaurantInfo={{
-                name: restaurant?.name,
-                address: restaurant?.address,
-                id: restaurant?.id,
-              }}
-              user={user}
-              onLoginRequired={() => setShowLoginModal(true)}
-            />
-          </div>
+            </div>
+          ))}
+
         </div>
+    
+        {/* Cart */}
+        <div className="restaurant-cart-section">
+          <OrderSummary
+            cart={orderItems}
+            onUpdateQuantity={updateQuantity}
+            restaurantInfo={{
+              name: restaurant?.name,
+              address: restaurant?.address,
+              id: restaurant?.id,
+            }}
+            user={user}
+            onLoginRequired={() => setShowLoginModal(true)}
+          />
+        </div>
+      </div>
       
         <button className="scroll-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>⬆</button>
+        {isOwner && (
+  <EditRestaurantModal
+    isOpen={editRestaurantModalOpen}
+    onClose={() => setEditRestaurantModalOpen(false)}
+    restaurant={restaurantToEdit}
+    onUpdate={handleUpdateRestaurant}
+  />
+)}
+        
         <Footer />
       
         {showLogin && <LoginModal close={() => setShowLogin(false)} onLoginSuccess={handleLoginSuccess} openRegister={() => { setShowLogin(false); setShowRegister(true); }} />}

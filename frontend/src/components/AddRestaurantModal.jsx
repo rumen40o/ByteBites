@@ -37,8 +37,8 @@ const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
   return (
     <div className="add-restaurant-overlay">
       <div className="add-restaurant-modal">
-        <button className="add-restaurant-close-btn" onClick={close} aria-label="Close">
-          <svg className="add-restaurant-close-icon" viewBox="0 0 24 24">
+        <button className="close-btn" onClick={close} aria-label="Close">
+          <svg className="close-icon" viewBox="0 0 24 24">
             <line x1="6" y1="6" x2="18" y2="18" />
             <line x1="18" y1="6" x2="6" y2="18" />
           </svg>

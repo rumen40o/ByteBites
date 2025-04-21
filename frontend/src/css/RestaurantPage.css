@@ -73,12 +73,38 @@
   width: 70%;
 }
 
+.restaurant-actions{
+  margin-bottom: 20px;
+}
+
+.restaurant-menu-section .restaurant-actions{
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.restaurant-menu-section .dropdown-menu button{
+  color: var(--green-color);
+}
+
+.restaurant-menu-section .dropdown-menu button:hover{
+  color: var(--wfont-color);
+  background-color: var(--green-color);
+}
+
+.restaurant-menu-section .restaurant-actions .dropdown-menu {
+  position: absolute;
+  left: 0;
+  width: 200px;
+}  
+
+
 .menu-category-section {
   margin-bottom: 2rem;
 }
 
 .menu-category-title {
-  font-size: 2rem;
+  font-size: 3rem;
+  font-weight: 600;
   margin-bottom: 1rem;
 }
 

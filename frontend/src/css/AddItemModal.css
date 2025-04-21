@@ -23,19 +23,6 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
-
-.custom-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #333;
-}
-
-/* ——— Лява форма ——— */
 .add-form {
     flex: 1;
   }
@@ -65,17 +52,18 @@
     width: 100%;
   }
   
-  /* ——— Дясна колона ——— */
   .edit-menu {
     flex: 1;
     display: flex;
     flex-direction: column;
   }
+  
   .edit-menu h2 {
     font-size: 2rem;
     color: #4f5d75;
     margin-bottom: 0.5rem;
   }
+
   .category-filter {
     padding: 0.6rem 1rem;
     border-radius: 50px;
@@ -83,6 +71,7 @@
     font-size: 1rem;
     outline: none;
   }
+
   .menu-list {
     margin-top: 1rem;
     overflow-y: auto;
@@ -92,7 +81,6 @@
     gap: 1rem;
   }
   
-  /* ——— Картички за ястия ——— */
   .menu-card {
     display: flex;
     align-items: center;
@@ -102,9 +90,11 @@
     padding: 0.5rem;
     transition: box-shadow 0.3s;
   }
+
   .menu-card:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
+
   .menu-card-img {
     width: 60px;
     height: 60px;
@@ -112,16 +102,19 @@
     object-fit: cover;
     margin-right: 1rem;
   }
+  
   .menu-card-info h3 {
     margin: 0;
     font-size: 1.1rem;
     color: #333;
   }
+
   .menu-card-info p {
     margin: 0.2rem 0 0;
     font-size: 1rem;
     color: var(--accent-color);
   }
+
   .menu-card-actions {
     margin-left: auto;
     display: flex;
@@ -130,16 +123,14 @@
 
   .custom-content {
     display: flex;
-    gap: 2rem;              /* разстояние между формата и списъка */
+    gap: 2rem;
     align-items: flex-start;
   }
 
-  
-  /* двете деца след flex-а да не излизат от рамките */
   .add-form,
   .edit-menu {
     flex: 1;
-    min-width: 0;           /* задължително при flex-basis процент за коректен wrapping */
+    min-width: 0;
   }
 
   .group_buttons{
