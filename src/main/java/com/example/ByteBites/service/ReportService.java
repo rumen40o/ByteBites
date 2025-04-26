@@ -6,6 +6,8 @@ import com.example.ByteBites.models.DTO.RestaurantRevenueDTO;
 import com.example.ByteBites.models.Restaurants;
 import com.example.ByteBites.repository.AccountRepository;
 import com.example.ByteBites.repository.RestaurantsRepository;
+import com.example.ByteBites.security.ApplicationConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import com.example.ByteBites.service.inteface.ReportServiceInterface;
@@ -23,7 +25,8 @@ public class ReportService implements ReportServiceInterface {
     private final OrdersRepository orderRepository;
     private JWTService jwtService;
 
-
+    @Value("${bonus.threshold}")
+    private BigDecimal bonusThreshold;
 
     private AccountRepository accountRepository;
 
@@ -31,19 +34,21 @@ public class ReportService implements ReportServiceInterface {
     private RestaurantsRepository restaurantRepository;
 
 
-
+    private ApplicationConfig applicationConfig;
 
 
     public ReportService(
             OrdersRepository orderRepository,
             JWTService jwtService,
             AccountRepository accountRepository,
-            RestaurantsRepository restaurantRepository
+            RestaurantsRepository restaurantRepository,
+           ApplicationConfig applicationConfig
     ) {
         this.orderRepository = orderRepository;
         this.jwtService = jwtService;
         this.accountRepository = accountRepository;
         this.restaurantRepository = restaurantRepository;
+        this.applicationConfig = applicationConfig;
     }
 
     @Override
@@ -91,30 +96,35 @@ public class ReportService implements ReportServiceInterface {
     }
 
     @Override
-    public DelivererRevenueDTO getDelivererIncomeForPeriod(Long delivererId, LocalDateTime start, LocalDateTime end, String jwtToken) {
-        // 1. Extract username/email from token
+    public List<DelivererRevenueDTO> getDelivererIncomeForPeriod(Long restaurantId, LocalDateTime start, LocalDateTime end, String jwtToken) {
+        // Step 1: Validate user and ownership
         String username = jwtService.extractUsername(jwtToken);
 
-        // 2. Find the authenticated account
         Accounts account = accountRepository.findByUsernameIgnoreCase(username)
                 .or(() -> accountRepository.findByEmail(username))
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
+        Restaurants restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
-        if (!account.getId().equals(delivererId)) {
-            throw new AccessDeniedException("You are not allowed to view this deliverer’s income.");
+        if (!restaurant.getOwner().getId().equals(account.getId())) {
+            throw new AccessDeniedException("You do not own this restaurant.");
         }
 
+        // Step 2: Fetch revenue data
+        List<DelivererRevenueDTO> revenues = orderRepository.getDelivererRevenueForRestaurantAndPeriod(restaurantId, start, end);
 
-        List<Orders> orders = orderRepository. findOrdersDeliveredByDelivererBetween(delivererId, start, end);
+        // Step 3: Apply bonus logic
+        for (DelivererRevenueDTO dto : revenues) {
+            if (dto.getTotalIncome().compareTo(BigDecimal.valueOf(applicationConfig.getBonusThreshold())) >= 0) {
+                BigDecimal bonusRevenue = dto.getTotalIncome().multiply(BigDecimal.valueOf(applicationConfig.getBonusMultiplier()));
+                dto.setTotalIncome(bonusRevenue);
+                dto.setBonusAwarded(true);
+            }
+        }
 
-
-        BigDecimal total = orders.stream()
-                .map(order -> BigDecimal.valueOf(order.getTotalPrice()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-        return new DelivererRevenueDTO(delivererId, account.getUsername(), total);
+        return revenues;
     }
+
 
 }

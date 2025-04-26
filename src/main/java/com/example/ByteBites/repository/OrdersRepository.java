@@ -1,6 +1,7 @@
 package com.example.ByteBites.repository;
 
 import com.example.ByteBites.models.Accounts;
+import com.example.ByteBites.models.DTO.DelivererRevenueDTO;
 import com.example.ByteBites.models.DTO.RestaurantRevenueDTO;
 import com.example.ByteBites.models.OrderStatus;
 import com.example.ByteBites.models.Orders;
@@ -37,13 +38,19 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     );
 
     @Query("""
-    SELECT o FROM Orders o
-    JOIN Deliveries d ON o.id = d.order.id
-    WHERE d.deliver.id = :delivererId
-    AND o.createdAt BETWEEN :start AND :end
+    SELECT new com.example.ByteBites.models.DTO.DelivererRevenueDTO(
+        d.deliver.id,
+        d.deliver.username,
+        CAST(SUM(o.totalPrice) AS java.math.BigDecimal)
+    )
+    FROM Deliveries d
+    JOIN d.order o
+    WHERE o.restaurant.id = :restaurantId
+      AND o.createdAt BETWEEN :start AND :end
+    GROUP BY d.deliver.id, d.deliver.username
 """)
-    List<Orders> findOrdersDeliveredByDelivererBetween(
-            @Param("delivererId") Long delivererId,
+    List<DelivererRevenueDTO> getDelivererRevenueForRestaurantAndPeriod(
+            @Param("restaurantId") Long restaurantId,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );

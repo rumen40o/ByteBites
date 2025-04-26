@@ -19,7 +19,7 @@ public class ReportController {
 
     private final ReportServiceInterface reportService;
 
-    // ✅ Manual constructor instead of @RequiredArgsConstructor
+
     public ReportController(ReportServiceInterface reportService) {
         this.reportService = reportService;
     }
@@ -36,13 +36,13 @@ public class ReportController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
             @RequestHeader(name = "Authorization", required = false) String token
     ) {
-        // If no time range, return all-time revenue for all restaurants
+
         if (start == null || end == null || token == null) {
             List<RestaurantRevenueDTO> allRevenue = reportService.getRevenuePerRestaurant();
             return ResponseEntity.ok(allRevenue);
         }
 
-        // If time range is present, return for specific restaurant & owner
+
         String jwt = token.startsWith("Bearer ") ? token.substring(7) : token;
 
         RestaurantPeriodRevenueDTO periodRevenue =
@@ -52,15 +52,17 @@ public class ReportController {
     }
 
     @GetMapping("/deliverer-revenue")
-    public ResponseEntity<DelivererRevenueDTO> getDelivererIncome(
-            @RequestParam Long delivererId,
+    public ResponseEntity<List<DelivererRevenueDTO>> getDelivererRevenues(
+            @RequestParam Long restaurantId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
             @RequestHeader(name = "Authorization") String token
     ) {
         String jwt = token.startsWith("Bearer ") ? token.substring(7) : token;
-        DelivererRevenueDTO income = reportService.getDelivererIncomeForPeriod(delivererId, start, end, jwt);
-        return ResponseEntity.ok(income);
+        List<DelivererRevenueDTO> incomeList = reportService.getDelivererIncomeForPeriod(restaurantId, start, end, jwt);
+        return ResponseEntity.ok(incomeList);
     }
+
+
 
 }
