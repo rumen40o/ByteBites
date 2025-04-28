@@ -207,6 +207,7 @@ const Navbar = ({ searchQuery, setSearchQuery, allRestaurants }) => {
                     >
                       View Profile
                     </button>
+                    {user.role === "USER" && (
                     <button
                       onClick={() => {
                         setDropDownMenu(false);
@@ -215,6 +216,7 @@ const Navbar = ({ searchQuery, setSearchQuery, allRestaurants }) => {
                     >
                       Order Status
                     </button>
+                    )}
                     {user.role === "OWNER" && (
                       <button
                         onClick={() => {

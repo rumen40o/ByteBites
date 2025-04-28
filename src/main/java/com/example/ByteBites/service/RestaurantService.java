@@ -63,7 +63,7 @@ public class RestaurantService implements RestaurantServiceInterface {
 
         restaurant.setName(dto.getName());
         restaurant.setDescription(dto.getDescription());
-        restaurant.setAddress(dto.getAddress());
+        restaurant.setAddress(dto.getAddress());    
         restaurant.setImageUrl(dto.getImageUrl());
 
         return restaurantsRepository.save(restaurant);
