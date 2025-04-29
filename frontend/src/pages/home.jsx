@@ -15,7 +15,7 @@ import pizzaIcon from "../images/pizza-1.png";
 import burgerIcon from "../images/burger-1-2.png";
 import sandwichIcon from "../images/sandwich-1.png";
 import pastaIcon from "../images/pasta-1.png";
-import ramenIcon from "../images/ramen-1.png";
+import donerIcon from "../images/doner-1.png";
 import sushiIcon from "../images/sushi-2.png";
 import handshake from "../images/handshake.jpg";
 import rider from "../images/rider.jpg";
@@ -43,7 +43,7 @@ function Home() {
     { icon: burgerIcon, label: "BURGER" },
     { icon: sandwichIcon, label: "SANDWICH" },
     { icon: pastaIcon, label: "PASTA" },
-    { icon: ramenIcon, label: "DONER" },
+    { icon: donerIcon, label: "DONER" },
     { icon: sushiIcon, label: "SUSHI" }
   ];
 

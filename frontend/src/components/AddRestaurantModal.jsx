@@ -1,82 +1,126 @@
-import { useState } from "react";
-import "../css/Buttons.css"
-import {
-  addRestaurant
-} from '../api/api';
+import { useState, useEffect } from "react";
+import "../css/Buttons.css";
 import "../css/Addrestaurant.css";
+import { addRestaurant } from '../api/api';
 
-const AddRestaurantModal = ({ isOpen, close, onAddSuccess }) => {
+const AddRestaurantModal = ({ isOpen, onClose, onAddSuccess }) => {
   const [restaurant, setRestaurant] = useState({
     name: "",
     description: "",
     address: "",
-    imageUrl: "" 
+    imageUrl: ""
   });
+
+  const [isOpenLocal, setIsOpenLocal] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    let timer;
+  
+    if (isOpen) {
+      setIsClosing(false);
+      timer = setTimeout(() => setIsOpenLocal(true), 10);
+    } else if (isOpenLocal) {
+      setIsClosing(true);
+      timer = setTimeout(() => {
+        setIsClosing(false);
+        setIsOpenLocal(false);
+      }, 300);
+    }
+  
+    return () => clearTimeout(timer);
+  }, [isOpen, isOpenLocal]);
+  
 
   const handleChange = (e) => {
     setRestaurant({ ...restaurant, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    if (!restaurant.name || !restaurant.description || !restaurant.address || !restaurant.imageUrl) {
-      alert("Моля, попълнете всички полета.");
+    const { name, description, address, imageUrl } = restaurant;
+    if (!name || !description || !address || !imageUrl) {
+      alert("Please fill in all fields.");
       return;
     }
 
     try {
-      await addRestaurant(restaurant)
+      await addRestaurant(restaurant);
       onAddSuccess();
-      close();
+      handleClose();
     } catch (err) {
-      console.error("Грешка при добавяне на ресторант:", err);
+      console.error("Error adding restaurant:", err);
     }
   };
 
-  if (!isOpen) return null;
+  const handleClose = () => {
+    onClose();
+  };
+
+  if (!isOpen && !isOpenLocal && !isClosing) return null;
 
   return (
-    <div className="add-restaurant-overlay">
-      <div className="add-restaurant-modal">
-        <button className="close-btn" onClick={close} aria-label="Close">
-          <svg className="close-icon" viewBox="0 0 24 24">
+    <div
+      className={`add-restaurant-overlay ${isOpenLocal && !isClosing ? 'open' : ''} ${isClosing ? 'closing' : ''}`}
+      onClick={handleClose}
+    >
+      <div
+        className={`add-restaurant-modal ${isOpenLocal && !isClosing ? 'open' : ''} ${isClosing ? 'closing' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className="close-small-btn" onClick={handleClose} aria-label="Close">
+          <svg className="close-small-icon" viewBox="-3 -3 30 30">
             <line x1="6" y1="6" x2="18" y2="18" />
             <line x1="18" y1="6" x2="6" y2="18" />
           </svg>
         </button>
-        <h2>Добави нов ресторант</h2>
-        <input
-          type="text"
-          name="name"
-          placeholder="Име"
-          value={restaurant.name}
-          onChange={handleChange}
-          className="add-restaurant-input"
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Описание"
-          value={restaurant.description}
-          onChange={handleChange}
-          className="add-restaurant-input"
-        />
-        <input
-          type="text"
-          name="address"
-          placeholder="Адрес"
-          value={restaurant.address}
-          onChange={handleChange}
-          className="add-restaurant-input"
-        />
-        <input
-          type="text"
-          name="imageUrl"
-          placeholder="Image URL"
-          value={restaurant.imageUrl}
-          onChange={handleChange}
-          className="add-restaurant-input"
-        />
-        <button className="add-restaurant-submit-btn blue-btn" onClick={handleSubmit}>Добави</button>
+        <h2 className="section-name">Add restaurant</h2>
+        <div className="input-layout">
+          <input 
+            className="form-input"
+            required
+            type="text"
+            name="name"
+            value={restaurant.name}
+            onChange={handleChange}
+          />
+          <div className="label">Name</div>
+        </div>
+        <div className="input-layout">
+          <input
+            className="form-input"
+            required
+            type="text"
+            name="description"
+            value={restaurant.description}
+            onChange={handleChange}
+          />
+          <div className="label">Description</div>
+        </div>
+        <div className="input-layout">
+          <input
+            className="form-input"
+            required
+            type="text"
+            name="address"
+            value={restaurant.address}
+            onChange={handleChange}
+          />
+          <div className="label">Address</div>
+        </div>
+        <div className="input-layout">
+          <input
+            className="form-input"
+            required
+            type="text"
+            name="imageUrl"
+            value={restaurant.imageUrl}
+            onChange={handleChange}
+          />
+          <div className="label">Cover</div>
+        </div>
+        <button className="blue-btn" onClick={handleSubmit}>
+          Add restaurant
+        </button>
       </div>
     </div>
   );
