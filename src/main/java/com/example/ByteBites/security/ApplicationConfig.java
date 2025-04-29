@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +35,19 @@ public class ApplicationConfig {
     private final RestaurantsRepository restaurantsRepository;
     private final MenuItemsRepository menuItemsRepository;
     private final OrdersRepository ordersRepository;
+    @Value("${bonus.threshold}")
+    private double bonusThreshold;
 
+    @Value("${bonus.multiplier}")
+    private double bonusMultiplier;
+
+    public double getBonusThreshold() {
+        return bonusThreshold;
+    }
+
+    public double getBonusMultiplier() {
+        return bonusMultiplier;
+    }
     public ApplicationConfig(AccountRepository repository, RestaurantsRepository restaurantsRepository, MenuItemsRepository menuItemsRepository, OrdersRepository ordersRepository) {
         this.repository = repository;
         this.restaurantsRepository = restaurantsRepository;
