@@ -34,7 +34,7 @@ const OwnerDashboard = () => {
           setRestaurants(restaurantRes.data);
         }
       } catch (err) {
-        setError("Грешка при зареждане на потребителя или ресторантите.");
+        setError("Error loading user or restaurants.");
       } finally {
         setLoading(false);
       }
@@ -44,15 +44,15 @@ const OwnerDashboard = () => {
   }, []);
 
   const handleDelete = async (restaurantId) => {
-    if (!window.confirm("Сигурни ли сте, че искате да изтриете този ресторант?")) return;
+    if (!window.confirm("Are you sure you want to delete this restaurant?")) return;
 
     try {
       await deleteRestaurant(restaurantId);
       setRestaurants(prev => prev.filter(r => r.id !== restaurantId));
-      alert("Ресторантът беше успешно изтрит!");
+      alert("The restaurant was successfully deleted!");
     } catch (err) {
-      console.error("Грешка при изтриване:", err);
-      alert("Възникна грешка при изтриването на ресторанта.");
+      console.error("Error while deleting:", err);
+      alert("An error occurred while deleting the restaurant.");
     }
   };
 
@@ -68,7 +68,7 @@ const OwnerDashboard = () => {
         prev.map(r => (r.id === id ? res.data : r))
       );
     } catch (err) {
-      console.error("Грешка при редакция:", err);
+      console.error("Editing error:", err);
     }
   };
 
@@ -79,7 +79,7 @@ const OwnerDashboard = () => {
     setSelectedRestaurant(restaurant);
   };
 
-  if (loading) return <div className="text-center mt-10">Зареждане...</div>;
+  if (loading) return <div className="text-center mt-10">Loading...</div>;
   if (error) return <div className="text-center text-red-500 mt-10">{error}</div>;
 
   
@@ -97,31 +97,52 @@ const OwnerDashboard = () => {
         </button>
     
       {restaurants.length === 0 ? (
-        <p>Нямате добавени ресторанти.</p>
+        <p>You have no restaurants added.</p>
       ) : (
         <div className="restaurant-grid">
           {restaurants.map((restaurant) => (
+            
             <div
               key={restaurant.id}
               className="restaurant-card"
               onClick={() => navigate(`/restaurant/${restaurant.id}`)}
             >
+              <div className="restaurant-overlay">
               <img
                 src={restaurant.imageUrl}
                 alt={restaurant.name}
                 className="restaurant-image"
               />
-              <div className="restaurant-overlay">
-                <div className="restaurant-info">
-                  <p className="location">📍 {restaurant.address}</p>
-                  <h3>{restaurant.name}</h3>
-                </div>
+              <div className="restaurant-info-layout">
+                
+              </div>
+              <div className="restaurant-info">
+              <p className="restaurant-address-tag">
+                <svg
+                  width="24px"
+                  height="18px"
+                  viewBox="3 0 24 24"
+                  fill="none"
+                  stroke="var(--wfont-color)"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 1 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                {restaurant?.address}</p>
+                <h3 className="restaurant-name">{restaurant.name}</h3>
+                
                 <div className="restaurant-actions">
                   <button className="blue-btn" onClick={(e) => { e.stopPropagation();}}>Report</button>
                   <button className="green-btn" onClick={(e) => { e.stopPropagation(); handleEdit(restaurant); }}>Edit</button>
                   <button className="orange-btn" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
                   <button className="red-btn" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>
                 </div>
+                </div>
+                
+                
               </div>
             </div>
           ))}
@@ -137,7 +158,7 @@ const OwnerDashboard = () => {
 
     <AddRestaurantModal
         isOpen={addModalOpen}
-        close={() => setAddModalOpen(false)}
+        onClose={() => setAddModalOpen(false)}
         onAddSuccess={() => {
             setAddModalOpen(false);
             getRestaurantsByOwner(user.id).then(res => setRestaurants(res.data));

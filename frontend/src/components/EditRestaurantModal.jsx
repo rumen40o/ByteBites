@@ -14,7 +14,6 @@ const EditRestaurantModal = ({ isOpen, onClose, restaurant, onUpdate }) => {
   const [isOpenLocal, setIsOpenLocal] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
 
-  // Sync form when restaurant prop changes
   useEffect(() => {
     if (restaurant) {
       setForm({
@@ -26,15 +25,12 @@ const EditRestaurantModal = ({ isOpen, onClose, restaurant, onUpdate }) => {
     }
   }, [restaurant]);
 
-  // Handle open animation
   useEffect(() => {
     if (isOpen) {
       setIsClosing(false);
-      // slight delay to allow CSS transition
       const timer = setTimeout(() => setIsOpenLocal(true), 10);
       return () => clearTimeout(timer);
     } else if (isOpenLocal) {
-      // trigger close animation
       setIsOpenLocal(false);
       setIsClosing(true);
       const timer = setTimeout(() => {
@@ -63,17 +59,14 @@ const EditRestaurantModal = ({ isOpen, onClose, restaurant, onUpdate }) => {
   };
 
   const handleClose = () => {
-    // start close animation
     setIsOpenLocal(false);
     setIsClosing(true);
-    // delay onClose until after animation
     setTimeout(() => {
       setIsClosing(false);
       onClose();
     }, 300);
   };
 
-  // don't render until needed
   if (!isOpen && !isOpenLocal && !isClosing) return null;
 
   return (
@@ -138,7 +131,7 @@ const EditRestaurantModal = ({ isOpen, onClose, restaurant, onUpdate }) => {
             value={form.imageUrl}
             onChange={handleChange}
           />
-          <div className="label">Image URL</div>
+          <div className="label">Cover</div>
         </div>
 
         <button className="blue-btn" onClick={handleSubmit}>
