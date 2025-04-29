@@ -10,8 +10,8 @@ import java.util.List;
 public interface ReportServiceInterface {
     OrderStatsDTO getOrderStatistics();
     List<RestaurantRevenueDTO> getRevenuePerRestaurant();
-     RestaurantPeriodRevenueDTO getRestaurantRevenueForPeriod(Long restaurantId, LocalDateTime start, LocalDateTime end, String jwtToken) ;
-    List<DelivererRevenueDTO> getDelivererIncomeForPeriod(Long restaurantId, LocalDateTime start, LocalDateTime end, String jwtToken);
+     RestaurantPeriodRevenueDTO getRestaurantRevenueForPeriod(Long restaurantId, LocalDateTime start, LocalDateTime end) ;
+    List<DelivererRevenueDTO> getDelivererIncomeForPeriod(Long restaurantId, LocalDateTime start, LocalDateTime end);
 
 
 

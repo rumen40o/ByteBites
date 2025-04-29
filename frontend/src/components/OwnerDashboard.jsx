@@ -135,7 +135,7 @@ const OwnerDashboard = () => {
                 <h3 className="restaurant-name">{restaurant.name}</h3>
                 
                 <div className="restaurant-actions">
-                  <button className="blue-btn" onClick={(e) => { e.stopPropagation();}}>Report</button>
+                  <button className="blue-btn" onClick={(e) => { e.stopPropagation(); navigate(`/reports/${restaurant.id}`);}}>Report</button>
                   <button className="green-btn" onClick={(e) => { e.stopPropagation(); handleEdit(restaurant); }}>Edit</button>
                   <button className="orange-btn" onClick={(e) => handleOrdersClick(restaurant, e)}>Orders</button>
                   <button className="red-btn" onClick={(e) => { e.stopPropagation(); handleDelete(restaurant.id); }}>Delete</button>

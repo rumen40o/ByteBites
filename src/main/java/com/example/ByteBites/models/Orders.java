@@ -92,6 +92,10 @@ public class Orders {
         this.deliveryAddress = deliveryAddress;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Orders() {
     }
 }

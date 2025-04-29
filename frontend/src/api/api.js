@@ -63,6 +63,20 @@ export const createOrder = (customerId, restaurantId, data) =>
   export const getReadyForPickupOrders = () =>
     api.get("/deliveries/ready-for-pickup");
 
+  // -- Reports
+  export const getOrderStats = () =>
+    api.get("/reports/order-stats");
+
+  export const getRestaurantRevenueByPeriod = (restaurantId, start, end) =>
+    api.get("/reports/restaurant-revenue", {
+      params: { restaurantId, start, end },
+    });
+  
+  export const getDelivererRevenueForPeriod = (restaurantId, start, end) =>
+    api.get("/reports/deliverer-revenue", {
+      params: { restaurantId, start, end },
+    });
+
 
 
 export default api;
