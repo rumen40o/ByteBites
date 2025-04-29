@@ -7,6 +7,7 @@ import Restaurantpage from './pages/restaurantpage';
 import OrderTrackingPage from './pages/orderTracking';
 import AllRestaurants from './pages/AllRestaurants';
 import BucketPage from './pages/BucketPage';
+import ReportPage from './pages/ReportPage'
 
 
 function App() {
@@ -66,6 +67,12 @@ function App() {
               path="/bucket"
               element={
                 <BucketPage />
+              }
+            />
+            <Route
+              path="/reports/:restaurantId"
+              element={
+                <ReportPage />
               }
             />
         </Routes>
