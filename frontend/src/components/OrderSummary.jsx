@@ -25,7 +25,12 @@ const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo, user, onLoginReq
       onLoginRequired();
       return;
     }
-  
+
+    if (cart.length === 0) {
+      alert("Количката е празна. Моля, добавете продукти преди да продължите.");
+      return;
+    }
+
     navigate('/bucket', {
       state: {
         cart,
@@ -39,31 +44,27 @@ const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo, user, onLoginReq
       <h3 className="order-title">Your cart</h3>
 
       <div className="order-items-restaurant">
-  {cart.map((item) => (
+        {cart.map((item) => (
           <div key={item.id} className="cart-item">
             <img
-                src={item.foodImage}
-                alt={item.name}
-                className="cart-item-img"
-              />
+              src={item.foodImage}
+              alt={item.name}
+              className="cart-item-img"
+            />
             <div className="cart-item-details">
               <span className="cart-item-name">{item.name}</span>
               <span className="cart-item-quantity-price">
                 {item.quantity} x {item.price.toFixed(2)} лв. {(item.price * item.quantity).toFixed(2)} лв.
               </span>
-              
             </div>
-            <hr/>
+            <hr />
             <div className="cart-quantity-buttons">
               <button className="circle-btn small" onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</button>
               <button className="circle-btn small" onClick={() => handleQuantityChange(item.id, item.quantity - 1)}>−</button>
             </div>
-            
           </div>
         ))}
-        
       </div>
-
 
       <div className="order-summary-breakdown">
         <div className="summary-row">
@@ -73,24 +74,22 @@ const OrderSummary = ({ cart, onUpdateQuantity, restaurantInfo, user, onLoginReq
         <div className="summary-row">
           <span>Delivery</span>
           <span>{deliveryFee.toFixed(2)} лв.</span>
-          
         </div>
         <div className="summary-row">
           <span>Service Fee</span>
           <span>{serviceFee.toFixed(2)} лв.</span>
-          
         </div>
         <div className="summary-row total">
           <strong>Summary:</strong>
           <strong>{total.toFixed(2)} лв.</strong>
         </div>
       </div>
+
       <div className='chechout-btn-container'>
         <button className="blue-btn" onClick={handleCheckout}>
           Check out
         </button>
       </div>
-      
     </div>
   );
 };
@@ -113,4 +112,4 @@ OrderSummary.propTypes = {
   onLoginRequired: PropTypes.func.isRequired,
 };
 
-export default OrderSummary; 
+export default OrderSummary;
