@@ -73,7 +73,7 @@ const DeliverPage = () => {
 
   return (
     <div className="deliver-page">
-      {/* Header */}
+      {}
       <header className="deliver-header">
         <Navbar />
         <div className="greeting">
@@ -82,7 +82,7 @@ const DeliverPage = () => {
         </div>
       </header>
 
-      {/* Waiting for you */}
+      {}
       <section className="section assigned-section">
         <h2>WAITING FOR YOU</h2>
         {assigned.length === 0 ? (
@@ -118,7 +118,7 @@ const DeliverPage = () => {
         )}
       </section>
 
-      {/* Available for you */}
+      {}
       <section className="section available-section">
         <h2>AVAILABLE FOR YOU</h2>
         {available.length === 0 ? (

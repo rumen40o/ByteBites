@@ -144,7 +144,7 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* текстово поле за адрес */
+
 .bucket-input {
   width: 100%;
   padding: 0.8rem 1rem;
@@ -169,25 +169,25 @@
   margin-bottom: 1rem;
 }
 
-/* обвива картата и скрива излишъка */
+
 .map-wrapper {
   position: relative;
   width: 100%;
-  max-width: 100%; /* или какъвто ти трябва */
-  height: 240px;   /* същата височина като .inline-map */
+  max-width: 100%;
+  height: 240px;
   overflow: hidden; 
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   margin-bottom: 1rem;
 }
 
-/* самата Leaflet карта да заема 100% от родителя */
+
 .map-wrapper .leaflet-container {
   width: 100% !important;
   height: 100% !important;
 }
 
-/* ако имаш бутон, който да е над картата */
+
 .track-button, .checkout-btn {
   position: relative;
   z-index: 10;

@@ -42,7 +42,7 @@ const ReportPage = () => {
         startISO,
         endISO
       );
-      // <-- read totalRevenue, not total
+      //  read totalRevenue, not total
       const total = pr.totalRevenue;
       setPeriodRev(typeof total === "number" ? total : Number(total));
 
