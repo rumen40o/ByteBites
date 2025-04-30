@@ -1,137 +1,138 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getCurrentUser,
   getOrdersByCustomer
 } from "../api/api";
-import OrderStatusIndicator from "../components/OrderStatusIndicator";
+import { FaUserAlt, FaCheck } from "react-icons/fa";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import '../css/orderTracking.css';
+import OrderStatusIndicator from "../components/OrderStatusIndicator";
+import "../css/orderTracking.css";
 
 const OrderTrackingPage = () => {
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('active');
+  const [activeTab, setActiveTab] = useState("active");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserAndOrders = async () => {
+    (async () => {
       try {
-        const userResponse = await getCurrentUser();
-        setUser(userResponse.data);
-
-        if (userResponse.data) {
-          const ordersResponse = await getOrdersByCustomer(userResponse.data.id);
-          setOrders(ordersResponse.data);
-        }
-      } catch (error) {
+        const { data: me } = await getCurrentUser();
+        setUser(me);
+        const { data: myOrders } = await getOrdersByCustomer(me.id);
+        setOrders(myOrders);
+      } catch {
         setError("Не сте логнати или сесията е изтекла.");
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchUserAndOrders();
+    })();
   }, []);
 
-  const activeOrders = orders.filter(order => order.status !== 'DELIVERED');
-  const completedOrders = orders.filter(order => order.status === 'DELIVERED');
+  const activeOrders    = orders.filter(o => o.status !== "DELIVERED");
+  const completedOrders = orders.filter(o => o.status === "DELIVERED");
 
+  const renderCard = (order, type) => (
+    <div key={order.id} className={`history-card ${type}`}>
+      <img src={order.restaurant.imageUrl} alt={order.restaurant.name} className="thumb" />
+      <div className="details">
+        <h3 className="name">{order.restaurant.name}</h3>
+        <p className="addr">{order.restaurant.address}</p>
+        <p className="price">{order.totalPrice.toFixed(2)} лв.</p>
+      </div>
+      <div className="status">
+        {type === "waiting" ? (
+          <div
+            className="icon-wrap waiting"
+            onClick={() => setSelectedOrder(order)}
+            style={{ cursor: "pointer" }}
+          >
+            <FaUserAlt className="icon" />
+          </div>
+        ) : (
+          <div className="icon-wrap finished">
+            <FaCheck className="icon" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // Когато е избрана поръчка, рендерираме само статус-индикатора
+  if (selectedOrder) {
+    // callback, ако потребителят не е логнат
+    const handleLoginRequired = () => navigate("/login");
+
+    // callback за ъпдейт на количка (тук може да е no-op, ако не позволяваш промяна)
+    const handleUpdateQuantity = (itemId, newQty) => {
+      console.log("Quantity change", itemId, newQty);
+      // евентуално можеш да извикаш някакъв API или просто да изключиш бутоните
+    };
+
+    return (
+      <div className="order-tracking-page">
+        <Navbar />
+        <div className="wrapper">
+          <button
+            className="back-button"
+            onClick={() => setSelectedOrder(null)}
+          >
+            ← Назад към списъка
+          </button>
+          <OrderStatusIndicator
+            order={selectedOrder}
+            user={user}
+            onLoginRequired={handleLoginRequired}
+            onUpdateQuantity={handleUpdateQuantity}
+          />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // По подразбиране – показваме list view
   return (
     <div className="order-tracking-page">
       <Navbar />
-
-      <div className="container mx-auto p-4 mt-6 mb-10">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h1 className="text-3xl font-bold mb-6">Проследяване на поръчки</h1>
-
-          <div className="flex border-b mb-6">
-            <button
-              className={`px-6 py-2 text-lg font-medium ${
-                activeTab === 'active'
-                  ? 'border-b-2 border-blue-500 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-              onClick={() => setActiveTab('active')}
-            >
-              Активни поръчки
-            </button>
-            <button
-              className={`px-6 py-2 text-lg font-medium ${
-                activeTab === 'history'
-                  ? 'border-b-2 border-blue-500 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-              onClick={() => setActiveTab('history')}
-            >
-              История на поръчките
-            </button>
-          </div>
-
-          {loading && <p>Зареждане...</p>}
-          {error && <p className="text-red-500">{error}</p>}
-          {!user && <p className="text-center mt-10">Моля, влезте в профила си.</p>}
-
-          {activeTab === 'active' && !loading && !error && (
-            <>
-              {activeOrders.length === 0 ? (
-                <p className="text-gray-500">Нямате активни поръчки.</p>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {activeOrders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="font-semibold text-lg">Поръчка #{order.id}</h3>
-                          <p className="text-sm text-gray-600">Ресторант: {order.restaurant.name}</p>
-                          <p className="text-sm text-gray-600">Адрес: {order.deliveryAddress}</p>
-                          <p className="text-sm font-semibold text-gray-800 mt-2">
-                            Сума: {order.totalPrice.toFixed(2)} лв.
-                          </p>
-                        </div>
-                      </div>
-                      <OrderStatusIndicator status={order.status} />
-                      <h1 className="delivery-progress-title">Delivery Progress</h1>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-
-          {activeTab === 'history' && !loading && !error && (
-            <>
-              {completedOrders.length === 0 ? (
-                <p className="text-gray-500">Нямате завършени поръчки.</p>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {completedOrders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="font-semibold text-lg">Поръчка #{order.id}</h3>
-                          <p className="text-sm text-gray-600">Ресторант: {order.restaurant.name}</p>
-                          <p className="text-sm text-gray-600">Адрес: {order.deliveryAddress}</p>
-                          <p className="text-sm font-semibold text-gray-800 mt-2">
-                            Сума: {order.totalPrice.toFixed(2)} лв.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <span className="inline-block px-4 py-2 bg-green-100 text-green-800 rounded-full">
-                          Завършено
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
+      <div className="wrapper">
+        <h1 className="page-title">DELIVERY HISTORY</h1>
+        <div className="tabs">
+          <button
+            className={activeTab === "active" ? "tab active" : "tab"}
+            onClick={() => setActiveTab("active")}
+          >
+            Waiting
+          </button>
+          <button
+            className={activeTab === "history" ? "tab active" : "tab"}
+            onClick={() => setActiveTab("history")}
+          >
+            Finished
+          </button>
         </div>
-      </div>
 
+        {loading && <p className="info">Зареждане...</p>}
+        {error   && <p className="error">{error}</p>}
+
+        {!loading && !error && activeTab === "active" && (
+          activeOrders.length
+            ? activeOrders.map(o => renderCard(o, "waiting"))
+            : <p className="info">Нямате чакащи поръчки.</p>
+        )}
+
+        {!loading && !error && activeTab === "history" && (
+          completedOrders.length
+            ? completedOrders.map(o => renderCard(o, "finished"))
+            : <p className="info">Нямате завършени поръчки.</p>
+        )}
+      </div>
       <Footer />
     </div>
   );
