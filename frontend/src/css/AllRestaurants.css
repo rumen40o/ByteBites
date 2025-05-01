@@ -54,8 +54,8 @@
 
 .restaurants-grid-all-rest {
   gap: 30px;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .restaurant-card-all-rest {
