@@ -97,7 +97,7 @@ public class ReportService implements ReportServiceInterface {
 
     @Override
     public List<DelivererRevenueDTO> getDelivererIncomeForPeriod(Long restaurantId, LocalDateTime start, LocalDateTime end, String jwtToken) {
-        // Step 1: Validate user and ownership
+        // Validate user and ownership
         String username = jwtService.extractUsername(jwtToken);
 
         Accounts account = accountRepository.findByUsernameIgnoreCase(username)
@@ -111,10 +111,10 @@ public class ReportService implements ReportServiceInterface {
             throw new AccessDeniedException("You do not own this restaurant.");
         }
 
-        // Step 2: Fetch revenue data
+        //  Fetch revenue data
         List<DelivererRevenueDTO> revenues = orderRepository.getDelivererRevenueForRestaurantAndPeriod(restaurantId, start, end);
 
-        // Step 3: Apply bonus logic
+        //  Apply bonus logic
         for (DelivererRevenueDTO dto : revenues) {
             if (dto.getTotalIncome().compareTo(BigDecimal.valueOf(applicationConfig.getBonusThreshold())) >= 0) {
                 BigDecimal bonusRevenue = dto.getTotalIncome().multiply(BigDecimal.valueOf(applicationConfig.getBonusMultiplier()));
