@@ -56,7 +56,6 @@ const BucketPage = () => {
 
   return (
     <div className="bucket-container">
-
       <div className="bucket-form">
         <h1>Check out</h1>
         <h2>Order information</h2>

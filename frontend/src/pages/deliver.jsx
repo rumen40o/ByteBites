@@ -30,7 +30,7 @@ const DeliverPage = () => {
         await loadAvailable();
         await loadAssigned(user.id);
       } catch {
-        navigate("/login");
+        navigate("/");
       }
     })();
   }, [navigate]);
