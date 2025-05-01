@@ -155,7 +155,9 @@
     width: 100%;
     height: 60px;
     border-radius: 50px;
-    border: 2px solid var(--bfont-color)
+    border: 3px solid #808080;
+    padding-left: 15px;
+    
   }
   .input-layout{
     padding-bottom: 10px;
